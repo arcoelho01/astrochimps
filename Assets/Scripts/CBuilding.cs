@@ -1,0 +1,241 @@
+using UnityEngine;
+using System.Collections;
+
+/// <summary>
+/// Class with building definitions
+/// </summary>
+public class CBuilding : CBaseEntity {
+
+	// PRIVATE
+	Material myMaterial;
+	
+	// PUBLIC
+	public enum eBuildingType { CommandCenter, ResourceExtractor, Farm, SecurityCenter, 
+		DroneFactory, ResearchLab }; // Building type
+	public eBuildingType buildingType;
+	
+	public AudioClip sfxLoadMonkey;
+	public AudioClip sfxSelected;
+	
+	public float costTime = 5.0f; // Seconds needed to build this structure
+	public float costOxygen = 1.0f;	// Amount of oxygen units needed to build this structure
+	public float costMetal = 2.0f;	// Amount of metal resources needed to build this structure
+	public int level = 1;	// Level of this building
+	public float workTime = 2.0f;
+	public float myTimer = 0.0f;
+
+	public Transform monkeyInside; // There's a monkey inside this building?
+	public bool idleStatus = false;	// The building is operational and fully functional?
+	public CBaseEntity resourceSite; // If it's an extractor, from which resource site it's extracting
+
+	// ================== MERGE
+
+	public enum TipoEstrutura{
+		CANO_CENTRAL,
+		CANO_EXTRATOR,
+		CENTRO_COMANDO,
+		FAZENDA,
+		GARAGEM,
+		CENTRAL_SEGURANCA,
+		FABRICA_DRONES,
+		SLOT,
+		EXTRATOR,
+		LABORATORIO,
+		PLATAFORMA_LANCAMENTO
+	} ;
+	public bool sabotado;
+	public bool conectado;
+	public bool construido;
+	public int vida;
+	public TipoEstrutura tipo;
+	// ================== MERGE
+
+
+	/*
+	 * ===========================================================================================================
+	 * UNITY'S STUFF
+	 * ===========================================================================================================
+	 */
+	
+	public override Transform Select() {
+
+		if(sfxSelected) {
+		
+			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
+		}
+		return base.Select();
+	}
+
+	/// <summary>
+	/// When the script is initialized
+	/// </summary>
+	void Awake() {
+
+		// Set the default settings for all the buildings
+		Selectable = true; // All building are selectable
+		Type = eObjType.Building;
+
+		// ================== MERGE
+		if((tipo ==TipoEstrutura.CANO_CENTRAL) || (tipo == TipoEstrutura.SLOT))
+		{
+				sabotado = false;
+				conectado = true;
+				construido = false;
+				vida = 100;
+		}
+		if((tipo ==TipoEstrutura.CANO_CENTRAL) || (tipo == TipoEstrutura.SLOT))
+		{
+				sabotado = false;
+				conectado = true;
+				construido = false;
+				vida = 100;
+		}
+		// ================== MERGE
+		//
+		myMaterial = renderer.material;
+	}
+
+	/// <summary>
+	/// In this update, we do whatever the building is supposed to do
+	/// </summary>
+	void Update() {
+
+		// Update the timer
+		myTimer += Time.deltaTime;
+
+		// Check if we need to show a menu
+		if(isSelected && monkeyInside != null) {
+
+			/*
+			// DEBUG
+			Debug.Log("enabling menu for removing the monkey");
+			//*/
+
+			mainScript.bottomMenu.BuildingInfoMenuEnable(this);
+		}
+
+		if(buildingType == eBuildingType.ResourceExtractor) {
+
+			if(!resourceSite) {
+
+				// DEBUG
+				Debug.LogError("Extractor without an associated resource site");
+			}
+
+			if(idleStatus == true) {
+
+				renderer.material = materialDisabled;
+
+				return;
+			}
+
+			if(myTimer >= workTime) {
+
+				float extractionAmount = level * 1.5f;
+
+				if(TheresAMonkeyInside() != null) {
+					extractionAmount *= 2.0f; // Hava a monkey inside the building? Double the production!!!
+				}
+				// FIXME: change the 1.5f to a define
+				resourceSite.GetComponent<CResource>().ExtractResource(extractionAmount);
+				myTimer = 0.0f;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Change the status of this building.
+	/// </summary>
+	/// <param name="bnIdleStatus"> A boolean. True indicates that the building is temporaly idle, so it not
+	/// produces anything. False the building is functional.
+	/// </param>
+	public void IsIdle(bool bnIdleStatus) {
+
+		idleStatus = bnIdleStatus;
+	}
+
+	/// <summary>
+	/// Create an instance of the selected building, place it and activate it
+	/// </summary>
+	public override void BuildIt() {
+
+		// Run the BuildIt from CBaseEntity
+		base.BuildIt();
+	}
+
+	/// <summary>
+	/// Do whatever this building is suppose to do, according to his type
+	/// </summary>
+	public override void Work() {
+
+	}
+
+	/// <summary>
+	/// Put a monkey inside this building. Building controller directly by monkey are more efficient somehow
+	/// </summary>
+	/// <param name ="monkeyIn">Transform of the monkey that will be inside the building</param>
+	public void PutAMonkeyInside(Transform monkeyIn) {
+
+		// TODO: Modify some of the building stats according to the type of monkey inside
+		
+		
+		
+		
+		if(monkeyInside != null) {
+			
+			// DEBUG
+			Debug.Log("There's already a monkey inside this building!");
+			return;
+		}
+		
+		
+		
+		monkeyInside = monkeyIn;
+		monkeyInside.gameObject.GetComponent<CBaseEntity>().Deselect();
+		// While inside the building, the monkey is not selectable anymore
+		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = false;	
+		AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
+		
+		//this.Select();//gameObject.GetComponent<CBaseEntity>().Select();
+		
+		// TODO: for now we put the monkey model on top of the building :P
+		monkeyInside.transform.position = 
+			this.transform.position + new Vector3(0,this.transform.localScale.y * 0.5f + 1, 0);
+	}
+
+	/// <summary>
+	/// Get the monkey out of the building, so it will be free to roam the terrain. The building is no more
+	/// affected by his bonus
+	/// </summary>
+	public void GetTheMonkeyOut() {
+		
+		
+		
+		
+		if(!monkeyInside) { // There's no monkey here!
+			
+			return;
+		}
+		
+		AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
+
+		monkeyInside.transform.position =
+		 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
+
+		this.Deselect();
+
+		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
+		
+		monkeyInside = null;
+	}
+
+	/// <summary>
+	/// Check if there's a monkey inside this building
+	/// </summary>
+	/// <returns> The Transform of the monkey inside this building, if any </returns>
+	public Transform TheresAMonkeyInside() {
+
+		return monkeyInside;
+	}
+}
+

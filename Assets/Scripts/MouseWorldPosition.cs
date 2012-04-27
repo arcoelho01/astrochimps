@@ -1,0 +1,434 @@
+using UnityEngine;
+using System.Collections;
+using Pathfinding;
+
+/// <summary>
+/// Script to filter all the mouse actions.
+///
+/// For now, when it passes over a monkey indicates its name in the console window
+/// </summary>
+public class MouseWorldPosition : MonoBehaviour {
+
+	// PUBLIC
+	// For the selected object
+	public Transform selectedObject = null;	// Selected object itself (any)
+	public Transform cursorObject = null;
+	public enum eMouseStates { Hover, Walking, SelectingPosition }; 
+
+	// PRIVATE
+	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
+	bool bnPositionAlreadySelected = false;	// Is the object already selected?
+	bool bnNodeStatus = false;	// keep if current node at the mouse cursor is walkable or not
+	Vector3 mouseNow;	// Mouse position now
+	Vector3 mouseBefore;	// Previous mouse position
+	GUIBottomMenu infoPanel = null;	// Pointer to the bottom menu bar
+	Transform cursorObjectClone = null;	// Pointer to the cursor, when some object is selected
+	CBaseEntity selectedBaseEntity = null;	// CBaseEntity stuff for the selected object, if exists
+	Vector3 targetPosition;	// Target to the pathfinding
+	eMouseStates MouseState;	// Current mouse state
+	MainScript mainScript;
+
+	// Defines a 'bar' in the screen. Mouse clicks outside this bar are ignored
+	public float gameBarTop	=	80;	// From the top o the screen		
+	public float gameBarBottom = 60 ;	// From the bottom of the screen. Usually the height of the bottom menu bar
+
+	/*
+	 * ===========================================================================================================
+	 * UNITY STUFF
+	 * ===========================================================================================================
+	 */
+
+	//
+	void Awake() {
+
+		// Gets the script of the GUI stuff
+		infoPanel = gameObject.GetComponent<GUIBottomMenu>();
+
+		if(infoPanel == null) {
+
+			// DEBUG
+			Debug.LogError("GUIBottomRuler not found in this object.");
+		}
+
+		if(cursorObject == null) {
+
+			// DEBUG
+			Debug.LogError("CursorObject not defined.");
+		}
+	}
+
+	// Use this for initialization
+	void Start () {
+	
+		// Cache the main script
+		mainScript = GameObject.Find("/Codigo").GetComponent<MainScript>();
+
+		if(!mainScript) {
+
+			// DEBUG
+			Debug.LogError("MainScript object not found. Check the code.");
+		}
+
+		mouseBefore = mouseNow = Input.mousePosition;
+		MouseState = eMouseStates.Hover;
+
+		// Adjust the gameBarBottom to pixels
+		gameBarBottom = Screen.height - gameBarBottom;
+	}
+	
+	// Update for physics stuff
+	void Update () {
+		
+		// Check what the mouse is pointing
+		MouseOver();
+
+		// MOUSE LEFT CLICK
+		if(Input.GetMouseButton(0)) {
+
+			CheckLeftMouseClick();
+		}// END OF LEFT CLICK
+
+		// RIGHT CLICK
+		// Check the right mouse button
+		// The right mouse button selects the target position to move the currently selected unit
+		if(Input.GetMouseButton(1)) {
+
+			CheckRightMouseClick();
+		} // END RIGHT CLICK
+	}
+
+	/*
+	 * ===========================================================================================================
+	 * ===========================================================================================================
+	 */
+
+	/// <summary> 
+	/// When the player presses the mouse button, check whatever is under the mouse cursor through a raycast
+	/// </summary>
+	/// <returns>The Transform of the object clicked, if any. Otherwise, returns null</returns>
+	Transform GetWhatIClicked() {
+
+		RaycastHit hit;
+
+		// Converts the mouse position to world position
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		// Creates a raycast from the mouse position in the screen	
+		if(Physics.Raycast(ray.origin, ray.direction, out hit)) {
+
+			targetPosition = hit.point; // Keeps the position where the player clicked
+			return hit.transform;	// Return the object
+		}
+
+		return null;
+	}
+
+	/// <summary>
+	/// Checks the objects under the mouse cursor, showing its info in the info panel
+	/// </summary>
+	void MouseOver() {
+		
+		string infoPanelMsg;
+
+		// Something is selected?
+		if(selectedObject != null) {
+
+			infoPanelMsg = selectedObject.gameObject.name + " ";
+		}
+
+		mouseNow = Input.mousePosition;
+
+		// Moved the cursor?
+		if(mouseNow != mouseBefore) {
+
+			RaycastHit hit;
+
+			mouseBefore = mouseNow;
+
+			// Converts the mouse position to world position
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		
+			// Creates a raycast from the mouse position in the screen	
+			if(Physics.Raycast(ray.origin, ray.direction, out hit)) {
+
+				// FIXME
+				switch(hit.transform.tag) {
+
+					case "Monkey":
+						infoPanel.SetInfoLabel(hit.transform.name);
+						break;
+					case "Drone":
+						infoPanel.SetInfoLabel(hit.transform.name);
+						break;
+					case "Resource":
+						{
+							infoPanelMsg = hit.transform.name;
+							if(!selectedObject) {
+
+								infoPanelMsg += " You can build a resource extractor here";
+							}
+
+							// FIXME: this message is showing even when an extractor is already built
+							infoPanel.SetInfoLabel(infoPanelMsg);
+						}
+						break;
+					case "Building":
+						{
+							infoPanel.SetInfoLabel(hit.transform.name);
+							// If we have a monkey selected, when we point a building we can put the monkey inside it
+							if(selectedObject != null) {
+
+								if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+
+									// TODO: set a flag here to turn the things easier...
+
+									infoPanel.SetInfoLabel("Click to put the monkey inside this building, enhancing it.");
+								}
+								else {
+
+									//	infoPanel.ClearInfoLabel();
+								}
+							}
+						}
+						break;
+					default:
+						{
+							infoPanel.ClearInfoLabel();
+							if(selectedObject != null) {
+
+								if(selectedObject.gameObject.GetComponent<CBaseEntity>().Movable) {
+
+									infoPanel.SetInfoLabel("Right click to choose the destination");
+								}
+							}
+						}
+						break;
+				}
+
+				if(MouseState == eMouseStates.SelectingPosition || MouseState == eMouseStates.Walking) {
+
+					if(cursorObjectClone != null) {
+
+						cursorObjectClone.transform.position = hit.point;
+					}
+				}
+
+				// Check if the node under the cursor is walkable or not
+				if(AstarPath.active != null) {
+
+					Node node = AstarPath.active.GetNearest(hit.point);
+					bnNodeStatus = node.walkable;
+
+					if(cursorObjectClone != null) {
+
+						cursorObjectClone.gameObject.GetComponent<CursorProjectorControl>().SetState(true, bnNodeStatus);
+					}
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Return the transform of the object currently selected, if any
+	/// </summary>
+	/// <returns>The Transform of the currently selected object</returns>
+	public Transform GetSelectedObject() {
+
+		return selectedObject;
+	}
+
+	/// <summary>
+	/// Executed when a script wants to receive a position when a mouse button is clicked
+	/// </summary>
+	public void IWantToSelectAPosition() {
+
+		MouseState = eMouseStates.SelectingPosition;
+		bnPositionAlreadySelected = false;
+
+		// Instantiate a cursor
+		cursorObjectClone = Instantiate(cursorObject, 
+				transform.position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+	}
+
+	/// <summary>
+	/// Used after IWantToSelectAPosition by another script, so it will know when something is clicked and a 
+	/// position is selected
+	/// </summary>
+	/// <returns> True if we already select a position, false otherwise </returns>
+	public bool PositionIsAlreadySelected() {
+		
+		return bnPositionAlreadySelected;
+	}
+
+	/// <summary>
+	/// Used in conjuction with IWantToSelectAPosition and PositionIsAlreadySelected. If the position is already
+	/// select, them polls this script to know what is this position
+	/// </summary>
+	/// <returns> A Vector3 with the position selected </returns>
+	public Vector3 WhatIsThePositionSelected() {
+
+		return targetPosition; 
+	}
+
+	/// <summary>
+	/// Execute when the player presses the left mouse button
+	/// Behaviours: select an unit, deselect-it if clicked in the terrain
+	/// </summary>
+	void CheckLeftMouseClick() {
+
+		// Check if we're inside the game defined viewport
+		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
+			return;
+
+		// Checks if we clicked in an unit
+		Transform whatIClicked = GetWhatIClicked();
+
+		// Possibilities:
+		// 1-I don't have anything selected. In this case, select the object under the mouse cursor, if possible
+		// 2-I already have select an object. In this case, the click will point where it should move
+		if(whatIClicked != null) {
+
+			// Get the basic info on the unit
+			selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
+
+			if(selectedBaseEntity != null) {
+
+				if(selectedBaseEntity.Selectable) {
+
+					// Unit not selected?
+					if(!selectedBaseEntity.isSelected) {
+
+						// Unselect previous units
+						if(selectedObject != null) {
+
+							selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
+							RemoveCursor();
+						}
+
+						// Select this unit
+						selectedObject = selectedBaseEntity.Select();
+
+						infoPanel.SetInfoLabel(selectedObject.gameObject.name);
+
+						if(selectedBaseEntity.Movable) {
+
+							// Get the AI for this object
+							AIScript = selectedObject.GetComponent<AstarAIFollow>();
+							// Change the mouse state
+							MouseState = eMouseStates.Walking;
+							// Instantiate a cursor
+							cursorObjectClone = Instantiate(cursorObject, 
+									transform.position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+						}
+						else {
+
+							// FIXME: to avoid a previously selected drone to walk, even not being selected
+							MouseState = eMouseStates.Hover;
+						}
+					}
+				}
+			}
+			else {
+
+				// Unselect current object
+				if(selectedObject != null) {
+
+					// Deselect the current selected object
+					selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
+					selectedObject = null;
+					// Clear the AI
+					AIScript = null;
+					// Change the mouse state
+					MouseState = eMouseStates.Hover;
+					RemoveCursor();
+
+					// Reset the menu panel
+					mainScript.bottomMenu.PlayerInfoMenuEnable(null);
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Execute when the player presses the right mouse button
+	/// Behaviours: when a le unit is selected, select where it should walk to
+	/// </summary>
+	void CheckRightMouseClick() {
+
+		// FIXME: add monkey select, I clicked in a building
+		if(selectedObject != null) {
+
+			if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+
+				// Checks if we clicked in an unit
+				Transform whatIClicked = GetWhatIClicked();
+
+				// Get the basic info on the unit
+				selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
+
+				if(selectedBaseEntity != null) {
+
+					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
+
+						// Unit not selected?
+						if(!selectedBaseEntity.isSelected) {
+
+							// After all that, check if the clicked object is a building, so the monkey can get inside
+							if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
+
+								CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
+								// Puts the monkey inside the building. Actually, the building get the monkey
+								selectedBuilding.PutAMonkeyInside(selectedObject);
+							}
+						}
+					}
+				}
+
+			}
+		}
+		
+
+		// Check if we're inside the game defined viewport
+		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
+			return;
+
+		// FIXME: guess we don't need this anymore. Maybe checking if selectedObject != null is enough
+		if(MouseState == eMouseStates.Walking) {
+
+			if(!bnNodeStatus) {
+
+				return;
+			}
+
+			GetWhatIClicked();
+			AIScript.ClickedTargetPosition(targetPosition);
+		}
+		else if(MouseState == eMouseStates.SelectingPosition) {
+
+			if(!bnNodeStatus) {
+
+				return;
+			}
+
+			// This will store the clicked position
+			GetWhatIClicked();
+			MouseState = eMouseStates.Hover;
+			bnPositionAlreadySelected = true; // This will let other scripts know
+
+			RemoveCursor();
+		}
+	}
+
+	/// <summary>
+	/// Removes the cursor projector, destroying its object
+	/// Used when we have deselected a unit
+	/// </summary>
+	public void RemoveCursor() {
+
+		// Destroys the cursor's instance
+		if(cursorObjectClone != null) {
+
+			Destroy(cursorObjectClone.gameObject);
+		}
+	}
+}

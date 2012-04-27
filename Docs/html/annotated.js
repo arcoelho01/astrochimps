@@ -1,0 +1,26 @@
+var annotated =
+[
+    [ "AstarAIFollow", "class_astar_a_i_follow.html", "class_astar_a_i_follow" ],
+    [ "CBaseEntity", "class_c_base_entity.html", "class_c_base_entity" ],
+    [ "CBuilding", "class_c_building.html", "class_c_building" ],
+    [ "CDrone", "class_c_drone.html", "class_c_drone" ],
+    [ "CMonkey", "class_c_monkey.html", "class_c_monkey" ],
+    [ "CPlayer", "class_c_player.html", "class_c_player" ],
+    [ "CResource", "class_c_resource.html", "class_c_resource" ],
+    [ "CursorProjectorControl", "class_cursor_projector_control.html", "class_cursor_projector_control" ],
+    [ "DefinicaoEstrutura", "class_definicao_estrutura.html", "class_definicao_estrutura" ],
+    [ "DroneRandomBehaviour", "class_drone_random_behaviour.html", "class_drone_random_behaviour" ],
+    [ "DroneVigilancia", "class_drone_vigilancia.html", "class_drone_vigilancia" ],
+    [ "EventosMenu", "class_eventos_menu.html", "class_eventos_menu" ],
+    [ "EventosMouse", "class_eventos_mouse.html", null ],
+    [ "GerenciadorSlots", "class_gerenciador_slots.html", "class_gerenciador_slots" ],
+    [ "GUIBottomMenu", "class_g_u_i_bottom_menu.html", "class_g_u_i_bottom_menu" ],
+    [ "HUDFPS", "class_h_u_d_f_p_s.html", "class_h_u_d_f_p_s" ],
+    [ "MainScript", "class_main_script.html", "class_main_script" ],
+    [ "MouseWorldPosition", "class_mouse_world_position.html", "class_mouse_world_position" ],
+    [ "Regiao", "class_regiao.html", "class_regiao" ],
+    [ "RTSCam", "class_r_t_s_cam.html", "class_r_t_s_cam" ],
+    [ "ToolMegaDroneInstantiatorTabajara", "class_tool_mega_drone_instantiator_tabajara.html", "class_tool_mega_drone_instantiator_tabajara" ],
+    [ "ToolTerrainSelector", "class_tool_terrain_selector.html", "class_tool_terrain_selector" ],
+    [ "VisibilityControl", "class_visibility_control.html", "class_visibility_control" ]
+];
