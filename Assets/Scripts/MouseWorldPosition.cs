@@ -3,9 +3,8 @@ using System.Collections;
 using Pathfinding;
 
 /// <summary>
-/// Script to filter all the mouse actions.
-///
-/// For now, when it passes over a monkey indicates its name in the console window
+/// Script to filter all the mouse actions, including moving and clicking the buttons.
+/// Right now, we use left click to 'select' units and buildings, and right click to issue 'action' commands
 /// </summary>
 public class MouseWorldPosition : MonoBehaviour {
 
@@ -14,6 +13,13 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Transform selectedObject = null;	// Selected object itself (any)
 	public Transform cursorObject = null;
 	public enum eMouseStates { Hover, Walking, SelectingPosition }; 
+
+	// Mouse cursor
+	public Texture2D cursorNormal;	// regular cursor
+	public Texture2D cursorAttack;	// used to indicate that we can attack this unit
+	public Texture2D cursorGetInside;	// used to indicate that we can enter this building or vehicle
+	public Texture2D cursorGetOut;	// used to indicate that we can exit this building or vehicle
+	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
 	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
@@ -74,6 +80,10 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		// Adjust the gameBarBottom to pixels
 		gameBarBottom = Screen.height - gameBarBottom;
+
+		// Hides the OS cursor
+		Screen.showCursor = false;
+		cursorCurrent = cursorNormal;
 	}
 	
 	// Update for physics stuff
@@ -123,6 +133,19 @@ public class MouseWorldPosition : MonoBehaviour {
 		return null;
 	}
 
+
+	/// <summary>
+	/// For now, the OnGUI only draws the custom mouse cursor
+	/// </summary>
+	void OnGUI() {
+
+		int cursorHeight = 32;
+		int cursorWidth = 32;
+
+		GUI.DrawTexture(new Rect(mouseNow.x - cursorWidth/2, Screen.height - mouseNow.y - cursorHeight/2, 32, 32), 
+				cursorCurrent);
+	}
+
 	/// <summary>
 	/// Checks the objects under the mouse cursor, showing its info in the info panel
 	/// </summary>
@@ -144,6 +167,12 @@ public class MouseWorldPosition : MonoBehaviour {
 			RaycastHit hit;
 
 			mouseBefore = mouseNow;
+
+			// What I am pointing right now?
+			Transform whatIAmPointing = GetWhatIClicked();
+
+			if(whatIAmPointing == null)
+				return;
 
 			// Converts the mouse position to world position
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -183,10 +212,17 @@ public class MouseWorldPosition : MonoBehaviour {
 									// TODO: set a flag here to turn the things easier...
 
 									infoPanel.SetInfoLabel("Click to put the monkey inside this building, enhancing it.");
+									// Changes the mouse cursor
+									cursorCurrent = cursorGetInside;
 								}
-								else {
+								else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type 
+										== CBaseEntity.eObjType.Building) {
+									if(selectedObject.gameObject.GetComponent<CBuilding>().TheresAMonkeyInside()) {
 
-									//	infoPanel.ClearInfoLabel();
+										// if we selected a building and there's a monkey inside, show the cursor that allow to 
+										// remove the monkey
+										cursorCurrent = cursorGetOut;
+									}
 								}
 							}
 						}
@@ -204,6 +240,25 @@ public class MouseWorldPosition : MonoBehaviour {
 						}
 						break;
 				}
+
+				// Check the context using layers. Is the object an allied or an enemy?
+				/*
+				switch(hit.transform.gameObject.layer) {
+
+					case 10:
+						cursorCurrent = cursorNormal;
+						break;
+					case 11:
+						cursorCurrent = cursorAttack;
+						break;
+					case 12:
+						cursorCurrent = cursorNormal;
+						break;
+					default:
+						cursorCurrent = cursorNormal;
+						break;
+				}	
+				//*/
 
 				if(MouseState == eMouseStates.SelectingPosition || MouseState == eMouseStates.Walking) {
 
