@@ -10,14 +10,16 @@ public class GerenciadorSlots : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		
-		for(int i = 0; i < 4; i++)
+		for(int i = 0; i < 9; i++)
 		{
 			canos[i] = GameObject.Find("CanoCentral"+(i+1));
 			slots[i] = GameObject.Find("Slot"+(i+1));
 			regioes[i] = GameObject.Find("Regiao"+(i+1));
-			canos[i].active = false;
-			slots[i].active = false;
-			regioes[i].active = false;
+      if(i >= 3){
+  			canos[i].active = false;
+  			slots[i].active = false;
+  			regioes[i].active = false;
+      }
 		}
 		
 	}
