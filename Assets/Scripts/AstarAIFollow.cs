@@ -28,7 +28,7 @@ public class AstarAIFollow : MonoBehaviour {
 	public float targetReached = 0.8F;
 	
 	/** Units per second */
-	public float speed = 5;
+	public float speed = 10;
 	
 	/** How fast the AI can turn around */
 	float rotationSpeed = 1;
@@ -213,7 +213,10 @@ public class AstarAIFollow : MonoBehaviour {
 		Vector3 dir = currentWaypoint - tr.position;
 		
 		// Rotate towards the target
-		tr.rotation = Quaternion.Slerp (tr.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
+		//tr.rotation = Quaternion.Slerp (tr.rotation, Quaternion.LookRotation(dir), rotationSpeed * Time.deltaTime);
+		// Added so the rotation is instantaneous. With this we can set the speed higher, otherwise the unit
+		// keep passing the waypoint and tries to rotate back to it, getting stuck in a loop
+		tr.rotation = Quaternion.LookRotation(dir);
 		tr.eulerAngles = new Vector3(0, tr.eulerAngles.y, 0);
 		
 		Vector3 forwardDir = transform.forward;
