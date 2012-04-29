@@ -202,4 +202,13 @@ public class VisibilityControl : MonoBehaviour {
 		return sight_range;
 		
 	}
+
+	/// <summary>
+	/// Tells if this unit is visible or not
+	/// </summary>
+	/// <returns> True if the unit is visible, false otherwise </returns>
+	public bool IsVisible() {
+
+		return visible;
+	}
 }

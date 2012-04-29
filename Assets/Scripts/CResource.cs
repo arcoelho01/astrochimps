@@ -127,4 +127,22 @@ public class CResource : CBaseEntity {
 		// Disable the associated extractor?
 		associatedExtractor.GetComponent<CBuilding>().IsIdle(true);
 	}
+
+	/// <summary>
+	/// Tell if we can scavenge this resource site. To do this, it can't have an extractor yet, and must have
+	/// resources left
+	/// </summary>
+	/// <returns> True if we can build an extractor here, false otherwise </returns>
+	public bool CanWeBuildInThisResourceSite() {
+
+		bool rv = true;
+
+		if(resourceDrained)
+			rv = false;
+
+		if(associatedExtractor != null)
+			rv = false;
+
+		return rv;
+	}
 }

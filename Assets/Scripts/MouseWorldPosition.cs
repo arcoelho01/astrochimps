@@ -28,11 +28,14 @@ public class MouseWorldPosition : MonoBehaviour {
 	Vector3 mouseNow;	// Mouse position now
 	Vector3 mouseBefore;	// Previous mouse position
 	GUIBottomMenu infoPanel = null;	// Pointer to the bottom menu bar
-	Transform cursorObjectClone = null;	// Pointer to the cursor, when some object is selected
+	Transform projectorSelectTargetPosition = null;	// Pointer to the cursor, when some object is selected
 	CBaseEntity selectedBaseEntity = null;	// CBaseEntity stuff for the selected object, if exists
 	Vector3 targetPosition;	// Target to the pathfinding
 	eMouseStates MouseState;	// Current mouse state
 	MainScript mainScript;
+	
+	// If we show the regular mouse cursor or not. We might want not to show it when using projectors
+	bool bnShowMouseCursor = true;	
 
 	// Defines a 'bar' in the screen. Mouse clicks outside this bar are ignored
 	public float gameBarTop	=	80;	// From the top o the screen		
@@ -142,8 +145,11 @@ public class MouseWorldPosition : MonoBehaviour {
 		int cursorHeight = 32;
 		int cursorWidth = 32;
 
-		GUI.DrawTexture(new Rect(mouseNow.x - cursorWidth/2, Screen.height - mouseNow.y - cursorHeight/2, 32, 32), 
-				cursorCurrent);
+		if(bnShowMouseCursor) {
+
+			GUI.DrawTexture(new Rect(mouseNow.x - cursorWidth/2, Screen.height - mouseNow.y - cursorHeight/2, 32, 32), 
+					cursorCurrent);
+		}
 	}
 
 	/// <summary>
@@ -165,20 +171,65 @@ public class MouseWorldPosition : MonoBehaviour {
 		if(mouseNow != mouseBefore) {
 
 			RaycastHit hit;
+			Transform whatIAmPointing = null;
 
 			mouseBefore = mouseNow;
-
-			// What I am pointing right now?
-			Transform whatIAmPointing = GetWhatIClicked();
-
-			if(whatIAmPointing == null)
-				return;
 
 			// Converts the mouse position to world position
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		
 			// Creates a raycast from the mouse position in the screen	
 			if(Physics.Raycast(ray.origin, ray.direction, out hit)) {
+
+				whatIAmPointing = hit.transform;
+			}
+
+			if(whatIAmPointing == null)
+				return;
+
+			// Check the visibility
+			if(whatIAmPointing.gameObject.GetComponent<VisibilityControl>() != null) {
+
+				if(!whatIAmPointing.gameObject.GetComponent<VisibilityControl>().IsVisible())
+					return;
+			}
+
+			// 1 - check if we have something select or not
+			if(!selectedObject) {
+
+				infoPanelMsg = whatIAmPointing.name;
+
+				// The cursor is the regular one
+				cursorCurrent = cursorNormal;
+				// And we show it
+				bnShowMouseCursor = true;
+
+				// Special case: hover over an resource site without an extractor
+				if(whatIAmPointing.tag == "Resource") {
+
+					CResource resourceExtractor = whatIAmPointing.gameObject.GetComponent<CResource>();
+
+					if(resourceExtractor.CanWeBuildInThisResourceSite()) {
+
+						infoPanelMsg += " You can build a resource extractor here";
+					}
+				}
+
+				infoPanel.SetInfoLabel(infoPanelMsg);
+				// And we're off!
+				return;
+			}
+
+			// 2 - Ok, we have an unit selected.
+			CBaseEntity selectedObjectEntity = selectedObject.gameObject.GetComponent<CBaseEntity>();
+
+			switch(selectedBaseEntity.Type) {
+
+				case CBaseEntity.eObjType.Monkey:
+					break;
+			}
+
+
 
 				// FIXME
 				switch(hit.transform.tag) {
@@ -241,30 +292,11 @@ public class MouseWorldPosition : MonoBehaviour {
 						break;
 				}
 
-				// Check the context using layers. Is the object an allied or an enemy?
-				/*
-				switch(hit.transform.gameObject.layer) {
-
-					case 10:
-						cursorCurrent = cursorNormal;
-						break;
-					case 11:
-						cursorCurrent = cursorAttack;
-						break;
-					case 12:
-						cursorCurrent = cursorNormal;
-						break;
-					default:
-						cursorCurrent = cursorNormal;
-						break;
-				}	
-				//*/
-
 				if(MouseState == eMouseStates.SelectingPosition || MouseState == eMouseStates.Walking) {
 
-					if(cursorObjectClone != null) {
+					if(projectorSelectTargetPosition != null) {
 
-						cursorObjectClone.transform.position = hit.point;
+						projectorSelectTargetPosition.transform.position = hit.point;
 					}
 				}
 
@@ -274,13 +306,12 @@ public class MouseWorldPosition : MonoBehaviour {
 					Node node = AstarPath.active.GetNearest(hit.point);
 					bnNodeStatus = node.walkable;
 
-					if(cursorObjectClone != null) {
+					if(projectorSelectTargetPosition != null) {
 
-						cursorObjectClone.gameObject.GetComponent<CursorProjectorControl>().SetState(true, bnNodeStatus);
+						projectorSelectTargetPosition.gameObject.GetComponent<CursorProjectorControl>().SetState(true, bnNodeStatus);
 					}
 				}
 			}
-		}
 	}
 
 	/// <summary>
@@ -301,7 +332,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		bnPositionAlreadySelected = false;
 
 		// Instantiate a cursor
-		cursorObjectClone = Instantiate(cursorObject, 
+		projectorSelectTargetPosition = Instantiate(cursorObject, 
 				transform.position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
 	}
 
@@ -372,7 +403,7 @@ public class MouseWorldPosition : MonoBehaviour {
 							// Change the mouse state
 							MouseState = eMouseStates.Walking;
 							// Instantiate a cursor
-							cursorObjectClone = Instantiate(cursorObject, 
+							projectorSelectTargetPosition = Instantiate(cursorObject, 
 									transform.position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
 						}
 						else {
@@ -481,9 +512,9 @@ public class MouseWorldPosition : MonoBehaviour {
 	public void RemoveCursor() {
 
 		// Destroys the cursor's instance
-		if(cursorObjectClone != null) {
+		if(projectorSelectTargetPosition != null) {
 
-			Destroy(cursorObjectClone.gameObject);
+			Destroy(projectorSelectTargetPosition.gameObject);
 		}
 	}
 }
