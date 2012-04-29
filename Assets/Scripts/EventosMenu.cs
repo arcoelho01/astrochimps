@@ -18,6 +18,11 @@ public class EventosMenu : MonoBehaviour {
 	private float metal;
 	CPlayer playerScript;
 
+ /* private int i_Inicial = 0;
+  private int i_Final = 3;*/
+
+  private int quantidadeConstrucoes = 0;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -66,16 +71,16 @@ public class EventosMenu : MonoBehaviour {
 			}	
 			
 		}
+		/*
 		if((tipoObj == DefinicaoEstrutura.TipoEstrutura.CENTRO_COMANDO) && (!slotsPosicionados))
 			if(GUI.Button(new Rect(5* 25,Screen.height - 44,70 * 1.3f,70 * 0.53f),"Expandir")){
 				HabilitarSlot();
 			}
-		/*
+			*/
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES)
-			if(GUI.Button(new Rect(5* xFactor,Screen.height - yFactor,70 * wFactor,70 * hFactor),"Drone")){
+			if(GUI.Button(new Rect(5,Screen.height,70,70),"Drone")){
 				
 			}		
-			*/
 	}
 	
 	void Construir(DefinicaoEstrutura.TipoEstrutura tipoConstrucao)
@@ -100,6 +105,9 @@ public class EventosMenu : MonoBehaviour {
 			// Pay for it!
 			playerScript.SubResourceMetal(prefabIWantToBuild.GetComponent<DefinicaoEstrutura>().custoMetal);
 			playerScript.SubResourceOxygen(prefabIWantToBuild.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+      quantidadeConstrucoes++;
+      if(quantidadeConstrucoes == 3)
+        HabilitarSlot();
 		}
 
 		/*
@@ -139,29 +147,20 @@ public class EventosMenu : MonoBehaviour {
 	
 	void HabilitarSlot()
 	{
-		oxigenio = playerScript.oxygenLevel;
-		metal = playerScript.metalLevel;
-		
-		if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoOxigenio <= oxigenio)
-			&& (objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetal <= metal))
-		{
-			for(int i = 0; i < 4; i++){
-		
-				objetoSelecionado.GetComponent<GerenciadorSlots>().canos[i].active = true;			
-				objetoSelecionado.GetComponent<GerenciadorSlots>().slots[i].active = true;
-				objetoSelecionado.GetComponent<GerenciadorSlots>().regioes[i].active = true;
-				
-				Debug.Log(objetoSelecionado.GetComponent<GerenciadorSlots>().canos[i].name+" "+i+objetoSelecionado.GetComponent<GerenciadorSlots>().canos[i].active);
-			}
+		for(int i = 3; i < 9; i++){
+
+
+			GameObject.Find("CentroComando").GetComponent<GerenciadorSlots>().canos[i].active = true;
+			GameObject.Find("CentroComando").GetComponent<GerenciadorSlots>().slots[i].active = true;
+			GameObject.Find("CentroComando").GetComponent<GerenciadorSlots>().regioes[i].active = true;
+
+			//Debug.Log(objetoSelecionado.GetComponent<GerenciadorSlots>().canos[i].name+" "+i+objetoSelecionado.GetComponent<GerenciadorSlots>().canos[i].active);
+		}
+		/*if(i_Final == 9)
 			slotsPosicionados = true;
 			playerScript.SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetal);
-			playerScript.SubResourceOxygen(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoOxigenio);
-		}
-		else
-		{
-			// FIXME: GUI stuff will only show in the OnGUI() or methods called by it
-			//GUI.TextArea(new Rect(310,Screen.height - 75,70,70),"Faltam Recursos!");
-		}
+			playerScript.SubResourceOxygen(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoOxigenio);*/
+
 	}
 
 
