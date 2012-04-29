@@ -1374,7 +1374,7 @@ public class AstarPath : MonoBehaviour {
 		//@Edit in - System.DateTime startTime = System.DateTime.Now;
 		
 		if (pathQueueEnd == null) {
-			Debug.Log ("Initializing Path Queue...");
+			//Debug.Log ("Initializing Path Queue...");
 			
 			pathQueueEnd = p;
 			pathQueueStart = p;
@@ -1394,7 +1394,7 @@ public class AstarPath : MonoBehaviour {
 		}
 		
 			if (!isCalculatingPaths) {
-					Debug.Log ("Starting Pathfinder...");
+					//Debug.Log ("Starting Pathfinder...");
 					
 					active.StartCoroutine (CalculatePaths ());
 			}

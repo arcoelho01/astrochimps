@@ -369,7 +369,7 @@ namespace Pathfinding {
 			
 			graphTypes = graphList.ToArray ();
 			
-			Debug.Log ("Found "+graphTypes.Length+" graph types");
+			//Debug.Log ("Found "+graphTypes.Length+" graph types");
 			
 		}
 		

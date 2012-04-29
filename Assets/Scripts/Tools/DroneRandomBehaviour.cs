@@ -28,8 +28,9 @@ public class DroneRandomBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		currentTimer += Time.deltaTime;
+		
+		if (!gameObject.GetComponent<CDrone>().isStunned())
+			currentTimer += Time.deltaTime;
 
 		if(currentTimer > changeTargetTimer) {
 

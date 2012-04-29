@@ -221,13 +221,15 @@ public class MouseWorldPosition : MonoBehaviour {
 			}
 
 			// 2 - Ok, we have an unit selected.
-			CBaseEntity selectedObjectEntity = selectedObject.gameObject.GetComponent<CBaseEntity>();
+			//CBaseEntity selectedObjectEntity = selectedObject.gameObject.GetComponent<CBaseEntity>();
+			
+			//if (selectedObjectEntity!= null)
+			
+			//switch(selectedBaseEntity.Type) {
 
-			switch(selectedBaseEntity.Type) {
-
-				case CBaseEntity.eObjType.Monkey:
-					break;
-			}
+			//	case CBaseEntity.eObjType.Monkey:
+			//		break;
+			//}
 
 
 
@@ -468,11 +470,38 @@ public class MouseWorldPosition : MonoBehaviour {
 							}
 						}
 					}
+					// ITS A DRONE
+					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Drone) {
+						// ITS AN ENEMY
+						if (whatIClicked.gameObject.layer == 11){
+							CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
+							// MONKEY ATTACKs DRONE
+							if (cMonkeyScript != null){
+								cMonkeyScript.Attack(whatIClicked);
+							}
+					
+						}
+					}
+					
 				}
 
 			}
 		}
 		
+		
+		// IF CLICK WASNT ON UNITS OR BUILDINGS
+		if(GetWhatIClicked().gameObject.GetComponent<CBaseEntity>() == null) {
+			// WALK THE MONKEY
+			if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+				selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
+			} 
+			// WALK THE DRONE
+			else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+				selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+			}
+					
+	
+		}
 
 		// Check if we're inside the game defined viewport
 		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
@@ -487,7 +516,6 @@ public class MouseWorldPosition : MonoBehaviour {
 			}
 
 			GetWhatIClicked();
-			AIScript.ClickedTargetPosition(targetPosition);
 		}
 		else if(MouseState == eMouseStates.SelectingPosition) {
 

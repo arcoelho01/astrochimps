@@ -13,6 +13,9 @@ public class CMonkey : CBaseEntity {
 	
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
+	private Transform transTarget;   // Target Transform
+	private Vector3 walkTo;
+	public float attackRange;      //  Attack Range to disable drones.
 	
 	public enum FSMState {
 		STATE_IDLE,							// Doing nothing...
@@ -25,6 +28,8 @@ public class CMonkey : CBaseEntity {
 	};
 	
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
+	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
+	private float stunnedTimeCounter;
 
 	/*
 	 * ===========================================================================================================
@@ -41,7 +46,8 @@ public class CMonkey : CBaseEntity {
 		Selectable = true; // All monkeys are selectable
 		Movable = true; // All monkeys are movable
 		Type = eObjType.Monkey;
-
+		AIScript = gameObject.GetComponent<AstarAIFollow>();
+		
 		// FSM setup
 		eFSMCurrentState = FSMState.STATE_IDLE;
 	}
@@ -57,6 +63,34 @@ public class CMonkey : CBaseEntity {
 		}
 		return base.Select();
 	}
+	
+	
+	// BEING ATTACKED
+	public void Attacked(){
+		
+		AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
+			
+		EnterNewState(FSMState.STATE_STUNNED);
+		
+	}
+	
+	public void WalkTo(Vector3 walkTo){
+		this.walkTo = walkTo;
+		EnterNewState(FSMState.STATE_WALKING);
+	}
+	
+	// ATTACK THE TARGET
+	
+	public void Attack(Transform transTarget){
+		 this.transTarget = transTarget;
+		 EnterNewState(FSMState.STATE_ATTACKING);
+	}
+	
+	void Update(){
+		
+		ExecuteCurrentState();
+	}
+	
 
 	/*
 	 * ===========================================================================================================
@@ -100,12 +134,18 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_WALKING:
+				AIScript.ClickedTargetPosition(walkTo);
+			
 				break;
 
 			case FSMState.STATE_STUNNED:
+				stunnedTimeCounter = 10000; // Stay stunned for 10 seconds.
+				AIScript.Stop();
 				break;
 
 			case FSMState.STATE_ATTACKING:
+				// SET AISCRIPT TO MOVE TO TARGET
+				AIScript.ClickedTargetPosition(transTarget.position);
 				break;
 
 			case FSMState.STATE_NULL:
@@ -128,7 +168,7 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_IDLE:
 				{
 					// DEBUG
-					Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
+					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
 				}
 				break;
 			case FSMState.STATE_SELECTED:
@@ -141,9 +181,44 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
+				// DO NOTHING FOR 10 SECONDS
+				Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
+				stunnedTimeCounter = stunnedTimeCounter - Time.deltaTime;
+				if ( stunnedTimeCounter <=0)
+					EnterNewState(FSMState.STATE_IDLE);
 				break;
-
+			
 			case FSMState.STATE_ATTACKING:
+			
+			
+			// BY LEO: POR ENQUANTO ELE NAO ESTA SE MOVIMENTANDO EM DIRECAO AO INIMIGO POIS JA ESTA SENDO FEITO FORA DAQUI, MAS ACHO QUE DEVERIA ENTRAR NO WALKING E TB NO ATTACKING
+			
+			// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
+				if (transTarget == null){
+					Debug.Log("TARGET INVALID");
+					EnterNewState(FSMState.STATE_IDLE);
+					break;
+				}
+			
+				Debug.Log("TARGET VALID");
+			
+				Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
+				float curDistance = diff.sqrMagnitude; 
+				
+				if (curDistance < 500)
+				{
+					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+					if (droneTarget != null){
+					
+						Debug.Log("XXXX MONKEY  attacking");
+						droneTarget.Attacked();
+				
+					// TODO: PLAY SOME ATTACKING SOUND
+				
+						EnterNewState(FSMState.STATE_IDLE);
+					}
+					
+				}
 				break;
 
 			case FSMState.STATE_NULL:
@@ -180,9 +255,11 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
+				AIScript.Resume();
 				break;
 
 			case FSMState.STATE_ATTACKING:
+				transTarget = null;
 				break;
 
 			case FSMState.STATE_NULL:

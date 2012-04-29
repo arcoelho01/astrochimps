@@ -177,7 +177,7 @@ public class AstarAIFollow : MonoBehaviour {
 	public virtual void ReachedEndOfPath () {
 		//The AI has reached the end of the path
 		// DEBUG
-		Debug.Log("Fim do caminho");
+		//Debug.Log("Fim do caminho");
 
 		Stop();
 	}
