@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/MouseWorldPosition.cs">
+    <Files>
+      <File FileName="Assets/Scripts/CMonkey.cs" Line="147" Column="5" />
+      <File FileName="Assets/Scripts/CDrone.cs" Line="137" Column="5" />
+      <File FileName="Assets/Scripts/MouseWorldPosition.cs" Line="518" Column="22" />
+      <File FileName="Assets/Scripts/AstarAIFollow.cs" Line="180" Column="5" />
+      <File FileName="Assets/Scripts/Tools/DroneRandomBehaviour.cs" Line="33" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
