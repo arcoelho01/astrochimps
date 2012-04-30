@@ -19,10 +19,11 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorAttack;	// used to indicate that we can attack this unit
 	public Texture2D cursorGetInside;	// used to indicate that we can enter this building or vehicle
 	public Texture2D cursorGetOut;	// used to indicate that we can exit this building or vehicle
+	public Texture2D cursorWalk;	// normal cursor to select where we want the unit to move
+	public Texture2D cursorWalkNotOk;	// Walk cursor, but indicating we can't walk here
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
-	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
 	bool bnPositionAlreadySelected = false;	// Is the object already selected?
 	bool bnNodeStatus = false;	// keep if current node at the mouse cursor is walkable or not
 	Vector3 mouseNow;	// Mouse position now
@@ -221,8 +222,28 @@ public class MouseWorldPosition : MonoBehaviour {
 			}
 
 			// 2 - Ok, we have an unit selected.
-			//CBaseEntity selectedObjectEntity = selectedObject.gameObject.GetComponent<CBaseEntity>();
+			CBaseEntity selectedObjectEntity = selectedObject.gameObject.GetComponent<CBaseEntity>();
 			
+			// 2.1 - if it's movable (a monkey or a drone, for instance), them we use mostly the 'walk' cursor
+			if(selectedObjectEntity.Movable) {
+
+				// we're pointing at the ground? Walk!
+				if(hit.transform.gameObject.layer == 8) {
+					
+					cursorCurrent = cursorWalk;
+
+					// Check if the node under the cursor is walkable or not
+					if(AstarPath.active != null) {
+
+						Node node = AstarPath.active.GetNearest(hit.point);
+						bnNodeStatus = node.walkable;
+						if(!bnNodeStatus) {
+
+							cursorCurrent = cursorWalkNotOk;
+						}
+					}
+				}
+			}
 			//if (selectedObjectEntity!= null)
 			
 			//switch(selectedBaseEntity.Type) {
@@ -232,7 +253,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			//}
 
 
-
+			/*/
 				// FIXME
 				switch(hit.transform.tag) {
 
@@ -313,6 +334,7 @@ public class MouseWorldPosition : MonoBehaviour {
 						projectorSelectTargetPosition.gameObject.GetComponent<CursorProjectorControl>().SetState(true, bnNodeStatus);
 					}
 				}
+				//*/
 			}
 	}
 
@@ -400,13 +422,13 @@ public class MouseWorldPosition : MonoBehaviour {
 
 						if(selectedBaseEntity.Movable) {
 
-							// Get the AI for this object
-							AIScript = selectedObject.GetComponent<AstarAIFollow>();
 							// Change the mouse state
 							MouseState = eMouseStates.Walking;
+							/*/ FIXME: for now we don't need the projector anymore
 							// Instantiate a cursor
 							projectorSelectTargetPosition = Instantiate(cursorObject, 
 									transform.position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+							//*/
 						}
 						else {
 
@@ -424,8 +446,6 @@ public class MouseWorldPosition : MonoBehaviour {
 					// Deselect the current selected object
 					selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
 					selectedObject = null;
-					// Clear the AI
-					AIScript = null;
 					// Change the mouse state
 					MouseState = eMouseStates.Hover;
 					RemoveCursor();
@@ -442,6 +462,10 @@ public class MouseWorldPosition : MonoBehaviour {
 	/// Behaviours: when a le unit is selected, select where it should walk to
 	/// </summary>
 	void CheckRightMouseClick() {
+
+		// Check if we're inside the game defined viewport
+		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
+			return;
 
 		// FIXME: add monkey select, I clicked in a building
 		if(selectedObject != null) {
@@ -489,24 +513,23 @@ public class MouseWorldPosition : MonoBehaviour {
 		}
 		
 		
-		// IF CLICK WASNT ON UNITS OR BUILDINGS
-		if(GetWhatIClicked().gameObject.GetComponent<CBaseEntity>() == null) {
-			// WALK THE MONKEY
-			if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
-				selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
-			} 
-			// WALK THE DRONE
-			else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
-				selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+		// Only walk if the place we clicked is allowed to walk
+		if(bnNodeStatus) {
+
+			// IF CLICK WASNT ON UNITS OR BUILDINGS
+			if(GetWhatIClicked().gameObject.GetComponent<CBaseEntity>() == null) {
+				// WALK THE MONKEY
+				if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+					selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
+				} 
+				// WALK THE DRONE
+				else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+					selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+				}
 			}
-					
-	
 		}
 
-		// Check if we're inside the game defined viewport
-		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
-			return;
-
+		/*/
 		// FIXME: guess we don't need this anymore. Maybe checking if selectedObject != null is enough
 		if(MouseState == eMouseStates.Walking) {
 
@@ -531,6 +554,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			RemoveCursor();
 		}
+		//*/
 	}
 
 	/// <summary>
