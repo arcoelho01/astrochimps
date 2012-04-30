@@ -3,3 +3,5 @@ Bin/*
 Library/*
 Temp/*
 *.swp
+*.csproj
+*.sln
