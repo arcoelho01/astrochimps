@@ -487,10 +487,13 @@ public class MouseWorldPosition : MonoBehaviour {
 
 							// After all that, check if the clicked object is a building, so the monkey can get inside
 							if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
+								
+								if (whatIClicked.gameObject.layer != 11){
 
-								CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
-								// Puts the monkey inside the building. Actually, the building get the monkey
-								selectedBuilding.PutAMonkeyInside(selectedObject);
+									CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
+									// Puts the monkey inside the building. Actually, the building get the monkey
+									selectedBuilding.PutAMonkeyInside(selectedObject);
+								}
 							}
 						}
 					}
