@@ -158,7 +158,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	/// </summary>
 	void MouseOver() {
 		
-		string infoPanelMsg;
+		string infoPanelMsg = "";
 
 		// Something is selected?
 		if(selectedObject != null) {
@@ -191,14 +191,19 @@ public class MouseWorldPosition : MonoBehaviour {
 			// Check the visibility
 			if(whatIAmPointing.gameObject.GetComponent<VisibilityControl>() != null) {
 
-				if(!whatIAmPointing.gameObject.GetComponent<VisibilityControl>().IsVisible())
+				if(!whatIAmPointing.gameObject.GetComponent<VisibilityControl>().IsVisible()) {
+
+					// DEBUG
+					Debug.Log("Pointing at " + whatIAmPointing + " but is not visible" );
 					return;
+				}
 			}
 
 			// 1 - check if we have something select or not
 			if(!selectedObject) {
 
-				infoPanelMsg = whatIAmPointing.name;
+				if(whatIAmPointing.gameObject.layer != MainScript.groundLayer)
+					infoPanelMsg = whatIAmPointing.name;
 
 				// The cursor is the regular one
 				cursorCurrent = cursorNormal;
@@ -228,7 +233,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			if(selectedObjectEntity.Movable) {
 
 				// we're pointing at the ground? Walk!
-				if(hit.transform.gameObject.layer == 8) {
+				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer) {
 					
 					cursorCurrent = cursorWalk;
 
@@ -242,8 +247,49 @@ public class MouseWorldPosition : MonoBehaviour {
 							cursorCurrent = cursorWalkNotOk;
 						}
 					}
+
+					// Ok, cursor set, get out
+					return;
+				}
+
+				// are we pointing at an enemy?
+				if(whatIAmPointing.gameObject.layer == MainScript.enemyLayer) {
+
+					// TODO AND FIXME: it's not that easy. Must check first if the monkey or drone can actually attack
+					// what we are pointing
+					cursorCurrent = cursorAttack;
+					return;
+				}
+
+				// Not pointing at the ground and not pointing at an enemy.
+				// Is a monkey selected?
+				if(selectedObject.gameObject.tag == "Monkey") {
+
+					// are we pointing at one of ours buildings?
+					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer) {
+
+						// Is this building clear?
+						if(!whatIAmPointing.gameObject.GetComponent<CBuilding>().TheresAMonkeyInside()) {
+
+							// TODO: actually, only the engineer monkey can get inside a building
+							cursorCurrent = cursorGetInside;
+						}
+						else { // Already have a monkey
+							
+							cursorCurrent = cursorNormal;
+						}
+					}
+				}
+				else { // not a monkey
+
 				}
 			}
+			else {
+
+				// Object is not movable: building, resource, etc.
+				cursorCurrent = cursorNormal;
+			}
+
 			//if (selectedObjectEntity!= null)
 			
 			//switch(selectedBaseEntity.Type) {

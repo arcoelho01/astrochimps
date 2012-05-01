@@ -7,9 +7,6 @@ public class VisibilityControl : MonoBehaviour {
 	private bool visible;
 	public bool keepVisible;
 	public float sight_range;
-	private int alliedMask = 10;
-	private int enemyMask = 11;
-	private int neutralMask = 12;
 	
 	// Use this for initialization
 	void Start () {
@@ -35,7 +32,7 @@ public class VisibilityControl : MonoBehaviour {
 			keepVisible = false;
 		}
 	
-		if (gameObject.layer == alliedMask){
+		if (gameObject.layer == MainScript.alliedLayer){
 			
 			/*
 			// DEBUG	
@@ -51,6 +48,7 @@ public class VisibilityControl : MonoBehaviour {
 
 				Transform mesh = this.transform.FindChild("Mesh");
 				mesh.gameObject.SetActiveRecursively(true);
+				visible = true;
 			}
 			else {
 
@@ -60,9 +58,10 @@ public class VisibilityControl : MonoBehaviour {
 				//*/
 
 				renderer.enabled = true;
+				visible = true;
 			}
 		}
-		else if (gameObject.layer == enemyMask ) {
+		else if (gameObject.layer == MainScript.enemyLayer ) {
 			
 			/*
 			// DEBUG	
@@ -77,7 +76,7 @@ public class VisibilityControl : MonoBehaviour {
 			else
 				renderer.enabled = false;
 		}
-		else if (gameObject.layer == neutralMask) {
+		else if (gameObject.layer == MainScript.neutralLayer) {
 
 				renderer.enabled = false;
 		}
@@ -86,7 +85,7 @@ public class VisibilityControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-		if (gameObject.layer == alliedMask) {
+		if (gameObject.layer == MainScript.alliedLayer) {
 
 			/*
 			// DEBUG	
@@ -149,7 +148,7 @@ public class VisibilityControl : MonoBehaviour {
 		foreach (GameObject go in gos) {
 			
 			// IF Allied dont test
-			if (gameObject.layer == alliedMask) {
+			if (gameObject.layer == MainScript.alliedLayer) {
 
 				/*
 				// DEBUG	
