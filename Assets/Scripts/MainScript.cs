@@ -18,6 +18,7 @@ public class MainScript : MonoBehaviour {
 	public static int alliedLayer = 10;	
 	public static int enemyLayer = 11;	
 	public static int neutralLayer = 12;	
+	public static int minimapLayer = 13;	
 
 	// Use this for initialization
 	void Start () {
