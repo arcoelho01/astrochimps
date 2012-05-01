@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-enum modo{PATRULHA,ALERTA,DETECTA};
+
+enum modo{PATROL,ALERT,DETECTA};
 
 public class DroneVigilancia : MonoBehaviour {
 	
@@ -19,7 +20,7 @@ public class DroneVigilancia : MonoBehaviour {
   private Collider[] scannedColliders;
   private int enemyMask = 1 << 11;
 
-  private modo status = modo.PATRULHA;
+  private modo status = modo.PATROL;
   
   //Field of View
   private float detectionDistance = 14.0f;
@@ -31,12 +32,21 @@ public class DroneVigilancia : MonoBehaviour {
   public GameObject detectAlert;
   private GameObject existingAlert;
 
+  private CDrone cdroneScript;
+
+  void Awake () {
+
+    cdroneScript = this.GetComponent<CDrone>();
+    myTransform = this.transform;
+    enemyAround = false;
+    scannedColliders = new Collider[0];
+
+  }
+
 	// Use this for initialization
 	void Start () {
 		
-		myTransform = this.transform;
-		enemyAround = false;
-    scannedColliders = new Collider[0];
+
 		pulseTime = 1.0f;
 	
 	}
@@ -44,10 +54,16 @@ public class DroneVigilancia : MonoBehaviour {
 	// Overlap sphere pulse
 	void Update () {
 
+  if(cdroneScript == null)
+      Debug.LogError("My script is empty go back");
+
+  if(cdroneScript.isStunned())
+      return;
+
     //Debug.DrawRay(myTransform.position,myTransform.forward * 10);
-  if(status == modo.PATRULHA)
+  if(status == modo.PATROL)
       Patrulha();
-    else if(status == modo.ALERTA)
+    else if(status == modo.ALERT)
             Alerta();
          else if(status == modo.DETECTA)
                  Detecta();
@@ -91,8 +107,8 @@ public class DroneVigilancia : MonoBehaviour {
           status = modo.DETECTA;
           existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
        }else if(Vector3.Distance(myTransform.position,target.position) < detectionDistance && Vector3.Angle(targetLine,myTransform.forward) < alertRadius){
-          Debug.Log("Vigilancia: ALERTA");
-          status = modo.ALERTA;
+          Debug.Log("Vigilancia: ALERT");
+          status = modo.ALERT;
        }
 
     }else{
@@ -117,7 +133,7 @@ void Alerta () {
         status = modo.DETECTA;
         existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
     }
-  }else status = modo.PATRULHA;
+  }else status = modo.PATROL;
 
 }
 
@@ -127,7 +143,7 @@ void Alerta () {
     pulseTime -= Time.deltaTime;
 
     if(pulseTime < 0){
-    status = modo.PATRULHA;
+    status = modo.PATROL;
     GameObject.Destroy(existingAlert);
     }
   }
