@@ -148,8 +148,17 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		if(bnShowMouseCursor) {
 
-			GUI.DrawTexture(new Rect(mouseNow.x - cursorWidth/2, Screen.height - mouseNow.y - cursorHeight/2, 32, 32), 
-					cursorCurrent);
+			if(cursorCurrent == cursorNormal) {
+
+				// Is a pointer, so we draw it at the start of the texture (left-top)
+				GUI.DrawTexture(new Rect(mouseNow.x, Screen.height - mouseNow.y, 32, 32), cursorCurrent);
+			}
+			else {
+
+				// It's a target type of cursor, so the pointer is in the center of the texture
+				GUI.DrawTexture(new Rect(mouseNow.x - cursorWidth/2, Screen.height - mouseNow.y - cursorHeight/2, 
+							32, 32), cursorCurrent);
+			}
 		}
 	}
 
@@ -192,9 +201,6 @@ public class MouseWorldPosition : MonoBehaviour {
 			if(whatIAmPointing.gameObject.GetComponent<VisibilityControl>() != null) {
 
 				if(!whatIAmPointing.gameObject.GetComponent<VisibilityControl>().IsVisible()) {
-
-					// DEBUG
-					Debug.Log("Pointing at " + whatIAmPointing + " but is not visible" );
 					return;
 				}
 			}
@@ -534,11 +540,14 @@ public class MouseWorldPosition : MonoBehaviour {
 							// After all that, check if the clicked object is a building, so the monkey can get inside
 							if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
 								
-								if (whatIClicked.gameObject.layer != 11){
+								if (whatIClicked.gameObject.layer != MainScript.enemyLayer){
 
 									CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
 									// Puts the monkey inside the building. Actually, the building get the monkey
 									selectedBuilding.PutAMonkeyInside(selectedObject);
+									// Deselect the monkey
+									selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
+									selectedObject = null;
 								}
 							}
 						}
@@ -546,7 +555,7 @@ public class MouseWorldPosition : MonoBehaviour {
 					// ITS A DRONE
 					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Drone) {
 						// ITS AN ENEMY
-						if (whatIClicked.gameObject.layer == 11){
+						if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
 							CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 							// MONKEY ATTACKs DRONE
 							if (cMonkeyScript != null){
