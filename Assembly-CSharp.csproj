@@ -90,7 +90,6 @@
      <Compile Include="Assets\Scripts\CMonkey.cs" />
      <Compile Include="Assets\Scripts\CPlayer.cs" />
      <Compile Include="Assets\Scripts\CResource.cs" />
-     <Compile Include="Assets\Scripts\CursorProjectorControl.cs" />
      <Compile Include="Assets\Scripts\DefinicaoEstrutura.cs" />
      <Compile Include="Assets\Scripts\DroneVigilancia.cs" />
      <Compile Include="Assets\Scripts\EventosMenu.cs" />

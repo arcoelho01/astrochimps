@@ -21,6 +21,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorGetOut;	// used to indicate that we can exit this building or vehicle
 	public Texture2D cursorWalk;	// normal cursor to select where we want the unit to move
 	public Texture2D cursorWalkNotOk;	// Walk cursor, but indicating we can't walk here
+	public Texture2D cursorBuild;	// cursor to show that we can build something
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
@@ -224,6 +225,7 @@ public class MouseWorldPosition : MonoBehaviour {
 					if(resourceExtractor.CanWeBuildInThisResourceSite()) {
 
 						infoPanelMsg += " You can build a resource extractor here";
+						cursorCurrent = cursorBuild;
 					}
 				}
 
@@ -272,7 +274,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				if(selectedObject.gameObject.tag == "Monkey") {
 
 					// are we pointing at one of ours buildings?
-					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer) {
+					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer)	{
 
 						// Is this building clear?
 						if(!whatIAmPointing.gameObject.GetComponent<CBuilding>().TheresAMonkeyInside()) {
@@ -295,99 +297,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				// Object is not movable: building, resource, etc.
 				cursorCurrent = cursorNormal;
 			}
-
-			//if (selectedObjectEntity!= null)
-			
-			//switch(selectedBaseEntity.Type) {
-
-			//	case CBaseEntity.eObjType.Monkey:
-			//		break;
-			//}
-
-
-			/*/
-				// FIXME
-				switch(hit.transform.tag) {
-
-					case "Monkey":
-						infoPanel.SetInfoLabel(hit.transform.name);
-						break;
-					case "Drone":
-						infoPanel.SetInfoLabel(hit.transform.name);
-						break;
-					case "Resource":
-						{
-							infoPanelMsg = hit.transform.name;
-							if(!selectedObject) {
-
-								infoPanelMsg += " You can build a resource extractor here";
-							}
-
-							// FIXME: this message is showing even when an extractor is already built
-							infoPanel.SetInfoLabel(infoPanelMsg);
-						}
-						break;
-					case "Building":
-						{
-							infoPanel.SetInfoLabel(hit.transform.name);
-							// If we have a monkey selected, when we point a building we can put the monkey inside it
-							if(selectedObject != null) {
-
-								if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
-
-									// TODO: set a flag here to turn the things easier...
-
-									infoPanel.SetInfoLabel("Click to put the monkey inside this building, enhancing it.");
-									// Changes the mouse cursor
-									cursorCurrent = cursorGetInside;
-								}
-								else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type 
-										== CBaseEntity.eObjType.Building) {
-									if(selectedObject.gameObject.GetComponent<CBuilding>().TheresAMonkeyInside()) {
-
-										// if we selected a building and there's a monkey inside, show the cursor that allow to 
-										// remove the monkey
-										cursorCurrent = cursorGetOut;
-									}
-								}
-							}
-						}
-						break;
-					default:
-						{
-							infoPanel.ClearInfoLabel();
-							if(selectedObject != null) {
-
-								if(selectedObject.gameObject.GetComponent<CBaseEntity>().Movable) {
-
-									infoPanel.SetInfoLabel("Right click to choose the destination");
-								}
-							}
-						}
-						break;
-				}
-
-				if(MouseState == eMouseStates.SelectingPosition || MouseState == eMouseStates.Walking) {
-
-					if(projectorSelectTargetPosition != null) {
-
-						projectorSelectTargetPosition.transform.position = hit.point;
-					}
-				}
-
-				// Check if the node under the cursor is walkable or not
-				if(AstarPath.active != null) {
-
-					Node node = AstarPath.active.GetNearest(hit.point);
-					bnNodeStatus = node.walkable;
-
-					if(projectorSelectTargetPosition != null) {
-
-						projectorSelectTargetPosition.gameObject.GetComponent<CursorProjectorControl>().SetState(true, bnNodeStatus);
-					}
-				}
-				//*/
-			}
+		}
 	}
 
 	/// <summary>
@@ -410,6 +320,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Instantiate a cursor
 		projectorSelectTargetPosition = Instantiate(cursorObject, 
 				transform.position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+
 	}
 
 	/// <summary>
@@ -476,11 +387,6 @@ public class MouseWorldPosition : MonoBehaviour {
 
 							// Change the mouse state
 							MouseState = eMouseStates.Walking;
-							/*/ FIXME: for now we don't need the projector anymore
-							// Instantiate a cursor
-							projectorSelectTargetPosition = Instantiate(cursorObject, 
-									transform.position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
-							//*/
 						}
 						else {
 
@@ -519,13 +425,13 @@ public class MouseWorldPosition : MonoBehaviour {
 		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
 			return;
 
+		// Checks if we clicked in an unit
+		Transform whatIClicked = GetWhatIClicked();
+
 		// FIXME: add monkey select, I clicked in a building
 		if(selectedObject != null) {
 
 			if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
-
-				// Checks if we clicked in an unit
-				Transform whatIClicked = GetWhatIClicked();
 
 				// Get the basic info on the unit
 				selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
@@ -561,7 +467,6 @@ public class MouseWorldPosition : MonoBehaviour {
 							if (cMonkeyScript != null){
 								cMonkeyScript.Attack(whatIClicked);
 							}
-					
 						}
 					}
 					
@@ -575,14 +480,20 @@ public class MouseWorldPosition : MonoBehaviour {
 		if(bnNodeStatus) {
 
 			// IF CLICK WASNT ON UNITS OR BUILDINGS
-			if(GetWhatIClicked().gameObject.GetComponent<CBaseEntity>() == null) {
+			if(whatIClicked.gameObject.GetComponent<CBaseEntity>() == null) {
 				// WALK THE MONKEY
 				if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
 					selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
+					
+					// Show where we clicked in the ground
+					StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
 				} 
 				// WALK THE DRONE
 				else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
 					selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+
+					// Show where we clicked in the ground
+					StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
 				}
 			}
 		}
@@ -626,5 +537,24 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			Destroy(projectorSelectTargetPosition.gameObject);
 		}
+	}
+
+	/// <summary>
+	/// When the player select a position to walk to, we show a cursor in the ground for visual aid
+	/// </summary>
+	/// <param name="position"> Position where to show the cursor (usually where we clicked)</param>
+	/// <param name="timeToShow"> A float with the amount of time to show the projector in the ground</param>
+	IEnumerator ShowSelectedPositionWithAProjector(Vector3 position, float timeToShow) {
+
+		// Instantiate a cursor
+		if(projectorSelectTargetPosition == null) {
+			projectorSelectTargetPosition = Instantiate(cursorObject, position, 
+					Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+		}
+
+		yield return new WaitForSeconds(timeToShow);
+
+		if(projectorSelectTargetPosition != null)
+			Destroy(projectorSelectTargetPosition.gameObject);
 	}
 }
