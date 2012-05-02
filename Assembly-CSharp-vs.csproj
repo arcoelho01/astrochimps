@@ -97,6 +97,7 @@
      <Compile Include="Assets\Scripts\GUI\GUIBottomMenu.cs" />
      <Compile Include="Assets\Scripts\GerenciadorSlots.cs" />
      <Compile Include="Assets\Scripts\MainScript.cs" />
+     <Compile Include="Assets\Scripts\Minimap.cs" />
      <Compile Include="Assets\Scripts\MouseWorldPosition.cs" />
      <Compile Include="Assets\Scripts\RTSCam.cs" />
      <Compile Include="Assets\Scripts\Regiao.cs" />

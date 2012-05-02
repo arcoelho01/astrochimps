@@ -24,8 +24,8 @@ public class RTSCam : MonoBehaviour {
 	Vector3 camPanDirection = Vector3.zero;
 	Vector3 worldLeftBoundary;
 	Vector3 worldTopBoundary; 
-	Vector3 screenHAxis;
-	Vector3 screenVAxis;
+	Vector3 screenHAxis;	// Horizontal axis on the screen
+	Vector3 screenVAxis;	// Vertical axis on the screen
 	Quaternion camDefaultRotation;
 
 	// Define min and max angles for rotation, so the camera doesn't cross the ground when rotating
@@ -324,6 +324,17 @@ public class RTSCam : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Returns the Vertical axis: the axis from the center of the screen to the top of it
+	/// </summary>
+	public Vector3 GetCameraVerticalAxis() {
+
+		return screenVAxis;
+	}
+
+	/// <summary>
+	/// Draws helpers on the screen
+	/// </summary>
 	void OnDrawGizmos() {
 
 		/*

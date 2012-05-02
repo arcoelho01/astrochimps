@@ -13,12 +13,15 @@ public class MainScript : MonoBehaviour {
 	public Transform playerObject;	// Pointer to the player object
 	public CPlayer player;
 
+	public bool isMinimapEnabled = true;	// Starts with the minimap enabled
+
 	// Index of all layers
 	public static int groundLayer = 8;
 	public static int alliedLayer = 10;	
 	public static int enemyLayer = 11;	
 	public static int neutralLayer = 12;	
 	public static int minimapLayer = 13;	
+	public static int minimapGroundLayer = 14;	
 
 	// Use this for initialization
 	void Start () {
