@@ -26,6 +26,7 @@ public class RTSCam : MonoBehaviour {
 	Vector3 worldTopBoundary; 
 	Vector3 screenHAxis;	// Horizontal axis on the screen
 	Vector3 screenVAxis;	// Vertical axis on the screen
+	Vector3 screenCenter;	// Center of the screen on the world
 	Quaternion camDefaultRotation;
 
 	// Define min and max angles for rotation, so the camera doesn't cross the ground when rotating
@@ -53,6 +54,8 @@ public class RTSCam : MonoBehaviour {
 	public float camAngleDefault = 45.0f;
 	public float cameraDistance;
 
+	public Transform micListener = null;
+
 	// Defines the border of the screen. When the mouse is within this amount of pixels from the border, pan
 	// the camera
 	public int screenPanEdge = 10;
@@ -78,6 +81,12 @@ public class RTSCam : MonoBehaviour {
 
 			// DEBUG
 			Debug.LogError("Cannot find the input script");
+		}
+
+		if(micListener == null) {
+
+			// DEBUG
+			Debug.LogError("Cannot find the 'microphone' object. Set it in the inspector.");
 		}
 	}	
 
@@ -164,6 +173,9 @@ public class RTSCam : MonoBehaviour {
 		// Applies the new settings
 		transform.rotation = rotation; 
 		transform.position = position;
+
+		//
+		RepositionMicListener();
 	}
 
 	/// <summary>
@@ -333,6 +345,41 @@ public class RTSCam : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Cast a ray through the camera to check where is the center of the screen in world coordinates
+	/// </summary>
+	/// <returns> A Vector3 with the world position pointed by the center of the screen </returns>
+	public Vector3 GetCameraCenterOnWorld() {
+
+		RaycastHit hit;
+
+		Ray ray = Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth*0.5f,Camera.main.pixelHeight*0.5f,0));
+		
+		if(Physics.Raycast(ray.origin, ray.direction, out hit, Mathf.Infinity, 
+					1 << MainScript.minimapGroundLayer)) {
+
+			return hit.point;
+		}
+
+		return Vector3.zero;
+	}
+
+	/// <summary>
+	/// Reposition the 'microphone' to the center of the screen, so we can use 3D sound in the action
+	/// </summary>
+	void RepositionMicListener() {
+
+		Vector3 position = GetCameraCenterOnWorld();
+
+		micListener.transform.position = position;
+	}
+
+	/*
+	 * ===========================================================================================================
+	 * HELPERS
+	 * ===========================================================================================================
+	 */
+
+	/// <summary>
 	/// Draws helpers on the screen
 	/// </summary>
 	void OnDrawGizmos() {
@@ -342,6 +389,9 @@ public class RTSCam : MonoBehaviour {
 
 		Gizmos.DrawRay(screenWorldCenter, screenHAxis * 100);
 		Gizmos.DrawRay(screenWorldCenter, screenVAxis * 100);
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawWireSphere(micListener.transform.position, 2.0f);
 		//*/
 	}
+
 }

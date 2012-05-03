@@ -473,27 +473,26 @@ public class MouseWorldPosition : MonoBehaviour {
 				}
 
 			}
-		}
-		
-		
-		// Only walk if the place we clicked is allowed to walk
-		if(bnNodeStatus) {
 
-			// IF CLICK WASNT ON UNITS OR BUILDINGS
-			if(whatIClicked.gameObject.GetComponent<CBaseEntity>() == null) {
-				// WALK THE MONKEY
-				if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
-					selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
-					
-					// Show where we clicked in the ground
-					StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
-				} 
-				// WALK THE DRONE
-				else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
-					selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+			// Only walk if the place we clicked is allowed to walk
+			if(bnNodeStatus) {
 
-					// Show where we clicked in the ground
-					StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
+				// IF CLICK WASNT ON UNITS OR BUILDINGS
+				if(whatIClicked.gameObject.GetComponent<CBaseEntity>() == null) {
+					// WALK THE MONKEY
+					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+						selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
+
+						// Show where we clicked in the ground
+						StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
+					} 
+					// WALK THE DRONE
+					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+						selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+
+						// Show where we clicked in the ground
+						StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
+					}
 				}
 			}
 		}

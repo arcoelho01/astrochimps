@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Untitled Gantt Project" company="" webLink="http://" view-date="2012-04-27" view-index="0" gantt-divider-location="521" resource-divider-location="614" version="2.0">
+<project name="Untitled Gantt Project" company="" webLink="http://" view-date="2012-05-07" view-index="0" gantt-divider-location="521" resource-divider-location="614" version="2.0">
     <description/>
-    <view zooming-state="default:3" id="gantt-chart"/>
+    <view zooming-state="default:7" id="gantt-chart"/>
     <view id="resource-table">
         <field id="0" name="Nome" width="100" order="0"/>
     </view>
@@ -31,12 +31,12 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="474" name="Milestones" color="#8cb6ce" meeting="false" start="2012-06-08" duration="36" complete="0" expand="false">
+        <task id="474" name="Milestones" color="#8cb6ce" meeting="false" start="2012-06-08" duration="36" complete="0" expand="true">
             <task id="475" name="Vertical Slice" color="#8cb6ce" meeting="false" start="2012-06-08" duration="1" complete="0" expand="true"/>
             <task id="477" name="Gold" color="#8cb6ce" meeting="false" start="2012-07-13" duration="1" complete="0" expand="true"/>
         </task>
-        <task id="4" name="Macacos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="8" complete="2" expand="false">
-            <task id="7" name="Astronauta" color="#8cb6ce" meeting="false" start="2012-05-05" duration="8" complete="4" expand="false">
+        <task id="4" name="Macacos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="8" complete="2" expand="true">
+            <task id="7" name="Astronauta" color="#8cb6ce" meeting="false" start="2012-05-05" duration="8" complete="4" expand="true">
                 <task id="32" name="Concept Macaco Astronauta" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="84" expand="true">
                     <depend id="33" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -83,7 +83,7 @@
                     <task id="192" name="Gravar efeito sonoro ao ser atacado" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false"/>
                 </task>
             </task>
-            <task id="8" name="Sabotador" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="8" name="Sabotador" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="43" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="42" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -95,7 +95,7 @@
                 </task>
                 <task id="72" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
             </task>
-            <task id="10" name="Cientista" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="10" name="Cientista" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="37" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="36" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -107,7 +107,7 @@
                 </task>
                 <task id="70" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
             </task>
-            <task id="9" name="Engenheiro" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="9" name="Engenheiro" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="40" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="39" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -120,8 +120,8 @@
                 <task id="71" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
             </task>
         </task>
-        <task id="5" name="Estruturas" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
-            <task id="12" name="Centro de Comando" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+        <task id="5" name="Estruturas" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
+            <task id="12" name="Centro de Comando" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="46" name="Concept Centro de Comando" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="45" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -133,7 +133,7 @@
                 </task>
                 <task id="73" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
             </task>
-            <task id="24" name="Central de Segurança" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="24" name="Central de Segurança" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="50" name="Concept Central de Segurança" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="49" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -145,7 +145,7 @@
                 </task>
                 <task id="74" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
             </task>
-            <task id="11" name="Extrator de Recursos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="11" name="Extrator de Recursos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="53" name="Concept Extrator de Recursos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="52" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -158,14 +158,14 @@
                     </task>
                 </task>
                 <task id="75" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
-                <task id="206" name="Desenvolvimento" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+                <task id="206" name="Desenvolvimento" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                     <task id="157" name="Implementar: aceitar somente a entrada do macaco engenheiro" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="true">
                         <task id="158" name="Implementar aumento de velocidade de extração quando o macaco estiver" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
                     </task>
                     <task id="207" name="Implementar a extração de recursos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 </task>
             </task>
-            <task id="13" name="Fábrica de Drones" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="13" name="Fábrica de Drones" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="56" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="55" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -186,7 +186,7 @@
                     </task>
                 </task>
             </task>
-            <task id="18" name="Fazenda" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="18" name="Fazenda" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="59" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                     <depend id="58" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -202,7 +202,7 @@
                     <task id="212" name="Implementar o consumo de recursos por parte dos macacos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 </task>
             </task>
-            <task id="22" name="Garagem (EM DEBATE)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="22" name="Garagem (EM DEBATE)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="62" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="61" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -214,7 +214,7 @@
                 </task>
                 <task id="78" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
             </task>
-            <task id="23" name="Laboratório de Pesquisa" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="23" name="Laboratório de Pesquisa" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="65" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="64" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -226,7 +226,7 @@
                 </task>
                 <task id="79" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
             </task>
-            <task id="25" name="Plataforma de Lançamento" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="25" name="Plataforma de Lançamento" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="68" name="Concept" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
                     <depend id="67" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -239,14 +239,14 @@
                 <task id="80" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="false"/>
                 <task id="173" name="Implementar menu de contexto para lançamento quando a plataforma estiver pronta" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="true"/>
             </task>
-            <task id="164" name="Tubulações" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+            <task id="164" name="Tubulações" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                 <task id="165" name="Implementar o corte de envio de recursos no estado sabotado" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="166" name="Implementar ligação entre prédios" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="167" name="animação: canos sendo construídos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             </task>
-            <task id="139" name="Comum" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="139" name="Comum" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="140" name="Implementar verificação de conexão entre estruturas" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
-                <task id="141" name="Implementar verificação de estado funcional (sabotado ou não)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+                <task id="141" name="Implementar verificação de estado funcional (sabotado ou não)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                     <task id="142" name="Implementar o efeito da sabotagem (corte de fornecimento/etc)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 </task>
                 <task id="143" name="GUI: mostrar custo de construcao" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
@@ -255,7 +255,7 @@
                 <task id="145" name="Implementar níveis de evolução (EM DEBATE)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="163" name="Animação: mostrar o prédio ser construído (tapumes e sons)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             </task>
-            <task id="174" name="Slots de Construção" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="false">
+            <task id="174" name="Slots de Construção" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
                 <task id="175" name="Modelagem" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                     <depend id="176" type="2" difference="0" hardness="Strong"/>
                 </task>
@@ -266,27 +266,27 @@
                     <depend id="178" type="2" difference="0" hardness="Strong"/>
                 </task>
                 <task id="178" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-08" duration="1" complete="0" expand="true"/>
-                <task id="451" name="Desenvolvimento" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+                <task id="451" name="Desenvolvimento" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                     <task id="179" name="Implementar lógica de construção de prédios" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                     <task id="180" name="Implementar lógica de encadeamento de construções (habilitar slots aos poucos)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 </task>
             </task>
         </task>
-        <task id="6" name="Drones" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
-            <task id="104" name="Comum" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+        <task id="6" name="Drones" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
+            <task id="104" name="Comum" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                 <task id="105" name="Possibilidade de reciclagem" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="106" name="Possibilidade de ser desabilitado pelo oponente" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="107" name="Possibilidade de ser forçado a trocar de time" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="170" name="Animar a desativação/desabilitação" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="171" name="Animar a reativação/habilitação" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             </task>
-            <task id="16" name="Caçador/Captura" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+            <task id="16" name="Caçador/Captura" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                 <task id="130" name="Implementar captura de macaco" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="131" name="Implementar atordoar drones sabotadores (somente)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="133" name="Implementar responder ao chamado do drone vigia (EM DEBATE)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="132" name="Propriedade: ser mais rápido do que macacos e drones de sabotagem" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             </task>
-            <task id="14" name="Vigilância" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+            <task id="14" name="Vigilância" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                 <task id="108" name="Implementar visão para revelar sabotadores exclusivamente" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="109" name="Implementar rotas de patrulha" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="111" name="Implementar feedback ao encontrar um inimigo" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
@@ -295,7 +295,7 @@
                 <task id="112" name="Efeito sonoro: feedback ao encontrar inimigo" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 <task id="124" name="Menu de contexto: opções de rota de patrulha" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             </task>
-            <task id="15" name="Sabotador" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+            <task id="15" name="Sabotador" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                 <task id="125" name="Implementar sabotagem de unidades (drones e construções)" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                     <task id="129" name="Implementar timer para sabotagem" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
                 </task>
@@ -305,7 +305,7 @@
             </task>
             <task id="81" name="Importação na Unity" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false"/>
         </task>
-        <task id="135" name="Peças do Foguete" color="#8cb6ce" meeting="false" start="2012-05-05" duration="3" complete="0" expand="false">
+        <task id="135" name="Peças do Foguete" color="#8cb6ce" meeting="false" start="2012-05-05" duration="4" complete="0" expand="true">
             <task id="137" name="Modelagem das peças" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                 <depend id="138" type="2" difference="0" hardness="Strong"/>
             </task>
@@ -319,12 +319,12 @@
             <task id="168" name="Audio: som do foguete em lançamento" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
         </task>
         <task id="136" name="Recursos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
-        <task id="27" name="Interface" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+        <task id="27" name="Interface" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
             <task id="28" name="Menus" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             <task id="31" name="Fundos" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
         </task>
-        <task id="29" name="Audio" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
-            <task id="115" name="Efeitos sonoros" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false">
+        <task id="29" name="Audio" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
+            <task id="115" name="Efeitos sonoros" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
                 <task id="116" name="Ser selecionado" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false"/>
                 <task id="117" name="Receber ordem" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false"/>
                 <task id="118" name="Atacar" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="false"/>
@@ -336,7 +336,7 @@
                 <task id="123" name="Musica de fundo no menu" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             </task>
         </task>
-        <task id="98" name="Level Design" color="#8cb6ce" meeting="false" start="2012-05-05" duration="2" complete="0" expand="false">
+        <task id="98" name="Level Design" color="#8cb6ce" meeting="false" start="2012-05-05" duration="2" complete="0" expand="true">
             <task id="99" name="Texturas cenário" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             <task id="100" name="Texturas de fundo" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true"/>
             <task id="101" name="Modelagem do terreno" color="#8cb6ce" meeting="false" start="2012-05-05" duration="1" complete="0" expand="true">
@@ -375,7 +375,7 @@
         <displaycolumn property-id="tpd10" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd1" order="-1" width="75" visible="false"/>
         <displaycolumn property-id="tpd0" order="-1" width="75" visible="false"/>
-        <displaycolumn property-id="tpd3" order="0" width="515" visible="true"/>
+        <displaycolumn property-id="tpd3" order="0" width="502" visible="true"/>
     </taskdisplaycolumns>
     <previous/>
     <roles roleset-name="Default"/>
