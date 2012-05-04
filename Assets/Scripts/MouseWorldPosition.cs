@@ -12,7 +12,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	// For the selected object
 	public Transform selectedObject = null;	// Selected object itself (any)
 	public Transform cursorObject = null;
-	public enum eMouseStates { Hover, Walking, SelectingPosition }; 
+	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, Targeting }; 
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -216,6 +216,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 				// The cursor is the regular one
 				cursorCurrent = cursorNormal;
+				MouseState = eMouseStates.Hover;
 				// And we show it
 				bnShowMouseCursor = true;
 
@@ -246,6 +247,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer) {
 					
 					cursorCurrent = cursorWalk;
+					MouseState = eMouseStates.CanWalk;
 
 					// Check if the node under the cursor is walkable or not
 					if(AstarPath.active != null) {
@@ -255,6 +257,7 @@ public class MouseWorldPosition : MonoBehaviour {
 						if(!bnNodeStatus) {
 
 							cursorCurrent = cursorWalkNotOk;
+							MouseState = eMouseStates.CannotWalk;
 						}
 					}
 
@@ -268,6 +271,7 @@ public class MouseWorldPosition : MonoBehaviour {
 					// TODO AND FIXME: it's not that easy. Must check first if the monkey or drone can actually attack
 					// what we are pointing
 					cursorCurrent = cursorAttack;
+					MouseState = eMouseStates.Targeting;
 					return;
 				}
 
@@ -276,17 +280,20 @@ public class MouseWorldPosition : MonoBehaviour {
 				if(selectedObject.gameObject.tag == "Monkey") {
 
 					// are we pointing at one of ours buildings?
-					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer)	{
+					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer &&
+							selectedObjectEntity.gameObject.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Engineer)	{
 
 						// Is this building clear?
 						if(!whatIAmPointing.gameObject.GetComponent<CBuilding>().TheresAMonkeyInside()) {
 
 							// TODO: actually, only the engineer monkey can get inside a building
 							cursorCurrent = cursorGetInside;
+							MouseState = eMouseStates.MonkeyCanEnterBuilding;
 						}
 						else { // Already have a monkey
 							
 							cursorCurrent = cursorNormal;
+							MouseState = eMouseStates.Hover;
 						}
 					}
 				}
@@ -298,6 +305,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 				// Object is not movable: building, resource, etc.
 				cursorCurrent = cursorNormal;
+				MouseState = eMouseStates.Hover;
 			}
 		}
 	}
@@ -389,7 +397,7 @@ public class MouseWorldPosition : MonoBehaviour {
 						if(selectedBaseEntity.Movable) {
 
 							// Change the mouse state
-							MouseState = eMouseStates.Walking;
+							MouseState = eMouseStates.CanWalk;
 						}
 						else {
 
@@ -430,6 +438,9 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		// Checks if we clicked in an unit
 		Transform whatIClicked = GetWhatIClicked();
+
+		// DEBUG
+		Debug.Log("MouseWorldPosition: mouse status during GetWhatIClicked " + MouseState);
 
 		// FIXME: add monkey select, I clicked in a building
 		if(selectedObject != null) {

@@ -9,7 +9,7 @@ public class CMonkey : CBaseEntity {
 	// PRIVATE
 	
 	// PUBLIC
-	public enum eMonkeyType { Astropilot, Cientist, Engineer, Saboteur, NONE }; // Monkeys types
+	public enum eMonkeyType { Astronaut, Cientist, Engineer, Saboteur, NONE }; // Monkeys types
 	
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
@@ -30,6 +30,7 @@ public class CMonkey : CBaseEntity {
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
 	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
 	private float stunnedTimeCounter;
+	public eMonkeyType monkeyClass; // Which class this monkey belongs
 
 	/*
 	 * ===========================================================================================================
