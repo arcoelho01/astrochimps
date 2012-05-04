@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MainScript : MonoBehaviour {
 
@@ -23,6 +24,18 @@ public class MainScript : MonoBehaviour {
 	public static int minimapLayer = 13;	
 	public static int minimapGroundLayer = 14;	
 
+	// List to hold all games units and resources
+	List<Transform> alliedMonkeys = new List<Transform>();
+	List<Transform> alliedDrones = new List<Transform>();
+	List<Transform> alliedBuildings = new List<Transform>();
+
+	List<Transform> opponentMonkeys = new List<Transform>();
+	List<Transform> opponentDrones = new List<Transform>();
+	List<Transform> opponentBuildings = new List<Transform>();
+
+	List<Transform> neutralResources = new List<Transform>();
+	List<Transform> neutralRocketParts = new List<Transform>();
+
 	// Use this for initialization
 	void Start () {
 	
@@ -39,6 +52,9 @@ public class MainScript : MonoBehaviour {
 			// DEBUG
 			Debug.LogError("Player object not found!");
 		}
+
+		// FIXME: added only for now
+		GetCurrentUnitsInScene();
 	}
 	
 	// Update is called once per frame
@@ -62,5 +78,77 @@ public class MainScript : MonoBehaviour {
 			as Transform;
 
 		return extractorClone;
+	}
+
+	/// <summary>
+	/// Get all units in the scene, filters them and add them to the corresponding list
+	/// </summary>
+	void GetCurrentUnitsInScene() {
+
+		// Monkeys
+		GameObject[] goMonkeys;
+
+		goMonkeys = GameObject.FindGameObjectsWithTag("Monkey");
+		foreach(GameObject oneMonkey in goMonkeys) {
+
+			if(oneMonkey.layer == alliedLayer) {
+				
+				alliedMonkeys.Add(oneMonkey.transform);
+			}
+			else if(oneMonkey.layer == enemyLayer) {
+				
+				opponentMonkeys.Add(oneMonkey.transform);
+			}
+		}
+
+		// Drones
+		GameObject[] goDrones;
+		goDrones = GameObject.FindGameObjectsWithTag("Drone");
+		foreach(GameObject oneDrone in goDrones) {
+
+			if(oneDrone.layer == alliedLayer) {
+				
+				alliedDrones.Add(oneDrone.transform);
+			}
+			else if(oneDrone.layer == enemyLayer) {
+				
+				opponentDrones.Add(oneDrone.transform);
+			}
+		}
+
+		// Buildings
+		GameObject[] goBuildings;
+		goBuildings = GameObject.FindGameObjectsWithTag("Building");
+		foreach(GameObject oneBuilding in goBuildings) {
+
+			if(oneBuilding.layer == alliedLayer) {
+				
+				alliedBuildings.Add(oneBuilding.transform);
+			}
+			else if(oneBuilding.layer == enemyLayer) {
+				
+				opponentBuildings.Add(oneBuilding.transform);
+			}
+		}
+
+		// Resources
+		GameObject[] goResources;
+		goResources = GameObject.FindGameObjectsWithTag("Resource");
+		foreach(GameObject oneResource in goResources) {
+
+			neutralResources.Add(oneResource.transform);
+		}
+
+		// 
+		Debug.Log("Resumo: macacos aliados: " + alliedMonkeys.Count);
+		Debug.Log("Resumo: macacos inimigos: " + opponentMonkeys.Count);
+
+		Debug.Log("Resumo: drones aliados: " + alliedDrones.Count);
+		Debug.Log("Resumo: drones inimigos: " + opponentDrones.Count);
+
+		Debug.Log("Resumo: predios aliados: " + alliedBuildings.Count);
+		Debug.Log("Resumo: predios inimigos: " + opponentBuildings.Count);
+
+		Debug.Log("Resumo: recursos: " + neutralResources.Count);
 	}
 }

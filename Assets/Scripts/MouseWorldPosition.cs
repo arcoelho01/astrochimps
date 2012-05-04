@@ -128,8 +128,9 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Converts the mouse position to world position
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-		// Creates a raycast from the mouse position in the screen	
-		if(Physics.Raycast(ray.origin, ray.direction, out hit)) {
+		// Creates a raycast from the mouse position in the screen. Ignores the minimap
+		if(Physics.Raycast(ray.origin, ray.direction, out hit, 
+					Mathf.Infinity, ~(1 << MainScript.minimapLayer))) {
 
 			targetPosition = hit.point; // Keeps the position where the player clicked
 			return hit.transform;	// Return the object
@@ -189,8 +190,9 @@ public class MouseWorldPosition : MonoBehaviour {
 			// Converts the mouse position to world position
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		
-			// Creates a raycast from the mouse position in the screen	
-			if(Physics.Raycast(ray.origin, ray.direction, out hit)) {
+			// Creates a raycast from the mouse position in the screen, ignoring the minimap (or not?)
+			if(Physics.Raycast(ray.origin, ray.direction, out hit,
+					Mathf.Infinity, ~(1 << MainScript.minimapLayer))) {
 
 				whatIAmPointing = hit.transform;
 			}
@@ -340,6 +342,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	/// <returns> A Vector3 with the position selected </returns>
 	public Vector3 WhatIsThePositionSelected() {
 
+		// DEBUG
 		return targetPosition; 
 	}
 
