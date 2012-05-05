@@ -559,15 +559,29 @@ public class MouseWorldPosition : MonoBehaviour {
 	/// <param name="timeToShow"> A float with the amount of time to show the projector in the ground</param>
 	IEnumerator ShowSelectedPositionWithAProjector(Vector3 position, float timeToShow) {
 
+		// Instantiate a local cursor
+		Transform myProjector = Instantiate(cursorObject, position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+
+		/*
 		// Instantiate a cursor
 		if(projectorSelectTargetPosition == null) {
 			projectorSelectTargetPosition = Instantiate(cursorObject, position, 
 					Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
 		}
+		else {
+
+			// if a projector already exists, just move it
+			projectorSelectTargetPosition.transform.position = position;
+		}
+		*/
 
 		yield return new WaitForSeconds(timeToShow);
 
+		/*
 		if(projectorSelectTargetPosition != null)
 			Destroy(projectorSelectTargetPosition.gameObject);
+			*/
+	
+		Destroy(myProjector.gameObject);
 	}
 }
