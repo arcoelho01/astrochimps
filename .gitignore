@@ -5,6 +5,7 @@ Temp/*
 *.swp
 *.csproj
 *.sln
+Assembly*
 
 # ignora arquivos do doygen por enquanto
 Docs/html/*
