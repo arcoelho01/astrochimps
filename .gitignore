@@ -4,3 +4,7 @@ Library/*
 Temp/*
 *.swp
 *.csproj
+*.sln
+
+# ignora arquivos do doygen por enquanto
+Docs/html/*
