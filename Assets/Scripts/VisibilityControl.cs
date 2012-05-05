@@ -48,10 +48,14 @@ public class VisibilityControl : MonoBehaviour {
 
 				Transform mesh = this.transform.FindChild("Mesh");
 				mesh.gameObject.SetActiveRecursively(true);
+
+				// Added: now that each object hava a specific icon, it must be made visible too
+				Transform icon = this.transform.FindChild("Icon");
+				icon.gameObject.renderer.enabled = true;
+				
 				visible = true;
 			}
 			else {
-
 				/*
 				// DEBUG	
 				Debug.Log("Object " + gameObject.name + " renderer enable");
@@ -72,13 +76,25 @@ public class VisibilityControl : MonoBehaviour {
 
 				Transform mesh = this.transform.FindChild("Mesh");
 				mesh.gameObject.SetActiveRecursively(false);
+
 			}
-			else
+			else {
+
 				renderer.enabled = false;
+			}
+
+			// Added: now that each object have a specific icon, it must be made (in)visible too
+			Transform icon = this.transform.FindChild("Icon");
+			if(icon != null)
+				icon.gameObject.renderer.enabled = false;
 		}
 		else if (gameObject.layer == MainScript.neutralLayer) {
 
-				renderer.enabled = false;
+			renderer.enabled = false;
+			// Added: now that each object have a specific icon, it must be made (in)visible too
+			Transform icon = this.transform.FindChild("Icon");
+			if(icon != null)
+				icon.gameObject.renderer.enabled = false;
 		}
 	}
 	
@@ -105,6 +121,11 @@ public class VisibilityControl : MonoBehaviour {
 			}
 			else 
 				renderer.enabled = visible;
+
+			// Added: now that each object have a specific icon, it must be made (in)visible too
+			Transform icon = this.transform.FindChild("Icon");
+			if(icon != null)
+				icon.gameObject.renderer.enabled = true;
 		}
 
 		if (visible && !keepVisible){
@@ -119,6 +140,11 @@ public class VisibilityControl : MonoBehaviour {
 			}
 			else
 				renderer.enabled = visible;
+
+			// Added: now that each object have a specific icon, it must be made (in)visible too
+			Transform icon = this.transform.FindChild("Icon");
+			if(icon != null)
+				icon.gameObject.renderer.enabled = true;
 		}
 		
 			
