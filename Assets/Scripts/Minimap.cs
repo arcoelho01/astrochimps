@@ -9,6 +9,7 @@ public class Minimap : MonoBehaviour {
 	Vector3 bottomLeft;
 	Vector3 centerScreen;
 	Vector3 mmDirection;
+	Vector3 focusCubeOriginalSize;
 
 	float focusRadius;
 
@@ -47,7 +48,9 @@ public class Minimap : MonoBehaviour {
 			Debug.LogError("Set a cube object to show the focus on the minimap");
 		}
 
-		minimapPosOnScreen = new Rect(x,y,xsize, ysize);;
+		minimapPosOnScreen = new Rect(x,y,xsize, ysize);
+
+		focusCubeOriginalSize = mmCubeFocus.localScale;
 	}
 	
 	// Update is called once per frame
@@ -101,8 +104,9 @@ public class Minimap : MonoBehaviour {
 		Quaternion rotation = Quaternion.LookRotation(mmDirection, Vector3.up);
 
 		// The scale is set to a minimum of 20.0f so it can always be visible in the minimap
-		Vector3 focusCubeSize = new Vector3((focusRadius < 20.0f) ? 20.0f:focusRadius, 1, 
-				(focusRadius < 20.0f) ? 20.0f : focusRadius);
+//		Vector3 focusCubeSize = new Vector3((focusRadius < 20.0f) ? 20.0f:focusRadius, 1, 
+//				(focusRadius < 20.0f) ? 20.0f : focusRadius);
+		Vector3 focusCubeSize = focusCubeOriginalSize + new Vector3(focusRadius, 0, focusRadius);	
 
 		// Position the cube
 		Vector3 focusCubePosition = new Vector3(centerScreen.x, 60, centerScreen.z);

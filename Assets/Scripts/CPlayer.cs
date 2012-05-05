@@ -1,4 +1,4 @@
-using UnityEngine;
+
 using System.Collections;
 
 /// <summary>
@@ -13,6 +13,7 @@ public class CPlayer : CBaseEntity {
 	// PUBLIC
 	public float oxygenLevel {get{return mOxygenLevel;}}
 	public float metalLevel {get{return mMetalLevel;}}
+	// TODO: add other resources, like hydrogen
 	
 	/*
 	 * ===========================================================================================================
