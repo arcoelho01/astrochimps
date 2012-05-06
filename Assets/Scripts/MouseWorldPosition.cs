@@ -560,9 +560,8 @@ public class MouseWorldPosition : MonoBehaviour {
 	IEnumerator ShowSelectedPositionWithAProjector(Vector3 position, float timeToShow) {
 
 		// Instantiate a local cursor
-		Transform myProjector = Instantiate(cursorObject, position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+		//Transform myProjector = Instantiate(cursorObject, position, Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
 
-		/*
 		// Instantiate a cursor
 		if(projectorSelectTargetPosition == null) {
 			projectorSelectTargetPosition = Instantiate(cursorObject, position, 
@@ -573,15 +572,12 @@ public class MouseWorldPosition : MonoBehaviour {
 			// if a projector already exists, just move it
 			projectorSelectTargetPosition.transform.position = position;
 		}
-		*/
 
 		yield return new WaitForSeconds(timeToShow);
 
-		/*
 		if(projectorSelectTargetPosition != null)
 			Destroy(projectorSelectTargetPosition.gameObject);
-			*/
 	
-		Destroy(myProjector.gameObject);
+		//Destroy(myProjector.gameObject);
 	}
 }

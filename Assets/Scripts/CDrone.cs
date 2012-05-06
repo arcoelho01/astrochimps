@@ -140,6 +140,12 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
+				// Play a sound effect
+				if(sfxAttacked) {
+
+					AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
+				}
+
 				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
 				AIScript.Stop();
 				break;
@@ -177,7 +183,7 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
-				Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
+				//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
 				// DO NOTHING FOR 10 SECONDS
 				stunnedTimeCounter = stunnedTimeCounter - Time.deltaTime;
 				if ( stunnedTimeCounter <=0)
@@ -251,5 +257,4 @@ public class CDrone : CBaseEntity {
 				break;
 		}
 	}
-	
 }

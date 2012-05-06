@@ -13,6 +13,7 @@ public class CMonkey : CBaseEntity {
 	
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
+	public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
 	private Transform transTarget;   // Target Transform
 	private Vector3 walkTo;
 	public float attackRange;      //  Attack Range to disable drones.
@@ -135,6 +136,10 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_WALKING:
+				if(sfxAck) {
+
+					AudioSource.PlayClipAtPoint(sfxAck, transform.position);
+				}
 				AIScript.ClickedTargetPosition(walkTo);
 			
 				break;
@@ -146,6 +151,9 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_ATTACKING:
 				// SET AISCRIPT TO MOVE TO TARGET
+				// FIXME: target is null here!
+				// DEBUG
+				Debug.Log("Entering STATE_ATTACKING with target: " + transTarget);
 				AIScript.ClickedTargetPosition(transTarget.position);
 				break;
 
@@ -206,7 +214,8 @@ public class CMonkey : CBaseEntity {
 				Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
 				float curDistance = diff.sqrMagnitude; 
 				
-				if (curDistance < 500)
+				// FIXME: distance must be the radius of the monkey collider plus the radius of the target collider
+				if (curDistance < 3.5f)
 				{
 					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 					if (droneTarget != null){
@@ -219,6 +228,16 @@ public class CMonkey : CBaseEntity {
 						EnterNewState(FSMState.STATE_IDLE);
 					}
 					
+				}
+				else {
+
+					// FIXME: create another state, like "walking_to_the_target" or something. The idea is to get closer
+					// to the target (walking) and then attacking, but without changing to the "walking" state.
+					// Another idea: create an "pursuit" state. When distance is less than X, change to attack 
+					// automatically
+					// DEBUG
+					Debug.Log("Distance: " + curDistance);
+					WalkTo(transTarget.transform.position);
 				}
 				break;
 
@@ -260,6 +279,8 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_ATTACKING:
+				// DEBUG
+				Debug.Log("Leaving STATE_ATTACKING");
 				transTarget = null;
 				break;
 
