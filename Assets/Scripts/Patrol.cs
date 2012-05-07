@@ -2,25 +2,23 @@ using UnityEngine;
 using System.Collections;
 
 
-enum modo{PATROL,ALERT,DETECTA};
+enum eAlertLevel{PATROL,ALERT,DETECT};
 
-public class DroneVigilancia : MonoBehaviour {
-	
-  private Transform target;
-  
-  //Shortcut to transform
+public class Patrol : MonoBehaviour {
+
   private Transform myTransform;
+
+  private Transform target;
+  private Vector3 targetVector;
   
-  private Vector3 targetLine;
-  
-  public float pulseTime;
+  private float pulseTime;
   
   //Check enemy around
   public bool enemyAround;
   private Collider[] scannedColliders;
   private int enemyMask = 1 << 11;
 
-  private modo status = modo.PATROL;
+  private eAlertLevel status = eAlertLevel.PATROL;
   
   //Field of View
   private float detectionDistance = 14.0f;
@@ -29,7 +27,7 @@ public class DroneVigilancia : MonoBehaviour {
 
   public Transform[] patrolTarget;
   
-  public GameObject detectAlert;
+  public GameObject detectAlert; //Prefab to instantiate once enemy has been found, set in Inspector
   private GameObject existingAlert;
 
   private CDrone cdroneScript;
@@ -43,16 +41,15 @@ public class DroneVigilancia : MonoBehaviour {
 
   }
 
-	// Use this for initialization
-	void Start () {
-		
+  // Use this for initialization
+  void Start () {
 
-		pulseTime = 1.0f;
-	
-	}
+    pulseTime = 1.0f;
 
-	// Overlap sphere pulse
-	void Update () {
+  }
+
+  // Overlap sphere pulse
+  void Update () {
 
   if(cdroneScript == null)
       Debug.LogError("My script is empty go back");
@@ -60,12 +57,11 @@ public class DroneVigilancia : MonoBehaviour {
   if(cdroneScript.isStunned())
       return;
 
-    //Debug.DrawRay(myTransform.position,myTransform.forward * 10);
-  if(status == modo.PATROL)
+  if(status == eAlertLevel.PATROL)
       Patrulha();
-    else if(status == modo.ALERT)
+    else if(status == eAlertLevel.ALERT)
             Alerta();
-         else if(status == modo.DETECTA)
+         else if(status == eAlertLevel.DETECT)
                  Detecta();
 
   }
@@ -99,51 +95,49 @@ public class DroneVigilancia : MonoBehaviour {
 
       }else target = scannedColliders[0].transform;
 
-      targetLine = target.position - myTransform.position;
+      targetVector = target.position - myTransform.position;
 
 
-       if(Vector3.Distance(myTransform.position,target.position) < detectionDistance  && Vector3.Angle(targetLine,myTransform.forward) < detectionRadius){
+       if(Vector3.Distance(myTransform.position,target.position) < detectionDistance  && Vector3.Angle(targetVector,myTransform.forward) < detectionRadius){
           pulseTime = 5.0f;
-          status = modo.DETECTA;
+          status = eAlertLevel.DETECT;
           existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
-       }else if(Vector3.Distance(myTransform.position,target.position) < detectionDistance && Vector3.Angle(targetLine,myTransform.forward) < alertRadius){
-          Debug.Log("Vigilancia: ALERT");
-          status = modo.ALERT;
+       }else if(Vector3.Distance(myTransform.position,target.position) < detectionDistance && Vector3.Angle(targetVector,myTransform.forward) < alertRadius){
+          status = eAlertLevel.ALERT;
        }
 
     }else{
       target = null;
     }
 
-    Debug.DrawRay(myTransform.position,myTransform.forward * 2);
+    Debug.DrawRay(myTransform.position,myTransform.forward * 10);
 
   }
 
 
 void Alerta () {
 
-  targetLine = target.position - myTransform.position;
+  targetVector = target.position - myTransform.position;
 
-  Debug.DrawRay(myTransform.position,myTransform.forward * 2,Color.yellow); // Smelled ya !
+  Debug.DrawRay(myTransform.position,myTransform.forward * 10,Color.yellow); // Smelled ya !
 
   if(Vector3.Distance(myTransform.position,target.position) < detectionDistance){
-    if(Vector3.Angle(targetLine,myTransform.forward) < detectionRadius ){
+    if(Vector3.Angle(targetVector,myTransform.forward) < detectionRadius ){
         pulseTime = 5.0f;
-        Debug.LogWarning("Vigilancia: found!");
-        status = modo.DETECTA;
+        status = eAlertLevel.DETECT;
         existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
     }
-  }else status = modo.PATROL;
+  }else status = eAlertLevel.PATROL;
 
 }
 
   void Detecta () {
 
-    Debug.DrawRay(myTransform.position,myTransform.forward * 2,Color.red); // Found ya !
+    Debug.DrawRay(myTransform.position,myTransform.forward * 10,Color.red); // Found ya !
     pulseTime -= Time.deltaTime;
 
     if(pulseTime < 0){
-    status = modo.PATROL;
+    status = eAlertLevel.PATROL;
     GameObject.Destroy(existingAlert);
     }
   }

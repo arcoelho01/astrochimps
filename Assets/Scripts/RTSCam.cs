@@ -58,7 +58,7 @@ public class RTSCam : MonoBehaviour {
 
 	// Defines the border of the screen. When the mouse is within this amount of pixels from the border, pan
 	// the camera
-	public int screenPanEdge = 10;
+	private int screenPanEdge = 20;
 
 	MouseWorldPosition inputStuffScript = null;
 	/*
@@ -243,19 +243,19 @@ public class RTSCam : MonoBehaviour {
 		panSpeed = AdjustedPanSpeed();
 
 		// HORIZONTAL PAN
-		if(Input.GetAxis("Horizontal") < 0 || Input.mousePosition.x < screenPanEdge ) {
+		if(Input.GetAxis("Horizontal") < 0 || (Input.mousePosition.x < screenPanEdge && Input.mousePosition.x > 0) ) {
 
 			camPanDirection -= screenHAxis.normalized * Time.deltaTime * panSpeed; 
 			bnCamModified = true;
 		}
-		else if(Input.GetAxis("Horizontal") > 0 || Input.mousePosition.x > (Screen.width-screenPanEdge)) {
+		else if(Input.GetAxis("Horizontal") > 0 || (Input.mousePosition.x > (Screen.width-screenPanEdge) && Input.mousePosition.x < Screen.width) ) {
 
 			camPanDirection += screenHAxis.normalized * Time.deltaTime * panSpeed; 
 			bnCamModified = true;
 		}
 
 		// VERTICAL PAN
-		if(Input.GetAxis("Vertical") < 0 || Input.mousePosition.y < screenPanEdge ) {
+		if(Input.GetAxis("Vertical") < 0 || (Input.mousePosition.y < screenPanEdge && Input.mousePosition.y > 0) ) {
 
 			Vector3 screenVAxisForPan = screenVAxis;
 			screenVAxisForPan.y = 0.0f;
@@ -263,7 +263,7 @@ public class RTSCam : MonoBehaviour {
 			camPanDirection -= screenVAxisForPan.normalized * Time.deltaTime * panSpeed; 
 			bnCamModified = true;
 		}
-		else if(Input.GetAxis("Vertical") > 0 || Input.mousePosition.y > (Screen.height-screenPanEdge)) {
+		else if(Input.GetAxis("Vertical") > 0 || (Input.mousePosition.y > (Screen.height-screenPanEdge) && Input.mousePosition.y < Screen.height) ) {
 
 			Vector3 screenVAxisForPan = screenVAxis;
 			screenVAxisForPan.y = 0.0f;
