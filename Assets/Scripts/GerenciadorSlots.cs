@@ -7,6 +7,8 @@ public class GerenciadorSlots : MonoBehaviour {
 	public GameObject[] slots;
 	public GameObject[] regioes;
 	
+	private bool alteracaoBloqueada = false;
+	
 	// Use this for initialization
 	void Start () {
 		
@@ -27,5 +29,27 @@ public class GerenciadorSlots : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+		HabilitarSlots();
+			
+	}
+	
+	void HabilitarSlots()
+	{
+		
+		if(!alteracaoBloqueada)
+		{
+			if((slots[0].GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.CONCLUIDO)&&
+				(slots[1].GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.CONCLUIDO)&&
+				(slots[2].GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.CONCLUIDO))
+			{
+				alteracaoBloqueada = true;
+				for(int i = 3; i< 9; i++)
+				{
+					canos[i].active = true;
+  					slots[i].active = true;
+  					regioes[i].active = true;
+				}
+			}
+		}
 	}
 }
