@@ -48,121 +48,89 @@ public class EventosMenu : MonoBehaviour {
 		//GUI.Box(new Rect(0,Screen.height - 100,Screen.width,100),"Menu");
 
 		
-		if((tipoObj == DefinicaoEstrutura.TipoEstrutura.SLOT) && (!objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido))
+		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.SLOT)
 		{
-			if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Fazenda")){
-				Construir(DefinicaoEstrutura.TipoEstrutura.FAZENDA);
-				objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)
+			{
+				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Fazenda")){
+					
+					if((prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
+						(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
+					{
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal);
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+						
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FAZENDA;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+					}
+					//Construir(DefinicaoEstrutura.TipoEstrutura.FAZENDA);		
+					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
+				}
+				
+				if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Garagem")){
+					
+					if((prefabGaragem.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
+						(prefabGaragem.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
+					{						
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabGaragem.GetComponent<DefinicaoEstrutura>().custoMetal);
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabGaragem.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+						
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.GARAGEM;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabGaragem.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+					}
+					//Construir(DefinicaoEstrutura.TipoEstrutura.GARAGEM);
+					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
+				}
+				
+				if(GUI.Button(new Rect(155* 2,Screen.height -44,70 * 1.25f,70 * 0.53f),"Laboratorio")){
+					
+					if((prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
+						(prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
+					{
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal);
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+						
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.LABORATORIO;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabLaboratorio.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+					}
+					//Construir(DefinicaoEstrutura.TipoEstrutura.LABORATORIO);
+					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
+				}	
+
+				if(GUI.Button(new Rect(230 * 1.78f,Screen.height - 44,70 * 1.74f,70 * 0.53f),"Fabrica de Drones")){
+					
+					if((prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
+						(prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
+					{
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal);
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+						
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+					}
+					//Construir(DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES);
+					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
+				}	
 			}
-			
-			if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Garagem")){
-				Construir(DefinicaoEstrutura.TipoEstrutura.GARAGEM);
-				objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO)
+			{
+				
+				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
 			}
-			
-			if(GUI.Button(new Rect(155* 2,Screen.height -44,70 * 1.25f,70 * 0.53f),"Laboratorio")){
-				Construir(DefinicaoEstrutura.TipoEstrutura.LABORATORIO);
-				objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
-			}	
-			
-			if(GUI.Button(new Rect(230 * 1.78f,Screen.height - 44,70 * 1.74f,70 * 0.53f),"Fabrica de Drones")){
-				Construir(DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES);
-				objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
-			}	
 			
 		}
-		/*
-		if((tipoObj == DefinicaoEstrutura.TipoEstrutura.CENTRO_COMANDO) && (!slotsPosicionados))
-			if(GUI.Button(new Rect(5* 25,Screen.height - 44,70 * 1.3f,70 * 0.53f),"Expandir")){
-				HabilitarSlot();
-			}
-			*/
+		
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES)
 			if(GUI.Button(new Rect(5,Screen.height,70,70),"Drone")){
 				
 			}		
 	}
 	
-	void Construir(DefinicaoEstrutura.TipoEstrutura tipoConstrucao)
-	{
-		GameObject novaConstrucao;
-		oxigenio = playerScript.oxygenLevel;
-		metal = playerScript.metalLevel;
-		
-		// Check Cost
-		GameObject prefabIWantToBuild = CheckCostAndSelectMyPrefab(tipoConstrucao);
-
-		if(!prefabIWantToBuild) {
-
-			// DEBUG
-			Debug.Log("Not enough resources to build this.");
-		}
-		else {
-				
-			novaConstrucao = (GameObject)Instantiate(prefabIWantToBuild,
-				                                         new Vector3(objetoSelecionado.position.x,objetoSelecionado.position.y + 0.7f,
-				                                                     objetoSelecionado.position.z),objetoSelecionado.rotation);
-			// Pay for it!
-			playerScript.SubResourceMetal(prefabIWantToBuild.GetComponent<DefinicaoEstrutura>().custoMetal);
-			playerScript.SubResourceOxygen(prefabIWantToBuild.GetComponent<DefinicaoEstrutura>().custoOxigenio);
-      quantidadeConstrucoes++;
-      if(quantidadeConstrucoes == 3)
-        HabilitarSlot();
-		}
-
-		/*
-		if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoOxigenio <= oxigenio)
-			&& (objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetal <= metal))
-		{
-			if(tipoConstrucao == DefinicaoEstrutura.TipoEstrutura.FAZENDA)
-				novaConstrucao = (GameObject)Instantiate(prefabFazenda,
-				                                         new Vector3(objetoSelecionado.position.x,objetoSelecionado.position.y + 0.7f,
-				                                                     objetoSelecionado.position.z),objetoSelecionado.rotation);
 	
-			if(tipoConstrucao == DefinicaoEstrutura.TipoEstrutura.GARAGEM)
-				novaConstrucao = (GameObject)Instantiate(prefabGaragem,
-				                                         new Vector3(objetoSelecionado.position.x,objetoSelecionado.position.y + 0.7f,
-				                                                     objetoSelecionado.position.z),objetoSelecionado.rotation);
-			
-			if(tipoConstrucao == DefinicaoEstrutura.TipoEstrutura.LABORATORIO)
-				novaConstrucao = (GameObject)Instantiate(prefabLaboratorio,
-				                                         new Vector3(objetoSelecionado.position.x,objetoSelecionado.position.y + 0.7f,
-				                                                     objetoSelecionado.position.z),objetoSelecionado.rotation);
-			
-			if(tipoConstrucao == DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES)
-				novaConstrucao = (GameObject)Instantiate(prefabFabricaDrones,
-				                                         new Vector3(objetoSelecionado.position.x,objetoSelecionado.position.y + 0.7f,
-				                                                     objetoSelecionado.position.z),objetoSelecionado.rotation);
-		
-			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetal);
-			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoOxigenio);		
-		}
-		else
-		{
-			// FIXME: GUI stuff will only show in the OnGUI() or methods called by it
-			//GUI.TextArea(new Rect(310,Screen.height - 75,70,70),"Faltam Recursos!");
-		}
-		//*/		
-	}
-	
-	void HabilitarSlot()
-	{
-		for(int i = 3; i < 9; i++){
-
-
-			GameObject.Find("CentroComando").GetComponent<GerenciadorSlots>().canos[i].active = true;
-			GameObject.Find("CentroComando").GetComponent<GerenciadorSlots>().slots[i].active = true;
-			GameObject.Find("CentroComando").GetComponent<GerenciadorSlots>().regioes[i].active = true;
-
-			//Debug.Log(objetoSelecionado.GetComponent<GerenciadorSlots>().canos[i].name+" "+i+objetoSelecionado.GetComponent<GerenciadorSlots>().canos[i].active);
-		}
-		/*if(i_Final == 9)
-			slotsPosicionados = true;
-			playerScript.SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetal);
-			playerScript.SubResourceOxygen(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoOxigenio);*/
-
-	}
-
 
 	/// <summary>
 	/// Select the prefab accordingly to the type of building we want to build. Also, check if we have enough
@@ -203,5 +171,5 @@ public class EventosMenu : MonoBehaviour {
 		}
 
 		return rv;
-	}	
+	}
 }
