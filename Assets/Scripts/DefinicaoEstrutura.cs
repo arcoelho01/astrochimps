@@ -18,11 +18,24 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	};
 	public bool sabotado;
 	public bool conectado;
-	public bool construido;
+	//public bool construido;
+	public enum StatusProgresso{
+		LIBERADO,
+		EM_PROGRESSO,
+		CONCLUIDO
+	};
 	public int vida;
 	public TipoEstrutura tipo;
+	public StatusProgresso statusProgressao;
 	public float custoOxigenio;
 	public float custoMetal;
+	public float tempoConstrucao;
+	public float tempoAtualConstrucao;
+	public TipoEstrutura objetoAConstruir;
+	public string descricao;
+	
+    private float progressoAtual = 0;
+	private GameObject prefabConstrucao;
 	
 	// Use this for initialization
 	void Start () {
@@ -30,14 +43,61 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		{
 			sabotado = false;
 			conectado = true;
-			construido = false;
+			//construido = false;
 			vida = 100;
 		}
-
+		statusProgressao = StatusProgresso.LIBERADO;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+		if(statusProgressao == StatusProgresso.EM_PROGRESSO)
+		{
+			tempoAtualConstrucao = MedeProgresso(tempoConstrucao);
+		}
 	}
+	
+	float MedeProgresso(float tempoTotal){
+		
+		float percentualProgresso;
+		
+		if(progressoAtual < tempoTotal)
+		{
+			progressoAtual += 1 *Time.deltaTime;
+		}
+		else 
+		{
+			progressoAtual = tempoTotal;
+			Construir();
+		}
+		
+		if(progressoAtual ==0)
+			percentualProgresso = 0;
+		else
+			percentualProgresso = (progressoAtual * 100)/tempoTotal;
+		
+		Debug.Log("("+tempoTotal+" * 100)/"+progressoAtual+" = "+percentualProgresso+"||||"+tempoAtualConstrucao);
+		return percentualProgresso;
+	}
+	
+	void Construir()
+	{
+		GameObject construcaoNova;
+		
+		statusProgressao = StatusProgresso.CONCLUIDO;
+		
+		if(objetoAConstruir == TipoEstrutura.FAZENDA)
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabFazenda;
+		if(objetoAConstruir == TipoEstrutura.FABRICA_DRONES)
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabFabricaDrones;
+		if(objetoAConstruir == TipoEstrutura.LABORATORIO)
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabLaboratorio;
+		if(objetoAConstruir == TipoEstrutura.GARAGEM)
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabGaragem;
+		
+
+		construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),transform.rotation);		
+	}
+
 }
