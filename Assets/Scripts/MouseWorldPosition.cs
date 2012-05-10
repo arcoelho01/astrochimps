@@ -106,7 +106,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// RIGHT CLICK
 		// Check the right mouse button
 		// The right mouse button selects the target position to move the currently selected unit
-		if(Input.GetMouseButton(1)) {
+		if(Input.GetMouseButtonDown(1)) {
 
 			CheckRightMouseClick();
 		} // END RIGHT CLICK
@@ -377,6 +377,12 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			if(selectedBaseEntity != null) {
 
+				// Do not let we select enemy units
+				if(selectedBaseEntity.Team == CBaseEntity.eObjTeam.Opponent) {
+
+					return;
+				}
+
 				if(selectedBaseEntity.Selectable) {
 
 					// Unit not selected?
@@ -493,6 +499,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 				// IF CLICK WASNT ON UNITS OR BUILDINGS
 				if(whatIClicked.gameObject.GetComponent<CBaseEntity>() == null) {
+
 					// WALK THE MONKEY
 					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
 						selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
@@ -510,33 +517,6 @@ public class MouseWorldPosition : MonoBehaviour {
 				}
 			}
 		}
-
-		/*/
-		// FIXME: guess we don't need this anymore. Maybe checking if selectedObject != null is enough
-		if(MouseState == eMouseStates.Walking) {
-
-			if(!bnNodeStatus) {
-
-				return;
-			}
-
-			GetWhatIClicked();
-		}
-		else if(MouseState == eMouseStates.SelectingPosition) {
-
-			if(!bnNodeStatus) {
-
-				return;
-			}
-
-			// This will store the clicked position
-			GetWhatIClicked();
-			MouseState = eMouseStates.Hover;
-			bnPositionAlreadySelected = true; // This will let other scripts know
-
-			RemoveCursor();
-		}
-		//*/
 	}
 
 	/// <summary>
