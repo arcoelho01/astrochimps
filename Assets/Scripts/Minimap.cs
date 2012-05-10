@@ -12,6 +12,7 @@ public class Minimap : MonoBehaviour {
 	Vector3 focusCubeOriginalSize;
 
 	float focusRadius;
+	bool showMinimap;
 
 	public Transform mmCubeFocus;
 
@@ -51,13 +52,28 @@ public class Minimap : MonoBehaviour {
 		minimapPosOnScreen = new Rect(x,y,xsize, ysize);
 
 		focusCubeOriginalSize = mmCubeFocus.localScale;
+
+		//
+		EnableMinimap();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		CheckMainCameraProjectionInTheWorld();
+		// FIXME: find a better place to put this. The ideal setting is all input code in one script only
+		if(Input.GetKeyDown(KeyCode.Tab)) {
 
+			if(showMinimap)
+				DisableMinimap();
+			else
+				EnableMinimap();
+		}
+
+		// Only check the routine if we need to show the minicam
+		if(showMinimap) {
+		
+			CheckMainCameraProjectionInTheWorld();
+		}
 		//minimapCam.rect = new Rect(x,y,xsize, ysize);
 	}
 
@@ -115,6 +131,27 @@ public class Minimap : MonoBehaviour {
 		mmCubeFocus.position = focusCubePosition;
 		mmCubeFocus.localScale = focusCubeSize;
 		mmCubeFocus.rotation = rotation;
+	}
+
+
+	/// <summary>
+	/// Disable the viewing of the minimap on the screen, disabling it's camera's rendering
+	/// </summary>
+	public void DisableMinimap() {
+
+		// Disables the camera
+		minimapCam.enabled = false;
+		showMinimap = false;
+	}
+
+	/// <summary>
+	/// Enable the viewing of the minimap on the screen, enabling back the camera rendering
+	/// </summary>
+	public void EnableMinimap() {
+
+		// Enables the camera
+		minimapCam.enabled = true;
+		showMinimap = true;
 	}
 
 	void OnDrawGizmos() {
