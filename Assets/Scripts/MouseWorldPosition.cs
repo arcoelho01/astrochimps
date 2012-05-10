@@ -279,19 +279,28 @@ public class MouseWorldPosition : MonoBehaviour {
 				// Is a monkey selected?
 				if(selectedObject.gameObject.tag == "Monkey") {
 
+					// FIXING as 10/05: all monkeys can entered buildings, but only at the Command Center. Other buildings
+					// cannot be monkey operated
+
 					// are we pointing at one of ours buildings?
-					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer &&
-							selectedObjectEntity.gameObject.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Engineer)	{
+					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer)	{
+
+						CBuilding pointedBuilding = whatIAmPointing.gameObject.GetComponent<CBuilding>();
+
+						// FIXME: Slots don't have CBuilding, so the mouseOver crash here
+						if(!pointedBuilding)
+							return;
 
 						// Is this building clear?
-						if(!whatIAmPointing.gameObject.GetComponent<CBuilding>().TheresAMonkeyInside()) {
+						if(pointedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter &&  
+								!pointedBuilding.TheresAMonkeyInside()) {
 
-							// TODO: actually, only the engineer monkey can get inside a building
 							cursorCurrent = cursorGetInside;
 							MouseState = eMouseStates.MonkeyCanEnterBuilding;
 						}
 						else { // Already have a monkey
-							
+							// FIXME: check the correct cursor. Not walk, perhaps?
+							return;
 							cursorCurrent = cursorNormal;
 							MouseState = eMouseStates.Hover;
 						}
@@ -350,7 +359,6 @@ public class MouseWorldPosition : MonoBehaviour {
 	/// <returns> A Vector3 with the position selected </returns>
 	public Vector3 WhatIsThePositionSelected() {
 
-		// DEBUG
 		return targetPosition; 
 	}
 
@@ -446,7 +454,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		Transform whatIClicked = GetWhatIClicked();
 
 		// DEBUG
-		Debug.Log("MouseWorldPosition: mouse status during GetWhatIClicked " + MouseState);
+		//Debug.Log("MouseWorldPosition: mouse status during GetWhatIClicked " + MouseState);
 
 		// FIXME: add monkey select, I clicked in a building
 		if(selectedObject != null) {
@@ -469,6 +477,11 @@ public class MouseWorldPosition : MonoBehaviour {
 								if (whatIClicked.gameObject.layer != MainScript.enemyLayer){
 
 									CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
+
+									// We can only use monkeys on the command center
+									if(selectedBuilding.buildingType != CBuilding.eBuildingType.CommandCenter)
+										return;
+
 									// Puts the monkey inside the building. Actually, the building get the monkey
 									selectedBuilding.PutAMonkeyInside(selectedObject);
 									// Deselect the monkey
