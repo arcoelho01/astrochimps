@@ -11,8 +11,10 @@ public class MouseWorldPosition : MonoBehaviour {
 	// PUBLIC
 	// For the selected object
 	public Transform selectedObject = null;	// Selected object itself (any)
+	Transform pointedObject = null;
 	public Transform cursorObject = null;
-	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, Targeting }; 
+	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, 
+		Targeting, CanCapture, CanReleaseCaptured}; 
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -22,6 +24,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorWalk;	// normal cursor to select where we want the unit to move
 	public Texture2D cursorWalkNotOk;	// Walk cursor, but indicating we can't walk here
 	public Texture2D cursorBuild;	// cursor to show that we can build something
+	public Texture2D cursorCaptureRay;	// cursor showing that we can use the capture ray
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
@@ -184,6 +187,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			RaycastHit hit;
 			Transform whatIAmPointing = null;
+			pointedObject = null;
 
 			mouseBefore = mouseNow;
 
@@ -304,7 +308,34 @@ public class MouseWorldPosition : MonoBehaviour {
 							cursorCurrent = cursorNormal;
 							MouseState = eMouseStates.Hover;
 						}
+
+						return;
 					}
+				
+					// No, so are we pointing at a rocket part?
+					if(whatIAmPointing.tag == "RocketPart") {
+
+						// Ok, but it's this part already being carried by someone in my team?
+						if(whatIAmPointing.transform.parent.GetComponent<CRocketPart>().isCaptured) {
+
+							// Set the cursor
+							cursorCurrent = cursorCaptureRay;
+							// Set the state
+							MouseState = eMouseStates.CanReleaseCaptured;
+							// Keeps the pointed object
+							pointedObject = whatIAmPointing;
+						}
+						else {
+
+							// Set the cursor
+							cursorCurrent = cursorCaptureRay;
+							// Set the state
+							MouseState = eMouseStates.CanCapture;
+							// Keeps the pointed object
+							pointedObject = whatIAmPointing;
+						}
+					}	
+
 				}
 				else { // not a monkey
 
@@ -455,6 +486,35 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		// DEBUG
 		//Debug.Log("MouseWorldPosition: mouse status during GetWhatIClicked " + MouseState);
+
+		// TESTING!!!
+		// Using the mouseState instead of doing a bunch of tests here. Should work...
+		if(MouseState == eMouseStates.CanCapture) {
+
+			CBaseEntity capturedEntity = pointedObject.transform.parent.GetComponent<CBaseEntity>();
+
+			if(!capturedEntity) {
+
+				// DEBUG
+				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
+			}
+
+			capturedEntity.CapturedBy(selectedObject);
+
+			return;
+		}
+		else if(MouseState == eMouseStates.CanReleaseCaptured) {
+
+			CBaseEntity capturedEntity = pointedObject.transform.parent.GetComponent<CBaseEntity>();
+
+			if(!capturedEntity) {
+
+				// DEBUG
+				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
+			}
+
+			capturedEntity.ReleaseMe();
+		}
 
 		// FIXME: add monkey select, I clicked in a building
 		if(selectedObject != null) {

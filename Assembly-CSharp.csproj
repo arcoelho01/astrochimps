@@ -90,8 +90,8 @@
      <Compile Include="Assets\Scripts\CMonkey.cs" />
      <Compile Include="Assets\Scripts\CPlayer.cs" />
      <Compile Include="Assets\Scripts\CResource.cs" />
+     <Compile Include="Assets\Scripts\CRocketPart.cs" />
      <Compile Include="Assets\Scripts\DefinicaoEstrutura.cs" />
-     <Compile Include="Assets\Scripts\DroneVigilancia.cs" />
      <Compile Include="Assets\Scripts\EventosMenu.cs" />
      <Compile Include="Assets\Scripts\EventosMouse.cs" />
      <Compile Include="Assets\Scripts\GUI\GUIBottomMenu.cs" />
@@ -99,8 +99,10 @@
      <Compile Include="Assets\Scripts\MainScript.cs" />
      <Compile Include="Assets\Scripts\Minimap.cs" />
      <Compile Include="Assets\Scripts\MouseWorldPosition.cs" />
+     <Compile Include="Assets\Scripts\Patrol.cs" />
      <Compile Include="Assets\Scripts\RTSCam.cs" />
      <Compile Include="Assets\Scripts\Regiao.cs" />
+     <Compile Include="Assets\Scripts\Saboteur.cs" />
      <Compile Include="Assets\Scripts\Tools\DroneRandomBehaviour.cs" />
      <Compile Include="Assets\Scripts\Tools\HUDFPS.cs" />
      <Compile Include="Assets\Scripts\Tools\ToolMegaDroneInstantiatorTabajara.cs" />

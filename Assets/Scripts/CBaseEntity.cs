@@ -11,12 +11,15 @@ public class CBaseEntity : MonoBehaviour {
 	private bool mIsSelected = false;			// The object is selected?
 
 	// PUBLIC
-	public enum eObjTeam { Allied, Opponent, Neutral };	// Possible teams for an object
-	///TODO: put more objects here
-	public enum eObjType { Monkey, Drone, Resource, Building, Player }; // Object type
+	// Possible teams for an object
+	public enum eObjTeam { Allied, Opponent, Neutral };		
+	// Types of objects in the game
+	public enum eObjType { Monkey, Drone, Resource, Building, Player, RocketPart };
 
-	public bool Selectable;	// This object can be selected?
-	public bool Movable;	// Can this unit be moved? (monkeys, drones, vehicles)
+	// This object can be selected?
+	public bool Selectable;	
+	// Can this unit be moved? (monkeys, drones, vehicles)
+	public bool Movable;
 	public eObjTeam Team;
 	public eObjType Type;
 	public string Name;
@@ -29,6 +32,13 @@ public class CBaseEntity : MonoBehaviour {
 	public MainScript mainScript;	// Pointer to the main game script
 
 	public Material materialDisabled;
+
+	// This object can be captured?
+	public bool canBeCaptured;
+	public bool isCaptured;
+
+	Transform capturedFormerParent;
+	Vector3 capturedFormerPosition;
 
 	//
 	void Start() {
@@ -119,5 +129,32 @@ public class CBaseEntity : MonoBehaviour {
 		projector.orthographicSize = objectRadius;	
 		// 3 - Put the projector as a child to this object, so it moves together
 		selector.transform.parent = this.transform;
+	}
+
+	/// <summary>
+	/// Somebody captured this entity! 
+	/// </summary>
+	/// <param name="capturer"> Transform for who is capturing this object </param>
+	public virtual void CapturedBy(Transform capturer) {
+
+		isCaptured = true;
+
+		capturedFormerParent = this.transform.parent;
+		capturedFormerPosition = transform.position;
+
+		// Move it as child of the capturer. This way, it will move together
+		this.transform.parent = capturer.transform;
+
+		Vector3 newPosition = new Vector3(0, 3, -3);
+		transform.position = capturer.transform.position + newPosition;
+	}
+
+	/// <summary>
+	/// Release the captured object
+	/// </summary>
+	public virtual void ReleaseMe() {
+
+		this.transform.parent = capturedFormerParent;
+		isCaptured = false;
 	}
 }
