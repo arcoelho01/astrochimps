@@ -33,9 +33,11 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	public float tempoAtualConstrucao;
 	public TipoEstrutura objetoAConstruir;
 	public string descricao;
+	public int nivelEstrutura;
 	
     private float progressoAtual = 0;
 	private GameObject prefabConstrucao;
+	private float tempoDecorrido = 0;
 	
 	// Use this for initialization
 	void Start () {
@@ -47,6 +49,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 			vida = 100;
 		}
 		statusProgressao = StatusProgresso.LIBERADO;
+		nivelEstrutura = 1;
 	}
 	
 	// Update is called once per frame
@@ -56,6 +59,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		{
 			tempoAtualConstrucao = MedeProgresso(tempoConstrucao);
 		}
+		ConsumirOxigenio();
 	}
 	
 	float MedeProgresso(float tempoTotal){
@@ -99,5 +103,23 @@ public class DefinicaoEstrutura : MonoBehaviour {
 
 		construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),transform.rotation);		
 	}
-
+	
+	void ConsumirOxigenio(){
+				
+		if((tipo != TipoEstrutura.CANO_CENTRAL)
+			&&(tipo != TipoEstrutura.EXTRATOR)
+			&&(tipo != TipoEstrutura.PLATAFORMA_LANCAMENTO)
+			&&(tipo != TipoEstrutura.SLOT))
+		{
+			if(tempoDecorrido < 1)
+				tempoDecorrido += 1 * Time.deltaTime;
+			else{
+				
+				if(GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel > 0)
+					GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(1);
+				
+				tempoDecorrido = 0;
+			}
+		}
+	}
 }
