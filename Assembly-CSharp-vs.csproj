@@ -91,7 +91,6 @@
      <Compile Include="Assets\Scripts\CPlayer.cs" />
      <Compile Include="Assets\Scripts\CResource.cs" />
      <Compile Include="Assets\Scripts\CRocketPart.cs" />
-     <Compile Include="Assets\Scripts\CaptureRay.cs" />
      <Compile Include="Assets\Scripts\DefinicaoEstrutura.cs" />
      <Compile Include="Assets\Scripts\EventosMenu.cs" />
      <Compile Include="Assets\Scripts\EventosMouse.cs" />
