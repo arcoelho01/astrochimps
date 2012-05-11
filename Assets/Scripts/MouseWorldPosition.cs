@@ -14,7 +14,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	Transform pointedObject = null;
 	public Transform cursorObject = null;
 	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, 
-		Targeting, CanCapture }; 
+		Targeting, CanCapture, CanReleaseCaptured}; 
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -315,12 +315,25 @@ public class MouseWorldPosition : MonoBehaviour {
 					// No, so are we pointing at a rocket part?
 					if(whatIAmPointing.tag == "RocketPart") {
 
-						// Set the cursor
-						cursorCurrent = cursorCaptureRay;
-						// Set the state
-						MouseState = eMouseStates.CanCapture;
-						// Keeps the pointed object
-						pointedObject = whatIAmPointing;
+						// Ok, but it's this part already being carried by someone in my team?
+						if(whatIAmPointing.transform.parent.GetComponent<CRocketPart>().isCaptured) {
+
+							// Set the cursor
+							cursorCurrent = cursorCaptureRay;
+							// Set the state
+							MouseState = eMouseStates.CanReleaseCaptured;
+							// Keeps the pointed object
+							pointedObject = whatIAmPointing;
+						}
+						else {
+
+							// Set the cursor
+							cursorCurrent = cursorCaptureRay;
+							// Set the state
+							MouseState = eMouseStates.CanCapture;
+							// Keeps the pointed object
+							pointedObject = whatIAmPointing;
+						}
 					}	
 
 				}
@@ -478,17 +491,6 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Using the mouseState instead of doing a bunch of tests here. Should work...
 		if(MouseState == eMouseStates.CanCapture) {
 
-			/*
-			CaptureRay captureRay = selectedObject.GetComponent<CaptureRay>();
-			if(!captureRay) {
-
-				// DEBUG
-				Debug.Log("CaptureRay component not found");
-			}
-			captureRay.Capture(pointedObject);
-			*/
-
-			// TODO: easiest way: make the captured object children of the capturer, so they move together
 			CBaseEntity capturedEntity = pointedObject.transform.parent.GetComponent<CBaseEntity>();
 
 			if(!capturedEntity) {
@@ -500,6 +502,18 @@ public class MouseWorldPosition : MonoBehaviour {
 			capturedEntity.CapturedBy(selectedObject);
 
 			return;
+		}
+		else if(MouseState == eMouseStates.CanReleaseCaptured) {
+
+			CBaseEntity capturedEntity = pointedObject.transform.parent.GetComponent<CBaseEntity>();
+
+			if(!capturedEntity) {
+
+				// DEBUG
+				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
+			}
+
+			capturedEntity.ReleaseMe();
 		}
 
 		// FIXME: add monkey select, I clicked in a building

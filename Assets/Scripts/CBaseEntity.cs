@@ -155,5 +155,6 @@ public class CBaseEntity : MonoBehaviour {
 	public virtual void ReleaseMe() {
 
 		this.transform.parent = capturedFormerParent;
+		isCaptured = false;
 	}
 }
