@@ -37,6 +37,9 @@ public class CBaseEntity : MonoBehaviour {
 	public bool canBeCaptured;
 	public bool isCaptured;
 
+	Transform capturedFormerParent;
+	Vector3 capturedFormerPosition;
+
 	//
 	void Start() {
 
@@ -129,14 +132,28 @@ public class CBaseEntity : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Somebody capture this entity! 
+	/// Somebody captured this entity! 
 	/// </summary>
 	/// <param name="capturer"> Transform for who is capturing this object </param>
-	public virtual void Captured(Transform capturer) {
+	public virtual void CapturedBy(Transform capturer) {
 
 		isCaptured = true;
 
-		// DEBUG
-		Debug.Log("Object captured " + this + "by " + capturer.name);
+		capturedFormerParent = this.transform.parent;
+		capturedFormerPosition = transform.position;
+
+		// Move it as child of the capturer. This way, it will move together
+		this.transform.parent = capturer.transform;
+
+		Vector3 newPosition = new Vector3(0, 3, -3);
+		transform.position = capturer.transform.position + newPosition;
+	}
+
+	/// <summary>
+	/// Release the captured object
+	/// </summary>
+	public virtual void ReleaseMe() {
+
+		this.transform.parent = capturedFormerParent;
 	}
 }

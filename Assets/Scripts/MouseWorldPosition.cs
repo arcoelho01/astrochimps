@@ -489,6 +489,15 @@ public class MouseWorldPosition : MonoBehaviour {
 			*/
 
 			// TODO: easiest way: make the captured object children of the capturer, so they move together
+			CBaseEntity capturedEntity = pointedObject.transform.parent.GetComponent<CBaseEntity>();
+
+			if(!capturedEntity) {
+
+				// DEBUG
+				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
+			}
+
+			capturedEntity.CapturedBy(selectedObject);
 
 			return;
 		}
