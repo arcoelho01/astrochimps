@@ -11,8 +11,10 @@ public class MouseWorldPosition : MonoBehaviour {
 	// PUBLIC
 	// For the selected object
 	public Transform selectedObject = null;	// Selected object itself (any)
+	Transform pointedObject = null;
 	public Transform cursorObject = null;
-	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, Targeting }; 
+	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, 
+		Targeting, CanCapture }; 
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -22,6 +24,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorWalk;	// normal cursor to select where we want the unit to move
 	public Texture2D cursorWalkNotOk;	// Walk cursor, but indicating we can't walk here
 	public Texture2D cursorBuild;	// cursor to show that we can build something
+	public Texture2D cursorCaptureRay;	// cursor showing that we can use the capture ray
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
@@ -184,6 +187,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			RaycastHit hit;
 			Transform whatIAmPointing = null;
+			pointedObject = null;
 
 			mouseBefore = mouseNow;
 
@@ -304,7 +308,21 @@ public class MouseWorldPosition : MonoBehaviour {
 							cursorCurrent = cursorNormal;
 							MouseState = eMouseStates.Hover;
 						}
+
+						return;
 					}
+				
+					// No, so are we pointing at a rocket part?
+					if(whatIAmPointing.tag == "RocketPart") {
+
+						// Set the cursor
+						cursorCurrent = cursorCaptureRay;
+						// Set the state
+						MouseState = eMouseStates.CanCapture;
+						// Keeps the pointed object
+						pointedObject = whatIAmPointing;
+					}	
+
 				}
 				else { // not a monkey
 
@@ -455,6 +473,25 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		// DEBUG
 		//Debug.Log("MouseWorldPosition: mouse status during GetWhatIClicked " + MouseState);
+
+		// TESTING!!!
+		// Using the mouseState instead of doing a bunch of tests here. Should work...
+		if(MouseState == eMouseStates.CanCapture) {
+
+			/*
+			CaptureRay captureRay = selectedObject.GetComponent<CaptureRay>();
+			if(!captureRay) {
+
+				// DEBUG
+				Debug.Log("CaptureRay component not found");
+			}
+			captureRay.Capture(pointedObject);
+			*/
+
+			// TODO: easiest way: make the captured object children of the capturer, so they move together
+
+			return;
+		}
 
 		// FIXME: add monkey select, I clicked in a building
 		if(selectedObject != null) {

@@ -133,6 +133,7 @@ public class CBuilding : CBaseEntity {
 
 				float extractionAmount = level * 1.5f;
 
+				// FIXME: a monkey will be inside the Command Center only
 				if(TheresAMonkeyInside() != null) {
 					extractionAmount *= 2.0f; // Hava a monkey inside the building? Double the production!!!
 				}
@@ -216,7 +217,7 @@ public class CBuilding : CBaseEntity {
 		
 		AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
-		// FIXME!
+		// FIXME: put all this in the monkey class, not here!!!
 		monkeyInside.transform.position =
 		 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
 
