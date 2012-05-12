@@ -25,6 +25,7 @@ public class CMonkey : CBaseEntity {
 		STATE_WALKING,					// Monkey walking around
 		STATE_STUNNED,					// Monkey stunned by an enemy drone, cannot move
 		STATE_ATTACKING,				// Attacking an enemy drone
+		STATE_PURSUIT,					// Walk until the target is in range, then attack it
 		STATE_NULL							// null
 	};
 	
@@ -85,7 +86,10 @@ public class CMonkey : CBaseEntity {
 	
 	public void Attack(Transform transTarget){
 		 this.transTarget = transTarget;
-		 EnterNewState(FSMState.STATE_ATTACKING);
+		 //EnterNewState(FSMState.STATE_ATTACKING);
+		 // Changed by Alexandre: instead of attacking, we first enter the pursuit mode. If the target is already 
+		 // at range, the FSM will change to ATTACKING
+		 EnterNewState(FSMState.STATE_PURSUIT);
 	}
 	
 	void Update(){
@@ -154,6 +158,11 @@ public class CMonkey : CBaseEntity {
 				// FIXME: target is null here!
 				// DEBUG
 				Debug.Log("Entering STATE_ATTACKING with target: " + transTarget);
+				break;
+
+			case FSMState.STATE_PURSUIT:
+				// DEBUG
+				Debug.Log("Entering STATE_PURSUIT");
 				AIScript.ClickedTargetPosition(transTarget.position);
 				break;
 
@@ -199,45 +208,49 @@ public class CMonkey : CBaseEntity {
 			
 			case FSMState.STATE_ATTACKING:
 			
+				// DEBUG
+				Debug.Log("Executing attack");
 			
-			// BY LEO: POR ENQUANTO ELE NAO ESTA SE MOVIMENTANDO EM DIRECAO AO INIMIGO POIS JA ESTA SENDO FEITO FORA DAQUI, MAS ACHO QUE DEVERIA ENTRAR NO WALKING E TB NO ATTACKING
-			
-			// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
+				CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+				if (droneTarget != null){
+
+					Debug.Log("XXXX MONKEY  attacking");
+					droneTarget.Attacked();
+
+					// TODO: PLAY SOME ATTACKING SOUND
+
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			case FSMState.STATE_PURSUIT:
+				// ADDED by Alexandre: pursuit is the combination and attack modes. First, walk to the target. Here, 
+				// test if the target is in range, the switch to the ATTACK state
+				// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
 				if (transTarget == null){
 					Debug.Log("TARGET INVALID");
 					EnterNewState(FSMState.STATE_IDLE);
 					break;
 				}
-			
+
+				// DEBUG
 				Debug.Log("TARGET VALID");
-			
+
 				Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
 				float curDistance = diff.sqrMagnitude; 
-				
+
 				// FIXME: distance must be the radius of the monkey collider plus the radius of the target collider
-				if (curDistance < 3.5f)
+				if (curDistance < 3.0f)
 				{
-					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-					if (droneTarget != null){
-					
-						Debug.Log("XXXX MONKEY  attacking");
-						droneTarget.Attacked();
-				
-					// TODO: PLAY SOME ATTACKING SOUND
-				
-						EnterNewState(FSMState.STATE_IDLE);
-					}
-					
+					// DEBUG
+					Debug.Log("Close enough to the target. Change to attack!");
+
+					EnterNewState(FSMState.STATE_ATTACKING);
 				}
 				else {
 
-					// FIXME: create another state, like "walking_to_the_target" or something. The idea is to get closer
-					// to the target (walking) and then attacking, but without changing to the "walking" state.
-					// Another idea: create an "pursuit" state. When distance is less than X, change to attack 
-					// automatically
-					// DEBUG
-					Debug.Log("Distance: " + curDistance);
-					WalkTo(transTarget.transform.position);
+					// FIXME: it's working for an stationary target. But if the targets moves away? I guess we should
+					// keep walking to the new target position
 				}
 				break;
 
@@ -282,6 +295,9 @@ public class CMonkey : CBaseEntity {
 				// DEBUG
 				Debug.Log("Leaving STATE_ATTACKING");
 				transTarget = null;
+				break;
+
+			case FSMState.STATE_PURSUIT:
 				break;
 
 			case FSMState.STATE_NULL:
