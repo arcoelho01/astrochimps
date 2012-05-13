@@ -14,7 +14,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	Transform pointedObject = null;
 	public Transform cursorObject = null;
 	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, 
-		Targeting, CanCapture, CanReleaseCaptured, OffLimits }; 
+		Targeting, CanCapture, CanReleaseCaptured}; 
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -25,7 +25,6 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorWalkNotOk;	// Walk cursor, but indicating we can't walk here
 	public Texture2D cursorBuild;	// cursor to show that we can build something
 	public Texture2D cursorCaptureRay;	// cursor showing that we can use the capture ray
-	public Texture2D cursorOffLimits;	// cursor when the mouse is over or off the limits from the game viewport
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
@@ -44,8 +43,8 @@ public class MouseWorldPosition : MonoBehaviour {
 	bool bnShowMouseCursor = true;	
 
 	// Defines a 'bar' in the screen. Mouse clicks outside this bar are ignored
-	public float gameBarTop;	// From the top o the screen		
-	public float gameBarBottom;	// From the bottom of the screen. Usually the height of the bottom menu bar
+	public float gameBarTop	=	80;	// From the top o the screen		
+	public float gameBarBottom = 60 ;	// From the bottom of the screen. Usually the height of the bottom menu bar
 
 	/*
 	 * ===========================================================================================================
@@ -191,14 +190,6 @@ public class MouseWorldPosition : MonoBehaviour {
 			pointedObject = null;
 
 			mouseBefore = mouseNow;
-
-			// Check if we're inside the game defined viewport
-			if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom) {
-
-				cursorCurrent = cursorOffLimits;
-				MouseState = eMouseStates.OffLimits;
-				return;
-			}
 
 			// Converts the mouse position to world position
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
