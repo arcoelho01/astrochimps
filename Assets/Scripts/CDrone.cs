@@ -106,6 +106,9 @@ public class CDrone : CBaseEntity {
 		
 		Debug.Log("XXXX BEING ATTACKED");
 		
+		// TODO check who is attacking this drone
+		// If is a monkey, check in CMonkey the rules; some monkeys cause the drone to be disabled, others to 
+		// recycle it, etc
 		EnterNewState(FSMState.STATE_STUNNED);
 		
 	}

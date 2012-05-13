@@ -210,6 +210,15 @@ public class CMonkey : CBaseEntity {
 			
 				// DEBUG
 				Debug.Log("Executing attack");
+
+				// TODO here applies the following rules:
+				// Astronaut: disable only the patrol drone
+				// Saboteur:	attack a building, disabling it;
+				//						attack a disabled drone, reprogramming it
+				//						attack any drone, temporarily disabling it (CHECK)
+				// Cientist:	get rocket parts
+				// Engineer:	attack a disabled drone, turning it in metal
+				//						'attack' a saboutaged building, repairing it 
 			
 				CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 				if (droneTarget != null){
