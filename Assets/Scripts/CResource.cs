@@ -16,6 +16,12 @@ public class CResource : CBaseEntity {
 
 	bool resourceDrained = false;	// Easier way to say that's resourceLevel is zero!
 
+	public class ExtractedResource {
+
+		public eResourceType type;	// Type o resource extracted
+		public float amount;				// Amount of resource extracted
+		public bool isDrained;			// This resource site is drained, i.e., have no resources left?
+	}
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -52,48 +58,35 @@ public class CResource : CBaseEntity {
 	/// <param name="amount">
 	/// Float with the amount of resource to be extracted. This value depends of the extractor level 
 	/// </param>
-	public void ExtractResource(float amount) {
+	public ExtractedResource ExtractResource(float amount) {
 
-		if(!associatedExtractor) {
+		ExtractedResource rv = new ExtractedResource();
 
-			return; 
+		rv.type = resourceType;
+		rv.amount = 0.0f;
+		rv.isDrained = resourceDrained;
+
+		if(!associatedExtractor ||  resourceLevel == 0.0f) {
+
+			return rv; 
 		}
 
-		// No resource left?
-		if(resourceLevel == 0.0f)
-			return;
-
+		// extracts an amount of resource
 		resourceLevel -= amount;
 
+		// Check if we actually have enough resources
 		if(resourceLevel < 0.0f) {
 
 			// We tried to extract more than available
 			amount += resourceLevel; // Adjust the amount extracted
 			resourceLevel = 0.0f;	// Clean the site
-			ResourcesDrained();
-
-			// TODO: should we disable the extractor and the resource site when it's all drained?
+			resourceDrained = true;
 		}
 
-		// Check the type of resource we're dealing here
-		switch(resourceType) {
+		rv.isDrained = resourceDrained;
+		rv.amount = amount;
 
-			case eResourceType.Oxygen:
-				// Adds the resource extracted to the player
-				mainScript.player.AddResourceOxygen(amount);
-				break;
-
-			case eResourceType.Metal:
-				// Adds the resource extracted to the player
-				mainScript.player.AddResourceMetal(amount);
-				break;
-
-			case eResourceType.NONE:
-				break;
-
-			default:
-				break;
-		}
+		return rv;
 	}
 
 	/// <summary>
@@ -115,17 +108,6 @@ public class CResource : CBaseEntity {
 		// With an extractor built, there's no need to be able to select this resource site anymore
 		Deselect();
 		Selectable = false;
-	}
-
-	/// <summary>
-	/// What to do when all resources from this site are drained
-	/// </summary>
-	void ResourcesDrained() {
-
-		resourceDrained = true;
-		// TODO: disable the resource site? Change it's model or texture?
-		// Disable the associated extractor?
-		associatedExtractor.GetComponent<CBuilding>().IsIdle(true);
 	}
 
 	/// <summary>

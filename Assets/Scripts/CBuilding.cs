@@ -132,16 +132,7 @@ public class CBuilding : CBaseEntity {
 
 			if(myTimer >= workTime) {
 
-				float extractionAmount = level * 1.5f;
-
-				// FIXME: a monkey will be inside the Command Center only
-				if(TheresAMonkeyInside() != null) {
-					extractionAmount *= 2.0f; // Have a monkey inside the building? Double the production!!!
-				}
-				// FIXME: change the 1.5f to a define
-				resourceSite.GetComponent<CResource>().ExtractResource(extractionAmount);
-				// Instantiate a info text
-				StartCoroutine(ShowInfoForExtractedResource(extractionAmount));
+				ExtractResource();
 
 				myTimer = 0.0f;
 			}
@@ -242,21 +233,70 @@ public class CBuilding : CBaseEntity {
 	}
 
 	/// <summary>
-	///
+	/// Extract resource from the resource site
 	/// </summary>
-	IEnumerator ShowInfoForExtractedResource(float amountExtracted) {
+	void ExtractResource() {
+
+		CResource.ExtractedResource extractedResource;
+		float extractionAmount = level * 1.5f;
+		string resourceString = "";
+
+		// FIXME: a monkey will be inside the Command Center only
+		if(TheresAMonkeyInside() != null) {
+			extractionAmount *= 2.0f; // Have a monkey inside the building? Double the production!!!
+		}
+		
+		// Try to extract resources
+		extractedResource = resourceSite.GetComponent<CResource>().ExtractResource(extractionAmount);
+
+		// Check if there's any resource left in the resource site. If not, disable the building
+		if(extractedResource.isDrained) {
+
+			IsIdle(true);
+		}
+
+		// Check what we got
+		switch(extractedResource.type) {
+
+			case CResource.eResourceType.Oxygen:
+				// Adds the resource extracted to the player
+				mainScript.player.AddResourceOxygen(extractedResource.amount);
+				resourceString = "Oxygen";
+				break;
+
+			case CResource.eResourceType.Metal:
+				// Adds the resource extracted to the player
+				mainScript.player.AddResourceMetal(extractedResource.amount);
+				resourceString = "Metal";
+				break;
+
+			case CResource.eResourceType.NONE:
+				break;
+
+			default:
+				break;
+		}
+
+		// Instantiate a info text
+		StartCoroutine(ShowInfoForExtractedResource(resourceString, extractedResource.amount));
+	}
+
+	/// <summary>
+	/// Show a text tag with the resource extracted and it's amount. Floats up the screen and the vanishes.
+	/// Useful to show the player what the extractor is doing
+	/// </summary>
+	IEnumerator ShowInfoForExtractedResource(string stResource, float amountExtracted) {
 
 		Transform myInfo = Instantiate(showInfoObject, this.transform.position, Quaternion.identity) as Transform;
 
 		myInfo.transform.parent = this.transform;
-		string infoText = "Metal +" + amountExtracted;
+		string infoText = stResource + " +" + amountExtracted;
 		myInfo.GetComponent<ShowInfoPanel>().SetInfoText(infoText);
 
 		yield return new WaitForSeconds(2.0f);
 
 		if(myInfo)
 			Destroy(myInfo.gameObject);
-
 	}
 }
 

@@ -1,11 +1,19 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// This class will create an object and put it as a child from another. It's show a text in the screen,
+/// right above the parent object, and then move it towards the top of the screen (like a score info from an
+/// old-school game). Useful, for instance, to show a player what resource an extractor is extracting and it's
+/// amount
+/// </summary>
 public class ShowInfoPanel : MonoBehaviour {
 
+	// Parent for this object
 	Transform myParent;
+	// Vertical offset, to make the text floats towards the top of the screen 
 	float offsetY;
-	bool showInfo = false;
+	// Text to be shown
 	string infoText = "";
 
 	// Use this for initialization
@@ -17,20 +25,17 @@ public class ShowInfoPanel : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
 
-		if(myParent.renderer.isVisible) {
-		
-			showInfo = true;
-			offsetY += Time.deltaTime * 20;
-		}
-		else
-			showInfo = false;
+		offsetY += Time.deltaTime * 20;
 	}
 
+	/// <summary>
+	/// Actually draws the text on screen
+	/// </summary>
 	void OnGUI() {
 
-		if(showInfo) {
+		// Only show something if the object is actually on the screen
+		if(myParent.renderer.isVisible) {
 			// Find my position on the screen
 			Vector3 position = Camera.main.WorldToScreenPoint(myParent.transform.position + 
 					new Vector3(0, myParent.transform.localScale.y,0));
@@ -39,6 +44,9 @@ public class ShowInfoPanel : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Set the text to be shown
+	/// </summary>
 	public void SetInfoText(string newText) {
 
 		infoText = newText;
