@@ -21,12 +21,13 @@ public class CBuilding : CBaseEntity {
 	public float costOxygen = 1.0f;	// Amount of oxygen units needed to build this structure
 	public float costMetal = 2.0f;	// Amount of metal resources needed to build this structure
 	public int level = 1;	// Level of this building
-	public float workTime = 2.0f;
+	public float workTime = 1.0f;
 	public float myTimer = 0.0f;
 
 	public Transform monkeyInside; // There's a monkey inside this building?
 	public bool idleStatus = false;	// The building is operational and fully functional?
 	public CBaseEntity resourceSite; // If it's an extractor, from which resource site it's extracting
+	public Transform showInfoObject;
 
 	// ================== MERGE
 
@@ -122,7 +123,7 @@ public class CBuilding : CBaseEntity {
 				Debug.LogError("Extractor without an associated resource site");
 			}
 
-			if(idleStatus == true) {
+			if(idleStatus || sabotado) {
 
 				renderer.material = materialDisabled;
 
@@ -135,10 +136,13 @@ public class CBuilding : CBaseEntity {
 
 				// FIXME: a monkey will be inside the Command Center only
 				if(TheresAMonkeyInside() != null) {
-					extractionAmount *= 2.0f; // Hava a monkey inside the building? Double the production!!!
+					extractionAmount *= 2.0f; // Have a monkey inside the building? Double the production!!!
 				}
 				// FIXME: change the 1.5f to a define
 				resourceSite.GetComponent<CResource>().ExtractResource(extractionAmount);
+				// Instantiate a info text
+				StartCoroutine(ShowInfoForExtractedResource(extractionAmount));
+
 				myTimer = 0.0f;
 			}
 		}
@@ -235,6 +239,24 @@ public class CBuilding : CBaseEntity {
 	public Transform TheresAMonkeyInside() {
 
 		return monkeyInside;
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	IEnumerator ShowInfoForExtractedResource(float amountExtracted) {
+
+		Transform myInfo = Instantiate(showInfoObject, this.transform.position, Quaternion.identity) as Transform;
+
+		myInfo.transform.parent = this.transform;
+		string infoText = "Metal +" + amountExtracted;
+		myInfo.GetComponent<ShowInfoPanel>().SetInfoText(infoText);
+
+		yield return new WaitForSeconds(2.0f);
+
+		if(myInfo)
+			Destroy(myInfo.gameObject);
+
 	}
 }
 
