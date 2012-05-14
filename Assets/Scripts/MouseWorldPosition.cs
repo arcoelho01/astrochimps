@@ -679,7 +679,6 @@ public class MouseWorldPosition : MonoBehaviour {
 				// DEBUG
 				Debug.Log("CHEAT: building " + selectedObject.name + " sabotage: " + selectedBuilding.sabotado);
 			}	
-
 		}
 	}
 }

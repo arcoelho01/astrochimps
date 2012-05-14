@@ -12,7 +12,7 @@ public class MainScript : MonoBehaviour {
 
 	public GUIBottomMenu bottomMenu;	// Pointer to the bottom menu bar
 	public Transform playerObject;	// Pointer to the player object
-	public CPlayer player;
+	public CPlayer player;	// Pointer to the player itself
 
 	public bool isMinimapEnabled = true;	// Starts with the minimap enabled
 

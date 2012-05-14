@@ -17,9 +17,9 @@ public class CBuilding : CBaseEntity {
 	public AudioClip sfxLoadMonkey;
 	public AudioClip sfxSelected;
 	
-	public float costTime = 5.0f; // Seconds needed to build this structure
-	public float costOxygen = 1.0f;	// Amount of oxygen units needed to build this structure
-	public float costMetal = 2.0f;	// Amount of metal resources needed to build this structure
+	public float costTime; // Seconds needed to build this structure
+	public float costOxygen;	// Amount of oxygen units needed to build this structure
+	public float costMetal;	// Amount of metal resources needed to build this structure
 	public int level = 1;	// Level of this building
 	public float workTime = 1.0f;
 	public float myTimer = 0.0f;
@@ -261,13 +261,13 @@ public class CBuilding : CBaseEntity {
 			case CResource.eResourceType.Oxygen:
 				// Adds the resource extracted to the player
 				mainScript.player.AddResourceOxygen(extractedResource.amount);
-				resourceString = "Oxygen";
+				resourceString = "Oxygen ";
 				break;
 
 			case CResource.eResourceType.Metal:
 				// Adds the resource extracted to the player
 				mainScript.player.AddResourceMetal(extractedResource.amount);
-				resourceString = "Metal";
+				resourceString = "Metal ";
 				break;
 
 			case CResource.eResourceType.NONE:
@@ -306,10 +306,18 @@ public class CBuilding : CBaseEntity {
 	/// </summary>
 	public void FixByEngineer() {
 
-		if(sabotado)
+		// FIXME: Cost of repairing: say, 20% of the building cost?
+		float fRepairCost = costMetal * 0.2f;
+
+		if(mainScript.player.metalLevel >= fRepairCost && sabotado) {
+		
+			mainScript.player.SubResourceMetal(fRepairCost);
 			sabotado = false;
-				
-		renderer.material = myMaterial;
+			renderer.material = myMaterial;
+		
+			// Instantiate a info text
+			StartCoroutine(ShowInfoForExtractedResource("Metal ", -fRepairCost));
+		}
 	}
 }
 
