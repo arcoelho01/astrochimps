@@ -221,12 +221,10 @@ public class CMonkey : CBaseEntity {
 				CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 				if (droneTarget != null){
 
-					bool bnDroneIsStunned = droneTarget.IsThisDroneStunned();	
-
 					Debug.Log("XXXX MONKEY  attacking");
 
 					// Astronaut only attack drones that are not stunned
-					if(monkeyClass == eMonkeyType.Astronaut && !bnDroneIsStunned) {
+					if(monkeyClass == eMonkeyType.Astronaut && !droneTarget.isStunned()) {
 
 						if(sfxAttack) {
 
@@ -235,17 +233,16 @@ public class CMonkey : CBaseEntity {
 
 						droneTarget.Attacked();
 					}
-					else if(monkeyClass == eMonkeyType.Engineer && bnDroneIsStunned) {
+					else if(monkeyClass == eMonkeyType.Engineer && droneTarget.isStunned()) {
 					
 						if(sfxAttack) {
 
 							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
 						}
-						// DEBUG
-						Debug.Log("Drone being attacked by a Engineer. Should be recycled");
-						droneTarget.Attacked();
+
+						droneTarget.Recycled();
 					}
-					else if(monkeyClass == eMonkeyType.Saboteur && bnDroneIsStunned) {
+					else if(monkeyClass == eMonkeyType.Saboteur && droneTarget.isStunned()) {
 
 						// DEBUG
 						Debug.Log("Drone being attacked by a Saboteur. Should be reprogrammed");
