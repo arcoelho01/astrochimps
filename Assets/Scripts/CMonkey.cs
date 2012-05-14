@@ -14,6 +14,7 @@ public class CMonkey : CBaseEntity {
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
 	public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAttack;	// Played when the monkey is attacking a target
 	private Transform transTarget;   // Target Transform
 	private Vector3 walkTo;
 	public float attackRange;      //  Attack Range to disable drones.
@@ -155,9 +156,6 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_ATTACKING:
 				// SET AISCRIPT TO MOVE TO TARGET
-				// FIXME: target is null here!
-				// DEBUG
-				Debug.Log("Entering STATE_ATTACKING with target: " + transTarget);
 				break;
 
 			case FSMState.STATE_PURSUIT:
@@ -223,9 +221,36 @@ public class CMonkey : CBaseEntity {
 				CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 				if (droneTarget != null){
 
-					Debug.Log("XXXX MONKEY  attacking");
-					droneTarget.Attacked();
+					bool bnDroneIsStunned = droneTarget.IsThisDroneStunned();	
 
+					Debug.Log("XXXX MONKEY  attacking");
+
+					// Astronaut only attack drones that are not stunned
+					if(monkeyClass == eMonkeyType.Astronaut && !bnDroneIsStunned) {
+
+						if(sfxAttack) {
+
+							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+						}
+
+						droneTarget.Attacked();
+					}
+					else if(monkeyClass == eMonkeyType.Engineer && bnDroneIsStunned) {
+					
+						if(sfxAttack) {
+
+							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+						}
+						// DEBUG
+						Debug.Log("Drone being attacked by a Engineer. Should be recycled");
+						droneTarget.Attacked();
+					}
+					else if(monkeyClass == eMonkeyType.Saboteur && bnDroneIsStunned) {
+
+						// DEBUG
+						Debug.Log("Drone being attacked by a Saboteur. Should be reprogrammed");
+					}
+					
 					// TODO: PLAY SOME ATTACKING SOUND
 
 					EnterNewState(FSMState.STATE_IDLE);

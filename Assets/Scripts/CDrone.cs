@@ -282,4 +282,15 @@ public class CDrone : CBaseEntity {
 				break;
 		}
 	}
+
+	/// <summary>
+	/// Helper function to tell if a drone is in the STATE_STUNNED or no. Useful for monkeys attacking this drone
+	/// </summary>
+	public bool IsThisDroneStunned() {
+
+		if(GetCurrentState() == FSMState.STATE_STUNNED)
+			return true;
+		else
+			return false;
+	}
 }
