@@ -14,7 +14,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	Transform pointedObject = null;
 	public Transform cursorObject = null;
 	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, 
-		Targeting, CanCapture, CanReleaseCaptured}; 
+		Targeting, CanCapture, CanReleaseCaptured, EngineerFix}; 
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -171,6 +171,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 	/// <summary>
 	/// Checks the objects under the mouse cursor, showing its info in the info panel
+	/// Actually, this is the main function of this script: it analyzes the context and set the mouse state and
+	/// cursor accordingly
 	/// </summary>
 	void MouseOver() {
 		
@@ -226,7 +228,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				// And we show it
 				bnShowMouseCursor = true;
 
-				// Special case: hover over an resource site without an extractor
+				// Special case: hover over a resource site without an extractor
 				if(whatIAmPointing.tag == "Resource") {
 
 					CResource resourceExtractor = whatIAmPointing.gameObject.GetComponent<CResource>();
@@ -285,7 +287,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				// Is a monkey selected?
 				if(selectedObject.gameObject.tag == "Monkey") {
 
-					// FIXING as 10/05: all monkeys can entered buildings, but only at the Command Center. Other buildings
+					// FIXING as 10/05: all monkeys can enter buildings, but only at the Command Center. Other buildings
 					// cannot be monkey operated
 
 					// are we pointing at one of ours buildings?
@@ -297,20 +299,29 @@ public class MouseWorldPosition : MonoBehaviour {
 						if(!pointedBuilding)
 							return;
 
-						// Is this building clear?
+						// Is this the Command Center?
 						if(pointedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter &&  
 								!pointedBuilding.TheresAMonkeyInside()) {
 
 							cursorCurrent = cursorGetInside;
 							MouseState = eMouseStates.MonkeyCanEnterBuilding;
 						}
-						else { // Already have a monkey
-							// FIXME: check the correct cursor. Not walk, perhaps?
-							return;
-							cursorCurrent = cursorNormal;
-							MouseState = eMouseStates.Hover;
+
+						// Is this a sabotaged building?
+						if(pointedBuilding.sabotado) {
+
+							// and we have the engineer selected?
+							if(selectedObject.gameObject.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Engineer) {
+								
+								cursorCurrent = cursorBuild;
+								MouseState = eMouseStates.EngineerFix;
+							}
 						}
 
+						// FIXME: check the correct cursor. Not walk, perhaps?
+						//	cursorCurrent = cursorNormal;
+						//	MouseState = eMouseStates.Hover;
+						//
 						return;
 					}
 				
