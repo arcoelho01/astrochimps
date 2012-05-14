@@ -10,6 +10,8 @@ public class CDrone : CBaseEntity {
 	
 	// PUBLIC
 	public enum eDroneType { Patrol, Saboteur, Hunter, NONE }; // Drones types
+	public Transform stunnedParticleSystem;
+	Transform stunnedObj = null;
 
 	/*
 	 * ===========================================================================================================
@@ -152,6 +154,17 @@ public class CDrone : CBaseEntity {
 					AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
 				}
 
+				// Add a visual aid
+				if(stunnedParticleSystem) {
+				
+					// Instantiate the particle system
+					stunnedObj = Instantiate(stunnedParticleSystem, this.transform.position + Vector3.up, 
+							Quaternion.Euler(-90,0,0)) as Transform;
+					
+					// Put it as child
+					stunnedObj.transform.parent = this.transform;
+				}
+
 				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
 				AIScript.Stop();
 				break;
@@ -248,6 +261,12 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
+				{
+
+					// Destroys the 'stunned particle system', if exists
+					if(stunnedObj)
+						Destroy(stunnedObj.gameObject);
+				}
 				break;
 
 			case FSMState.STATE_ATTACKING:
