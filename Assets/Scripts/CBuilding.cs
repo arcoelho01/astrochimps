@@ -298,5 +298,18 @@ public class CBuilding : CBaseEntity {
 		if(myInfo)
 			Destroy(myInfo.gameObject);
 	}
+
+	/// <summary>
+	/// Fixing the building by an engineer. For now, it only changes the state from "sabotaged" to "not 
+	/// sabotaged"
+	/// TODO: add some cost in resources (metal?) when this is done. And check if we can afford it before fixing
+	/// </summary>
+	public void FixByEngineer() {
+
+		if(sabotado)
+			sabotado = false;
+				
+		renderer.material = myMaterial;
+	}
 }
 

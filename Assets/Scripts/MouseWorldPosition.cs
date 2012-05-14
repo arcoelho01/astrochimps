@@ -207,6 +207,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			if(whatIAmPointing == null)
 				return;
+			else 
+				pointedObject = whatIAmPointing;
 
 			// Check the visibility
 			if(whatIAmPointing.gameObject.GetComponent<VisibilityControl>() != null) {
@@ -486,7 +488,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 	/// <summary>
 	/// Execute when the player presses the right mouse button
-	/// Behaviours: when a le unit is selected, select where it should walk to
+	/// Behaviours: when a movable unit is selected, select where it should walk to
 	/// </summary>
 	void CheckRightMouseClick() {
 
@@ -524,6 +526,23 @@ public class MouseWorldPosition : MonoBehaviour {
 			}
 
 			capturedEntity.ReleaseMe();
+			return;
+		}
+
+		// Engineer monkey + sabotaged building = fix it!
+		if(MouseState == eMouseStates.EngineerFix) {
+
+			CBuilding pointedBuilding = pointedObject.GetComponent<CBuilding>();
+
+			if(!pointedBuilding) {
+
+				// DEBUG
+				Debug.LogError("Cannot find CBuilding in this building: " + pointedBuilding.name);
+			}
+
+			// Fix the building
+			pointedBuilding.FixByEngineer();
+
 			return;
 		}
 
@@ -658,7 +677,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				selectedBuilding.sabotado = !selectedBuilding.sabotado;
 
 				// DEBUG
-				Debug.Log("CHEAT: building " + selectedObject.name + " saboutage: " + selectedBuilding.sabotado);
+				Debug.Log("CHEAT: building " + selectedObject.name + " sabotage: " + selectedBuilding.sabotado);
 			}	
 
 		}

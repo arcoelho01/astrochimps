@@ -317,4 +317,5 @@ public class CMonkey : CBaseEntity {
 				break;
 		}
 	}
+
 }
