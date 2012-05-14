@@ -101,8 +101,9 @@ public class CBuilding : CBaseEntity {
 	/// </summary>
 	void Update() {
 
-		// Update the timer
-		myTimer += Time.deltaTime;
+		// Only update the timer if the building is working
+		if(!idleStatus && !sabotado)
+			myTimer += Time.deltaTime;
 
 		// Check if we need to show a menu
 		if(isSelected && monkeyInside != null) {
@@ -282,7 +283,7 @@ public class CBuilding : CBaseEntity {
 	}
 
 	/// <summary>
-	/// Show a text tag with the resource extracted and it's amount. Floats up the screen and the vanishes.
+	/// Show a text tag with the resource extracted and it's amount. Floats up the screen and then vanishes.
 	/// Useful to show the player what the extractor is doing
 	/// </summary>
 	IEnumerator ShowInfoForExtractedResource(string stResource, float amountExtracted) {

@@ -40,7 +40,7 @@ public class ShowInfoPanel : MonoBehaviour {
 			Vector3 position = Camera.main.WorldToScreenPoint(myParent.transform.position + 
 					new Vector3(0, myParent.transform.localScale.y,0));
 
-			GUI.Label(new Rect(position.x, Screen.height - position.y - offsetY,100,50), infoText);
+			GUI.Label(new Rect(position.x, Screen.height - position.y - offsetY, 150,50), infoText);
 		}
 	}
 

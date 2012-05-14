@@ -218,7 +218,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				}
 			}
 
-			// 1 - check if we have something select or not
+			// 1 - check if we have something selected or not
 			if(!selectedObject) {
 
 				if(whatIAmPointing.gameObject.layer != MainScript.groundLayer)
@@ -289,6 +289,16 @@ public class MouseWorldPosition : MonoBehaviour {
 				// Is a monkey selected?
 				if(selectedObject.gameObject.tag == "Monkey") {
 
+					CMonkey selectedMonkey = selectedObject.gameObject.GetComponent<CMonkey>();
+
+					if(!selectedMonkey) {
+
+						// DEBUG
+						Debug.LogError("Cannot find CMonkey component on " + selectedObject);
+						return;
+					}
+
+
 					// FIXING as 10/05: all monkeys can enter buildings, but only at the Command Center. Other buildings
 					// cannot be monkey operated
 
@@ -313,7 +323,7 @@ public class MouseWorldPosition : MonoBehaviour {
 						if(pointedBuilding.sabotado) {
 
 							// and we have the engineer selected?
-							if(selectedObject.gameObject.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Engineer) {
+							if(selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Engineer) {
 								
 								cursorCurrent = cursorBuild;
 								MouseState = eMouseStates.EngineerFix;
@@ -327,8 +337,9 @@ public class MouseWorldPosition : MonoBehaviour {
 						return;
 					}
 				
-					// No, so are we pointing at a rocket part?
-					if(whatIAmPointing.tag == "RocketPart") {
+					// No, so are we pointing at a rocket part with the cientist monkey selected?
+					if(whatIAmPointing.tag == "RocketPart" && 
+							selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Cientist) {
 
 						// Ok, but it's this part already being carried by someone in my team?
 						if(whatIAmPointing.transform.parent.GetComponent<CRocketPart>().isCaptured) {
@@ -338,7 +349,7 @@ public class MouseWorldPosition : MonoBehaviour {
 							// Set the state
 							MouseState = eMouseStates.CanReleaseCaptured;
 							// Keeps the pointed object
-							pointedObject = whatIAmPointing;
+							//pointedObject = whatIAmPointing;
 						}
 						else {
 
@@ -347,10 +358,9 @@ public class MouseWorldPosition : MonoBehaviour {
 							// Set the state
 							MouseState = eMouseStates.CanCapture;
 							// Keeps the pointed object
-							pointedObject = whatIAmPointing;
+							//pointedObject = whatIAmPointing;
 						}
 					}	
-
 				}
 				else { // not a monkey
 
