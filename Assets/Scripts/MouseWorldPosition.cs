@@ -43,8 +43,8 @@ public class MouseWorldPosition : MonoBehaviour {
 	bool bnShowMouseCursor = true;	
 
 	// Defines a 'bar' in the screen. Mouse clicks outside this bar are ignored
-	public float gameBarTop	=	80;	// From the top o the screen		
-	public float gameBarBottom = 60 ;	// From the bottom of the screen. Usually the height of the bottom menu bar
+	public float gameBarTop;	// From the top o the screen		
+	public float gameBarBottom;	// From the bottom of the screen. Usually the height of the bottom menu bar
 
 	/*
 	 * ===========================================================================================================
@@ -86,7 +86,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		mouseBefore = mouseNow = Input.mousePosition;
 		MouseState = eMouseStates.Hover;
 
-		// Adjust the gameBarBottom to pixels
+		// Adjust the gameBarTop to pixels
 		gameBarBottom = Screen.height - gameBarBottom;
 
 		// Hides the OS cursor
@@ -113,6 +113,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			CheckRightMouseClick();
 		} // END RIGHT CLICK
+
+		DoCheatingStuff();
 	}
 
 	/*
@@ -478,14 +480,11 @@ public class MouseWorldPosition : MonoBehaviour {
 	void CheckRightMouseClick() {
 
 		// Check if we're inside the game defined viewport
-		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
+		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom) 
 			return;
 
 		// Checks if we clicked in an unit
 		Transform whatIClicked = GetWhatIClicked();
-
-		// DEBUG
-		//Debug.Log("MouseWorldPosition: mouse status during GetWhatIClicked " + MouseState);
 
 		// TESTING!!!
 		// Using the mouseState instead of doing a bunch of tests here. Should work...
@@ -514,6 +513,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			}
 
 			capturedEntity.ReleaseMe();
+			return;
 		}
 
 		// FIXME: add monkey select, I clicked in a building
@@ -632,5 +632,24 @@ public class MouseWorldPosition : MonoBehaviour {
 			Destroy(projectorSelectTargetPosition.gameObject);
 	
 		//Destroy(myProjector.gameObject);
+	}
+
+	/// <summary>
+	/// Do some cheats, for development purposes only
+	/// </summary>
+	void DoCheatingStuff() {
+
+		if(Input.GetKeyDown(KeyCode.Backslash)){
+
+			if(selectedObject.tag == "Building") {
+
+				CBuilding selectedBuilding = selectedObject.gameObject.GetComponent<CBuilding>();
+				selectedBuilding.sabotado = !selectedBuilding.sabotado;
+
+				// DEBUG
+				Debug.Log("CHEAT: building " + selectedObject.name + " saboutage: " + selectedBuilding.sabotado);
+			}	
+
+		}
 	}
 }

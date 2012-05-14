@@ -102,6 +102,9 @@ public class CDrone : CBaseEntity {
 		ExecuteCurrentState();
 	}
 	
+	/// <summary>
+	/// What to do when this drone is attacked?
+	/// </summary>
 	public void Attacked(){
 		
 		Debug.Log("XXXX BEING ATTACKED");

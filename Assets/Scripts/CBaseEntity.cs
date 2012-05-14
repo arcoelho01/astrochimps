@@ -155,6 +155,13 @@ public class CBaseEntity : MonoBehaviour {
 	public virtual void ReleaseMe() {
 
 		this.transform.parent = capturedFormerParent;
+
+		// FIXME: find a better way to put the captured object back to the ground
+		Vector3 putMeBackInTheGround = new Vector3(transform.position.x, capturedFormerPosition.y, 
+				transform.position.z);
+		
+		transform.position = putMeBackInTheGround;
+
 		isCaptured = false;
 	}
 }

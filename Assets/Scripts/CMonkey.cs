@@ -233,8 +233,8 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_PURSUIT:
-				// ADDED by Alexandre: pursuit is the combination and attack modes. First, walk to the target. Here, 
-				// test if the target is in range, the switch to the ATTACK state
+				// ADDED by Alexandre: pursuit is the combination of walk and attack modes. First, walk to the target. 
+				// Here, test if the target is in range, then switch to the ATTACK state
 				// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
 				if (transTarget == null){
 					Debug.Log("TARGET INVALID");
@@ -248,17 +248,16 @@ public class CMonkey : CBaseEntity {
 				Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
 				float curDistance = diff.sqrMagnitude; 
 
-				// FIXME: distance must be the radius of the monkey collider plus the radius of the target collider
+				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target 
+				// collider
 				if (curDistance < 3.0f)
 				{
-					// DEBUG
-					Debug.Log("Close enough to the target. Change to attack!");
 
 					EnterNewState(FSMState.STATE_ATTACKING);
 				}
 				else {
 
-					// FIXME: it's working for an stationary target. But if the targets moves away? I guess we should
+					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
 					// keep walking to the new target position
 				}
 				break;
