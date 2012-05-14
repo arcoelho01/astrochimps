@@ -684,7 +684,10 @@ public class MouseWorldPosition : MonoBehaviour {
 			if(selectedObject.tag == "Building") {
 
 				CBuilding selectedBuilding = selectedObject.gameObject.GetComponent<CBuilding>();
-				selectedBuilding.sabotado = !selectedBuilding.sabotado;
+				if(selectedBuilding.sabotado)
+					selectedBuilding.Desabotage();
+				else
+					selectedBuilding.Sabotage();
 
 				// DEBUG
 				Debug.Log("CHEAT: building " + selectedObject.name + " sabotage: " + selectedBuilding.sabotado);

@@ -29,6 +29,9 @@ public class CBuilding : CBaseEntity {
 	public CBaseEntity resourceSite; // If it's an extractor, from which resource site it's extracting
 	public Transform showInfoObject;
 
+	public Transform sabotagedParticleSystem;
+	Transform sabotagedPSObj = null;
+
 	// ================== MERGE
 
 	public enum TipoEstrutura{
@@ -313,12 +316,42 @@ public class CBuilding : CBaseEntity {
 		if(mainScript.player.metalLevel >= fRepairCost && sabotado) {
 		
 			mainScript.player.SubResourceMetal(fRepairCost);
-			sabotado = false;
-			renderer.material = myMaterial;
-		
+
+			Desabotage();	
 			// Instantiate a info text
 			StartCoroutine(ShowInfoForExtractedResource("Metal ", -fRepairCost));
 		}
+	}
+
+	/// <summary>
+	/// Sabotage this building, adding a visual aid to the player
+	/// </summary>
+	public void Sabotage() {
+
+		sabotado = true;
+
+		// Add a visual aid
+		if(sabotagedParticleSystem) {
+
+			// Instantiate the particle system
+				sabotagedPSObj = Instantiate(sabotagedParticleSystem, this.transform.position + Vector3.up, 
+					Quaternion.Euler(-90,0,0)) as Transform;
+
+			// Put it as child
+			sabotagedPSObj.transform.parent = this.transform;
+		}
+	}
+
+	/// <summary>
+	/// "Desabotage" (is this a real word?) this building, removing the visual aid to the player
+	/// </summary>
+	public void Desabotage() {
+	
+		sabotado = false;
+		renderer.material = myMaterial;
+
+		if(sabotagedPSObj)
+			Destroy(sabotagedPSObj.gameObject);
 	}
 }
 
