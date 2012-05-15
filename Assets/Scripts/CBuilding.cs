@@ -7,7 +7,7 @@ using System.Collections;
 public class CBuilding : CBaseEntity {
 
 	// PRIVATE
-	Material myMaterial;
+	//Material myMaterial;
 	
 	// PUBLIC
 	public enum eBuildingType { CommandCenter, ResourceExtractor, Farm, SecurityCenter, 
@@ -96,7 +96,7 @@ public class CBuilding : CBaseEntity {
 		}
 		// ================== MERGE
 		//
-		myMaterial = renderer.material;
+		//myMaterial = renderer.material;
 	}
 
 	/// <summary>
@@ -129,7 +129,7 @@ public class CBuilding : CBaseEntity {
 
 			if(idleStatus || sabotado) {
 
-				renderer.material = materialDisabled;
+				//renderer.material = materialDisabled;
 
 				return;
 			}
@@ -348,7 +348,7 @@ public class CBuilding : CBaseEntity {
 	public void Desabotage() {
 	
 		sabotado = false;
-		renderer.material = myMaterial;
+		//renderer.material = myMaterial;
 
 		if(sabotagedPSObj)
 			Destroy(sabotagedPSObj.gameObject);

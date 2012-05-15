@@ -26,11 +26,21 @@ public class Regiao : MonoBehaviour {
 		
 		if(GameObject.Find("CanoCentral"+numeroSetor) != null)
 		{
-			 
+			GameObject goCheckRenderer = null;
+
 			for(int i = 0; i <= 1;i++)
 			{
 				
-				if(setor[i].renderer.active)
+				// Check the type of renderer
+				Transform mesh = setor[i].transform.FindChild("Mesh");
+				if(mesh) {
+
+					goCheckRenderer = mesh.gameObject;
+				}
+				else
+					goCheckRenderer = setor[i];
+
+				if(goCheckRenderer.renderer.active)
 				{
 					
 					if(setor[i].GetComponent<DefinicaoEstrutura>().tipo == DefinicaoEstrutura.TipoEstrutura.CANO_CENTRAL)
