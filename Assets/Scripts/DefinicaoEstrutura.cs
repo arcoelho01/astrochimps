@@ -14,7 +14,8 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		SLOT,
 		EXTRATOR,
 		LABORATORIO,
-		PLATAFORMA_LANCAMENTO
+		PLATAFORMA_LANCAMENTO,
+		DRONE_NORMAL
 	};
 	public bool sabotado;
 	public bool conectado;
@@ -88,9 +89,16 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	void Construir()
 	{
 		GameObject construcaoNova;
+		bool drone = false;
 		
-		statusProgressao = StatusProgresso.CONCLUIDO;
+		if(tipo == TipoEstrutura.SLOT)
+			statusProgressao = StatusProgresso.CONCLUIDO;
+		else
+			statusProgressao = StatusProgresso.LIBERADO;
 		
+		progressoAtual = 0;
+		
+		//construcoes
 		if(objetoAConstruir == TipoEstrutura.FAZENDA)
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabFazenda;
 		if(objetoAConstruir == TipoEstrutura.FABRICA_DRONES)
@@ -99,9 +107,17 @@ public class DefinicaoEstrutura : MonoBehaviour {
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabLaboratorio;
 		if(objetoAConstruir == TipoEstrutura.GARAGEM)
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabGaragem;
+		//drones
+		if(objetoAConstruir == TipoEstrutura.DRONE_NORMAL){
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabUnidadeDrone;
+			drone = true;
+		}
 		
-
-		construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),transform.rotation);		
+		if(!drone)
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),transform.rotation);		
+		else
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+3,transform.position.y,transform.position.z+3),transform.rotation);
+			
 	}
 	
 	void ConsumirOxigenio(){
