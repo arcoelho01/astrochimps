@@ -60,6 +60,8 @@ public class RTSCam : MonoBehaviour {
 	// the camera
 	private int screenPanEdge = 20;
 
+	Transform commandCenter;
+
 	MouseWorldPosition inputStuffScript = null;
 	/*
 	 * ===========================================================================================================
@@ -105,13 +107,9 @@ public class RTSCam : MonoBehaviour {
 
 		cameraDistance = zoomDefault;
 
-		PositionCamera();
-		//
-		GameObject commandCenter = GameObject.Find("CommandCenter");
-		if(commandCenter) {
+		commandCenter = GameObject.Find("CentroComando").transform;
 
-			LookAtTarget(commandCenter.transform);
-		}
+		PositionCamera();
 
 	}
 
@@ -143,11 +141,21 @@ public class RTSCam : MonoBehaviour {
 		}
 
 		// FOCUS ON OBJECT
-		if(Input.GetKeyDown("space")) {
+		if(Input.GetKeyDown(KeyCode.Space)) {
 
 			// Is a unit selected?
 			objectInFocus = inputStuffScript.GetSelectedObject();
 			LookAtTarget(objectInFocus);
+		}
+
+		if(Input.GetKeyDown(KeyCode.H)) {
+		
+			if(commandCenter)	{
+			
+				objectInFocus = commandCenter;
+				LookAtTarget(objectInFocus);
+			}
+
 		}
 
 		if(bnCamMoving) {
@@ -220,6 +228,9 @@ public class RTSCam : MonoBehaviour {
 			
 			bnCamMoving = true;
 		}
+
+		// DEBUG
+		Debug.Log("Looking at: " + objectToLook + " @ " + objectToLook.transform.position);
 
 		camPanDirection = Vector3.Lerp(camPanDirection, objectToLook.transform.position, Time.deltaTime * 5.0f);
 		bnCamModified = true;
