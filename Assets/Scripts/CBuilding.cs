@@ -31,6 +31,7 @@ public class CBuilding : CBaseEntity {
 
 	public Transform sabotagedParticleSystem;
 	Transform sabotagedPSObj = null;
+	Transform meshObject = null;
 
 	// ================== MERGE
 
@@ -97,6 +98,9 @@ public class CBuilding : CBaseEntity {
 		// ================== MERGE
 		//
 		//myMaterial = renderer.material;
+		//
+		// Get the mesh
+		meshObject = transform.Find("Mesh");
 	}
 
 	/// <summary>
@@ -133,6 +137,10 @@ public class CBuilding : CBaseEntity {
 
 				return;
 			}
+
+			// Adding animation
+			if(meshObject)
+				meshObject.animation.Play();
 
 			if(myTimer >= workTime) {
 

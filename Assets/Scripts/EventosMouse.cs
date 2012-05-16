@@ -31,15 +31,15 @@ public class EventosMouse : MonoBehaviour {
 			Debug.Log("hit em " + hit.transform);
 
 			// If the mesh collider is a child object...
-			if(hit.transform.parent.transform.GetComponent<DefinicaoEstrutura>() != null) {
-
-				transform.GetComponent<EventosMenu>().tipoObj = hit.transform.parent.transform.GetComponent<DefinicaoEstrutura>().tipo;
-				transform.GetComponent<EventosMenu>().objetoSelecionado = hit.transform.parent.transform;
-			}
-			else if(hit.transform.GetComponent<DefinicaoEstrutura>() != null)
+			if(hit.transform.GetComponent<DefinicaoEstrutura>() != null)
 			{
 				transform.GetComponent<EventosMenu>().tipoObj = hit.transform.GetComponent<DefinicaoEstrutura>().tipo;
 				transform.GetComponent<EventosMenu>().objetoSelecionado = hit.transform;
+			}
+			else if(hit.transform.parent.transform.GetComponent<DefinicaoEstrutura>() != null) {
+
+				transform.GetComponent<EventosMenu>().tipoObj = hit.transform.parent.transform.GetComponent<DefinicaoEstrutura>().tipo;
+				transform.GetComponent<EventosMenu>().objetoSelecionado = hit.transform.parent.transform;
 			}
 		}
 	}
