@@ -35,7 +35,7 @@ public class ShowInfoPanel : MonoBehaviour {
 	void OnGUI() {
 
 		// Only show something if the object is actually on the screen
-		if(myParent.renderer.isVisible) {
+		if(BeingRenderedOnCamera()) {
 			// Find my position on the screen
 			Vector3 position = Camera.main.WorldToScreenPoint(myParent.transform.position + 
 					new Vector3(0, myParent.transform.localScale.y,0));
@@ -50,5 +50,31 @@ public class ShowInfoPanel : MonoBehaviour {
 	public void SetInfoText(string newText) {
 
 		infoText = newText;
+	}
+
+	/// <summary>
+	/// Check if the object is being rendered in the screen. If not, there's no need to display the info text,
+	/// right?
+	/// </summary>
+	bool BeingRenderedOnCamera() {
+
+		bool rv = false;
+
+		CBaseEntity baseEntity = myParent.gameObject.GetComponent<CBaseEntity>();
+
+		if(baseEntity) {
+
+			if(baseEntity.mainRendererObject != null) {
+
+				Debug.Log("Checking renderer in " + baseEntity.mainRendererObject);
+				rv = baseEntity.mainRendererObject.renderer.isVisible;
+			}
+		}
+		else {
+					
+			rv  = myParent.renderer.isVisible;
+		}
+
+		return rv;
 	}
 }

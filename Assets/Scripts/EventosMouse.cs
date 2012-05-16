@@ -23,9 +23,13 @@ public class EventosMouse : MonoBehaviour {
 		
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
-		
-		if(Physics.Raycast(ray,out hit))
+	
+		// Do the raycast, but ignore the minimap's layers	
+		if(Physics.Raycast(ray,out hit, Mathf.Infinity, 
+					~(1 << MainScript.minimapLayer | 1 << MainScript.minimapGroundLayer)))
 		{
+			Debug.Log("hit em " + hit.transform);
+
 			// If the mesh collider is a child object...
 			if(hit.transform.parent.transform.GetComponent<DefinicaoEstrutura>() != null) {
 

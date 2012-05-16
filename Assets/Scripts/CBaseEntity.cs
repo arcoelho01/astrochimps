@@ -40,6 +40,10 @@ public class CBaseEntity : MonoBehaviour {
 	Transform capturedFormerParent;
 	Vector3 capturedFormerPosition;
 
+	// Only a shortcut. When the object has multiple renderes in the hierarchy, we only verify on to know if 
+	// whether is being rendered or not
+	public Transform mainRendererObject = null;	
+	
 	//
 	void Start() {
 
