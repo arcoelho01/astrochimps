@@ -10,6 +10,7 @@ public class EventosMenu : MonoBehaviour {
 	public GameObject prefabLaboratorio;
 	public GameObject prefabGaragem;
 	public GameObject prefabFabricaDrones;
+	public GameObject prefabUnidadeDrone;
 	public Transform objetoSelecionado;
    	public DefinicaoEstrutura.TipoEstrutura tipoObj;
 	
@@ -125,8 +126,13 @@ public class EventosMenu : MonoBehaviour {
 		}
 		
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES)
-			if(GUI.Button(new Rect(5,Screen.height,70,70),"Drone")){
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO){
+				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Drone")){
 				
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_NORMAL;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
+				}
 			}		
 	}
 	
