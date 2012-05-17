@@ -28,7 +28,6 @@ public class EventosMouse : MonoBehaviour {
 		if(Physics.Raycast(ray,out hit, Mathf.Infinity, 
 					~(1 << MainScript.minimapLayer | 1 << MainScript.minimapGroundLayer)))
 		{
-			Debug.Log("hit em " + hit.transform);
 
 			// If the mesh collider is a child object...
 			if(hit.transform.GetComponent<DefinicaoEstrutura>() != null)
