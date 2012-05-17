@@ -272,7 +272,7 @@ public class CMonkey : CBaseEntity {
 
 				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target 
 				// collider
-				if (curDistance < 3.0f)
+				if (curDistance < 3.5f)
 				{
 
 					EnterNewState(FSMState.STATE_ATTACKING);
