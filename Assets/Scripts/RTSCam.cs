@@ -229,9 +229,6 @@ public class RTSCam : MonoBehaviour {
 			bnCamMoving = true;
 		}
 
-		// DEBUG
-		Debug.Log("Looking at: " + objectToLook + " @ " + objectToLook.transform.position);
-
 		camPanDirection = Vector3.Lerp(camPanDirection, objectToLook.transform.position, Time.deltaTime * 5.0f);
 		bnCamModified = true;
 
@@ -239,8 +236,6 @@ public class RTSCam : MonoBehaviour {
 		if(Vector3.Distance(camPanDirection, objectToLook.transform.position) < 0.1f) {
 
 			bnCamMoving = false;
-			// DEBUG
-			Debug.Log("Moving ended.");
 		}
 	}
 

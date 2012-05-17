@@ -281,6 +281,7 @@ public class CMonkey : CBaseEntity {
 
 					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
 					// keep walking to the new target position
+					Debug.Log("Distance from target: " + curDistance);
 				}
 				break;
 

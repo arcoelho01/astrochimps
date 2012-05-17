@@ -139,6 +139,14 @@ public class MainScript : MonoBehaviour {
 			neutralResources.Add(oneResource.transform);
 		}
 
+		// Rocket parts
+		GameObject[] goRocketParts;
+		goRocketParts = GameObject.FindGameObjectsWithTag("RocketPart");
+		foreach(GameObject oneResource in goRocketParts) {
+
+			neutralRocketParts.Add(oneResource.transform);
+		}
+		
 		// 
 		Debug.Log("Resumo: macacos aliados: " + alliedMonkeys.Count);
 		Debug.Log("Resumo: macacos inimigos: " + opponentMonkeys.Count);
@@ -150,5 +158,7 @@ public class MainScript : MonoBehaviour {
 		Debug.Log("Resumo: predios inimigos: " + opponentBuildings.Count);
 
 		Debug.Log("Resumo: recursos: " + neutralResources.Count);
+		Debug.Log("Resumo: rocket parts: " + neutralRocketParts.Count);
+		//*/
 	}
 }
