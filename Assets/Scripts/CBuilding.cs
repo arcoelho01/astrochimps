@@ -33,6 +33,8 @@ public class CBuilding : CBaseEntity {
 	Transform sabotagedPSObj = null;
 	Transform meshObject = null;
 
+	Vector3 sweetSpot;
+
 	// ================== MERGE
 
 	public enum TipoEstrutura{
@@ -71,6 +73,8 @@ public class CBuilding : CBaseEntity {
 		return base.Select();
 	}
 
+	/// IMPORTANT! NEVER DEFINE A START FUNCTION HERE!
+
 	/// <summary>
 	/// When the script is initialized
 	/// </summary>
@@ -88,19 +92,13 @@ public class CBuilding : CBaseEntity {
 				construido = false;
 				vida = 100;
 		}
-		if((tipo ==TipoEstrutura.CANO_CENTRAL) || (tipo == TipoEstrutura.SLOT))
-		{
-				sabotado = false;
-				conectado = true;
-				construido = false;
-				vida = 100;
-		}
-		// ================== MERGE
-		//
-		//myMaterial = renderer.material;
-		//
+		
 		// Get the mesh
 		meshObject = transform.Find("Mesh");
+		
+		sweetSpot = GetSweetSpotPosition();
+		// DEBUG
+		Debug.Log("SweetSpot for " + this.transform + " " + sweetSpot);
 	}
 
 	/// <summary>
@@ -257,7 +255,7 @@ public class CBuilding : CBaseEntity {
 		if(TheresAMonkeyInside() != null) {
 			extractionAmount *= 2.0f; // Have a monkey inside the building? Double the production!!!
 		}
-		
+	
 		// Try to extract resources
 		extractedResource = resourceSite.GetComponent<CResource>().ExtractResource(extractionAmount);
 
@@ -283,9 +281,9 @@ public class CBuilding : CBaseEntity {
 				break;
 
 			case CResource.eResourceType.NONE:
-				break;
+					break;
 
-			default:
+				default:
 				break;
 		}
 
@@ -303,7 +301,7 @@ public class CBuilding : CBaseEntity {
 
 		myInfo.transform.parent = this.transform;
 		string infoText = stResource + " +" + amountExtracted;
-		myInfo.GetComponent<ShowInfoPanel>().SetInfoText(infoText);
+		myInfo.GetComponent<ShowInfoPanel>().SetInfoText(infoText, sweetSpot);
 
 		yield return new WaitForSeconds(2.0f);
 
@@ -342,8 +340,8 @@ public class CBuilding : CBaseEntity {
 		if(sabotagedParticleSystem) {
 
 			// Instantiate the particle system
-				sabotagedPSObj = Instantiate(sabotagedParticleSystem, this.transform.position + Vector3.up, 
-					Quaternion.Euler(-90,0,0)) as Transform;
+				sabotagedPSObj = Instantiate(sabotagedParticleSystem, sweetSpot, 
+						Quaternion.Euler(-90,0,0)) as Transform;
 
 			// Put it as child
 			sabotagedPSObj.transform.parent = this.transform;
@@ -360,6 +358,23 @@ public class CBuilding : CBaseEntity {
 
 		if(sabotagedPSObj)
 			Destroy(sabotagedPSObj.gameObject);
+	}
+
+	/// <summary>
+	/// Get the sweet spot position, if this object is defined. Otherwise, will return this object position
+	/// </summar>
+	Vector3 GetSweetSpotPosition() {
+
+		Transform sweetSpotObj = transform.Find("SweetSpot");
+
+		if(sweetSpotObj) {
+
+			return sweetSpotObj.transform.position;
+		}
+		else {
+
+			return this.transform.position;
+		}
 	}
 }
 
