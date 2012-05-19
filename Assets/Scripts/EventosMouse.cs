@@ -35,11 +35,6 @@ public class EventosMouse : MonoBehaviour {
 				transform.GetComponent<EventosMenu>().tipoObj = hit.transform.GetComponent<DefinicaoEstrutura>().tipo;
 				transform.GetComponent<EventosMenu>().objetoSelecionado = hit.transform;
 			}
-	//		else if(hit.transform.parent.transform.GetComponent<DefinicaoEstrutura>() != null) {
-
-	//			transform.GetComponent<EventosMenu>().tipoObj = hit.transform.parent.transform.GetComponent<DefinicaoEstrutura>().tipo;
-	//			transform.GetComponent<EventosMenu>().objetoSelecionado = hit.transform.parent.transform;
-	//		}
 		}
 	}
 }
