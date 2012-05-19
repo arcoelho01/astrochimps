@@ -449,7 +449,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 						// Select this unit
 						selectedObject = selectedBaseEntity.Select();
-
+            Debug.Log("This is what is selected: " + selectedObject );
 						infoPanel.SetInfoLabel(selectedObject.gameObject.name);
 
 						if(selectedBaseEntity.Movable) {
