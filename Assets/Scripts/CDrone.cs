@@ -10,6 +10,9 @@ public class CDrone : CBaseEntity {
 	
 	// PUBLIC
 	public enum eDroneType { Patrol, Saboteur, Hunter, NONE }; // Drones types
+	public Transform stunnedParticleSystem;
+	Transform stunnedObj = null;
+	float fRecycleTimer;
 
 	/*
 	 * ===========================================================================================================
@@ -26,12 +29,14 @@ public class CDrone : CBaseEntity {
 	private Vector3 walkTo;
 	
 	public enum FSMState {
-		STATE_IDLE,							// Doing nothing...
+		STATE_IDLE,								// Doing nothing...
 		STATE_SELECTED,						// Selected by the player
 		STATE_WALKING,						// Drone walking around
 		STATE_STUNNED,						// Drone stunned by an enemy, cannot move
 		STATE_ATTACKING,					// Attacking an enemy
-		STATE_NULL							// null
+		STATE_BEING_RECYCLED,			// Being recycled by an enemy
+		STATE_DESTROYED,					// Destroyed (recycled) by an enemy
+		STATE_NULL								// null
 	};
 	
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
@@ -92,10 +97,6 @@ public class CDrone : CBaseEntity {
 		return eFSMCurrentState;
 	}
 	
-	public bool isStunned(){
-		return (eFSMCurrentState == FSMState.STATE_STUNNED);
-	}
-	
 	
 	public void Update(){
 		
@@ -113,8 +114,8 @@ public class CDrone : CBaseEntity {
 		// If is a monkey, check in CMonkey the rules; some monkeys cause the drone to be disabled, others to 
 		// recycle it, etc
 		EnterNewState(FSMState.STATE_STUNNED);
-		
 	}
+
 	/// <summary>
 	/// Changes the FSM to a new state
 	/// </summary>
@@ -152,12 +153,32 @@ public class CDrone : CBaseEntity {
 					AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
 				}
 
+				// Add a visual aid
+				if(stunnedParticleSystem) {
+				
+					// Instantiate the particle system
+					stunnedObj = Instantiate(stunnedParticleSystem, this.transform.position + Vector3.up, 
+							Quaternion.Euler(-90,0,0)) as Transform;
+					
+					// Put it as child
+					stunnedObj.transform.parent = this.transform;
+				}
+
 				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
 				AIScript.Stop();
 				break;
 
 			case FSMState.STATE_ATTACKING:
 				// Get the target to attack
+				break;
+
+			case FSMState.STATE_BEING_RECYCLED:
+				// Clears the timer
+				fRecycleTimer = 0.0f;
+				break;
+
+			case FSMState.STATE_DESTROYED:
+				Destroy(this.gameObject);
 				break;
 
 			case FSMState.STATE_NULL:
@@ -217,6 +238,18 @@ public class CDrone : CBaseEntity {
 				}
 				break;
 
+			case FSMState.STATE_BEING_RECYCLED:
+				fRecycleTimer += Time.deltaTime;
+				if(fRecycleTimer > 5.0f) {
+				
+					// Give the metal to the player
+					mainScript.player.AddResourceMetal(5.0f);	// FIXME: each drone must have a resource value
+					
+					// And vanishes with the drone
+					EnterNewState(FSMState.STATE_DESTROYED);
+				}
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -248,10 +281,19 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
+				{
+
+					// Destroys the 'stunned particle system', if exists
+					if(stunnedObj)
+						Destroy(stunnedObj.gameObject);
+				}
 				break;
 
 			case FSMState.STATE_ATTACKING:
 				transTarget = null;
+				break;
+
+			case FSMState.STATE_BEING_RECYCLED:
 				break;
 
 			case FSMState.STATE_NULL:
@@ -262,5 +304,25 @@ public class CDrone : CBaseEntity {
 				Debug.LogError("I shouldn't be here.");
 				break;
 		}
+	}
+
+	/// <summary>
+	/// Helper function to tell if a drone is in the STATE_STUNNED or no. Useful for monkeys attacking this drone
+	/// </summary>
+	public bool isStunned(){
+
+		return (eFSMCurrentState == FSMState.STATE_STUNNED);
+	}
+	
+
+	/// <summary>
+	/// What to do when the drone is being recycled
+	/// </summary>
+	public void Recycled() {
+
+		// DEBUG
+		Debug.Log("Drone being recycled");
+
+		EnterNewState(FSMState.STATE_BEING_RECYCLED);
 	}
 }

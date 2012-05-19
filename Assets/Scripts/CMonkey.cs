@@ -14,6 +14,7 @@ public class CMonkey : CBaseEntity {
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
 	public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAttack;	// Played when the monkey is attacking a target
 	private Transform transTarget;   // Target Transform
 	private Vector3 walkTo;
 	public float attackRange;      //  Attack Range to disable drones.
@@ -155,9 +156,6 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_ATTACKING:
 				// SET AISCRIPT TO MOVE TO TARGET
-				// FIXME: target is null here!
-				// DEBUG
-				Debug.Log("Entering STATE_ATTACKING with target: " + transTarget);
 				break;
 
 			case FSMState.STATE_PURSUIT:
@@ -224,8 +222,32 @@ public class CMonkey : CBaseEntity {
 				if (droneTarget != null){
 
 					Debug.Log("XXXX MONKEY  attacking");
-					droneTarget.Attacked();
 
+					// Astronaut only attack drones that are not stunned
+					if(monkeyClass == eMonkeyType.Astronaut && !droneTarget.isStunned()) {
+
+						if(sfxAttack) {
+
+							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+						}
+
+						droneTarget.Attacked();
+					}
+					else if(monkeyClass == eMonkeyType.Engineer && droneTarget.isStunned()) {
+					
+						if(sfxAttack) {
+
+							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+						}
+
+						droneTarget.Recycled();
+					}
+					else if(monkeyClass == eMonkeyType.Saboteur && droneTarget.isStunned()) {
+
+						// DEBUG
+						Debug.Log("Drone being attacked by a Saboteur. Should be reprogrammed");
+					}
+					
 					// TODO: PLAY SOME ATTACKING SOUND
 
 					EnterNewState(FSMState.STATE_IDLE);
@@ -250,7 +272,7 @@ public class CMonkey : CBaseEntity {
 
 				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target 
 				// collider
-				if (curDistance < 3.0f)
+				if (curDistance < 6.5f)
 				{
 
 					EnterNewState(FSMState.STATE_ATTACKING);
@@ -259,6 +281,8 @@ public class CMonkey : CBaseEntity {
 
 					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
 					// keep walking to the new target position
+					// DEBUG
+					Debug.Log("Distance from target: " + curDistance);
 				}
 				break;
 
@@ -317,4 +341,5 @@ public class CMonkey : CBaseEntity {
 				break;
 		}
 	}
+
 }

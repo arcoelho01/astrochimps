@@ -15,6 +15,8 @@ public class ShowInfoPanel : MonoBehaviour {
 	float offsetY;
 	// Text to be shown
 	string infoText = "";
+	// Starting position of the text in the world
+	Vector3 v3Position;
 
 	// Use this for initialization
 	void Start () {
@@ -35,20 +37,47 @@ public class ShowInfoPanel : MonoBehaviour {
 	void OnGUI() {
 
 		// Only show something if the object is actually on the screen
-		if(myParent.renderer.isVisible) {
+		if(BeingRenderedOnCamera()) {
 			// Find my position on the screen
-			Vector3 position = Camera.main.WorldToScreenPoint(myParent.transform.position + 
-					new Vector3(0, myParent.transform.localScale.y,0));
+			Vector3 position = Camera.main.WorldToScreenPoint(v3Position);
 
-			GUI.Label(new Rect(position.x, Screen.height - position.y - offsetY,100,50), infoText);
+			GUI.Label(new Rect(position.x, Screen.height - position.y - offsetY, 150,50), infoText);
 		}
 	}
 
 	/// <summary>
-	/// Set the text to be shown
+	/// Set the text to be shown and it's initial position
 	/// </summary>
-	public void SetInfoText(string newText) {
+	/// <param name="newText"> String with the text to be shown </param>
+	/// <param name="position"> A Vector3 with the initial position (on the world) to show the text
+	public void SetInfoText(string newText, Vector3 position) {
 
 		infoText = newText;
+		v3Position = position;
+	}
+
+	/// <summary>
+	/// Check if the object is being rendered in the screen. If not, there's no need to display the info text,
+	/// right?
+	/// </summary>
+	bool BeingRenderedOnCamera() {
+
+		bool rv = false;
+
+		CBaseEntity baseEntity = myParent.gameObject.GetComponent<CBaseEntity>();
+
+		if(baseEntity) {
+
+			if(baseEntity.mainRendererObject != null) {
+
+				rv = baseEntity.mainRendererObject.renderer.isVisible;
+			}
+		}
+		else {
+					
+			rv  = myParent.renderer.isVisible;
+		}
+
+		return rv;
 	}
 }

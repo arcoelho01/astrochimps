@@ -31,7 +31,7 @@ public class AstarAIFollow : MonoBehaviour {
 	public float speed = 10;
 	
 	/** How fast the AI can turn around */
-	float rotationSpeed = 1;
+	//float rotationSpeed = 1;
 	
 	public bool drawGizmos = false;
 	
@@ -260,9 +260,6 @@ public class AstarAIFollow : MonoBehaviour {
 	/// </summary>
 	public void ClickedTargetPosition(Vector3 newTargetPosition) {
 
-		//targetPosition = newTargetPosition;
-		//newTargetClicked = true;
-		//Resume();
 		PathToTarget(newTargetPosition);
 		Resume();
 	}

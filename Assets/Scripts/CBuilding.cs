@@ -7,7 +7,7 @@ using System.Collections;
 public class CBuilding : CBaseEntity {
 
 	// PRIVATE
-	Material myMaterial;
+	//Material myMaterial;
 	
 	// PUBLIC
 	public enum eBuildingType { CommandCenter, ResourceExtractor, Farm, SecurityCenter, 
@@ -17,9 +17,9 @@ public class CBuilding : CBaseEntity {
 	public AudioClip sfxLoadMonkey;
 	public AudioClip sfxSelected;
 	
-	public float costTime = 5.0f; // Seconds needed to build this structure
-	public float costOxygen = 1.0f;	// Amount of oxygen units needed to build this structure
-	public float costMetal = 2.0f;	// Amount of metal resources needed to build this structure
+	public float costTime; // Seconds needed to build this structure
+	public float costOxygen;	// Amount of oxygen units needed to build this structure
+	public float costMetal;	// Amount of metal resources needed to build this structure
 	public int level = 1;	// Level of this building
 	public float workTime = 1.0f;
 	public float myTimer = 0.0f;
@@ -28,6 +28,12 @@ public class CBuilding : CBaseEntity {
 	public bool idleStatus = false;	// The building is operational and fully functional?
 	public CBaseEntity resourceSite; // If it's an extractor, from which resource site it's extracting
 	public Transform showInfoObject;
+
+	public Transform sabotagedParticleSystem;
+	Transform sabotagedPSObj = null;
+	Transform meshObject = null;
+
+	Vector3 sweetSpot;
 
 	// ================== MERGE
 
@@ -67,6 +73,8 @@ public class CBuilding : CBaseEntity {
 		return base.Select();
 	}
 
+	/// IMPORTANT! NEVER DEFINE A START FUNCTION HERE!
+
 	/// <summary>
 	/// When the script is initialized
 	/// </summary>
@@ -84,16 +92,28 @@ public class CBuilding : CBaseEntity {
 				construido = false;
 				vida = 100;
 		}
-		if((tipo ==TipoEstrutura.CANO_CENTRAL) || (tipo == TipoEstrutura.SLOT))
-		{
-				sabotado = false;
-				conectado = true;
-				construido = false;
-				vida = 100;
+		
+		// Get the mesh
+		meshObject = GetMeshObject();
+		if(!meshObject) {
+
+			// DEBUG
+			Debug.LogError("Cannot find Mesh for " + this.transform);
 		}
-		// ================== MERGE
-		//
-		myMaterial = renderer.material;
+		else {
+
+			// Get one object to be check the renderer
+			foreach(Transform child in meshObject) {
+
+				if(child.GetComponent<Renderer>()) {
+	
+					mainRendererObject = child;
+					break;
+				}
+			}
+		}
+		
+		sweetSpot = GetSweetSpotPosition();
 	}
 
 	/// <summary>
@@ -101,8 +121,9 @@ public class CBuilding : CBaseEntity {
 	/// </summary>
 	void Update() {
 
-		// Update the timer
-		myTimer += Time.deltaTime;
+		// Only update the timer if the building is working
+		if(!idleStatus && !sabotado)
+			myTimer += Time.deltaTime;
 
 		// Check if we need to show a menu
 		if(isSelected && monkeyInside != null) {
@@ -125,10 +146,14 @@ public class CBuilding : CBaseEntity {
 
 			if(idleStatus || sabotado) {
 
-				renderer.material = materialDisabled;
+				//renderer.material = materialDisabled;
 
 				return;
 			}
+
+			// Adding animation
+			if(meshObject)
+				meshObject.animation.Play();
 
 			if(myTimer >= workTime) {
 
@@ -245,7 +270,7 @@ public class CBuilding : CBaseEntity {
 		if(TheresAMonkeyInside() != null) {
 			extractionAmount *= 2.0f; // Have a monkey inside the building? Double the production!!!
 		}
-		
+	
 		// Try to extract resources
 		extractedResource = resourceSite.GetComponent<CResource>().ExtractResource(extractionAmount);
 
@@ -261,19 +286,19 @@ public class CBuilding : CBaseEntity {
 			case CResource.eResourceType.Oxygen:
 				// Adds the resource extracted to the player
 				mainScript.player.AddResourceOxygen(extractedResource.amount);
-				resourceString = "Oxygen";
+				resourceString = "Oxygen ";
 				break;
 
 			case CResource.eResourceType.Metal:
 				// Adds the resource extracted to the player
 				mainScript.player.AddResourceMetal(extractedResource.amount);
-				resourceString = "Metal";
+				resourceString = "Metal ";
 				break;
 
 			case CResource.eResourceType.NONE:
-				break;
+					break;
 
-			default:
+				default:
 				break;
 		}
 
@@ -282,7 +307,7 @@ public class CBuilding : CBaseEntity {
 	}
 
 	/// <summary>
-	/// Show a text tag with the resource extracted and it's amount. Floats up the screen and the vanishes.
+	/// Show a text tag with the resource extracted and it's amount. Floats up the screen and then vanishes.
 	/// Useful to show the player what the extractor is doing
 	/// </summary>
 	IEnumerator ShowInfoForExtractedResource(string stResource, float amountExtracted) {
@@ -291,12 +316,105 @@ public class CBuilding : CBaseEntity {
 
 		myInfo.transform.parent = this.transform;
 		string infoText = stResource + " +" + amountExtracted;
-		myInfo.GetComponent<ShowInfoPanel>().SetInfoText(infoText);
+		myInfo.GetComponent<ShowInfoPanel>().SetInfoText(infoText, sweetSpot);
 
 		yield return new WaitForSeconds(2.0f);
 
 		if(myInfo)
 			Destroy(myInfo.gameObject);
+	}
+
+	/// <summary>
+	/// Fixing the building by an engineer. For now, it only changes the state from "sabotaged" to "not 
+	/// sabotaged"
+	/// TODO: add some cost in resources (metal?) when this is done. And check if we can afford it before fixing
+	/// </summary>
+	public void FixByEngineer() {
+
+		// FIXME: Cost of repairing: say, 20% of the building cost?
+		float fRepairCost = costMetal * 0.2f;
+
+		if(mainScript.player.metalLevel >= fRepairCost && sabotado) {
+		
+			mainScript.player.SubResourceMetal(fRepairCost);
+
+			Desabotage();	
+			// Instantiate a info text
+			StartCoroutine(ShowInfoForExtractedResource("Metal ", -fRepairCost));
+		}
+	}
+
+	/// <summary>
+	/// Sabotage this building, adding a visual aid to the player
+	/// </summary>
+	public void Sabotage() {
+
+		sabotado = true;
+
+		// Add a visual aid
+		if(sabotagedParticleSystem) {
+
+			// Instantiate the particle system
+			sabotagedPSObj = Instantiate(sabotagedParticleSystem, sweetSpot, 
+						Quaternion.Euler(-90,0,0)) as Transform;
+
+			// Put it as child
+			sabotagedPSObj.transform.parent = this.transform;
+		}
+	}
+
+	/// <summary>
+	/// "Desabotage" (is this a real word?) this building, removing the visual aid to the player
+	/// </summary>
+	public void Desabotage() {
+	
+		sabotado = false;
+		//renderer.material = myMaterial;
+
+		if(sabotagedPSObj)
+			Destroy(sabotagedPSObj.gameObject);
+	}
+
+	/// <summary>
+	/// Get the sweet spot position, if this object is defined. Otherwise, will return this object position
+	/// </summar>
+	Vector3 GetSweetSpotPosition() {
+
+		Transform sweetSpotObj = transform.Find("SweetSpot");
+
+		if(sweetSpotObj) {
+
+			return sweetSpotObj.transform.position;
+		}
+		else {
+
+			return this.transform.position;
+		}
+	}
+
+	/// <summary>
+	/// Get the mesh object in the hierarchy, as this:
+	/// Object -> collider
+	/// | - Icon
+	/// | - SweetSpot
+	/// | - Mesh -> animation
+	///	  | - Imported FBX
+	/// </summary>
+	Transform GetMeshObject() {
+
+		// First, find the "Mesh" in the hierarchy
+		Transform meshHierarchy = transform.Find("Mesh");
+
+		// Now, get the children of the Mesh, This will be the real model
+		if(meshHierarchy) {
+
+			foreach(Transform child in meshHierarchy) {
+				
+				return child;
+			}
+		}
+
+		return null;
 	}
 }
 

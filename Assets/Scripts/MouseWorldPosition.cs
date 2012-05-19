@@ -207,6 +207,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			if(whatIAmPointing == null)
 				return;
+			else 
+				pointedObject = whatIAmPointing;
 
 			// Check the visibility
 			if(whatIAmPointing.gameObject.GetComponent<VisibilityControl>() != null) {
@@ -216,7 +218,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				}
 			}
 
-			// 1 - check if we have something select or not
+			// 1 - check if we have something selected or not
 			if(!selectedObject) {
 
 				if(whatIAmPointing.gameObject.layer != MainScript.groundLayer)
@@ -287,6 +289,16 @@ public class MouseWorldPosition : MonoBehaviour {
 				// Is a monkey selected?
 				if(selectedObject.gameObject.tag == "Monkey") {
 
+					CMonkey selectedMonkey = selectedObject.gameObject.GetComponent<CMonkey>();
+
+					if(!selectedMonkey) {
+
+						// DEBUG
+						Debug.LogError("Cannot find CMonkey component on " + selectedObject);
+						return;
+					}
+
+
 					// FIXING as 10/05: all monkeys can enter buildings, but only at the Command Center. Other buildings
 					// cannot be monkey operated
 
@@ -311,7 +323,7 @@ public class MouseWorldPosition : MonoBehaviour {
 						if(pointedBuilding.sabotado) {
 
 							// and we have the engineer selected?
-							if(selectedObject.gameObject.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Engineer) {
+							if(selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Engineer) {
 								
 								cursorCurrent = cursorBuild;
 								MouseState = eMouseStates.EngineerFix;
@@ -325,8 +337,9 @@ public class MouseWorldPosition : MonoBehaviour {
 						return;
 					}
 				
-					// No, so are we pointing at a rocket part?
-					if(whatIAmPointing.tag == "RocketPart") {
+					// No, so are we pointing at a rocket part with the cientist monkey selected?
+					if(whatIAmPointing.tag == "RocketPart" && 
+							selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Cientist) {
 
 						// Ok, but it's this part already being carried by someone in my team?
 						if(whatIAmPointing.transform.parent.GetComponent<CRocketPart>().isCaptured) {
@@ -336,7 +349,7 @@ public class MouseWorldPosition : MonoBehaviour {
 							// Set the state
 							MouseState = eMouseStates.CanReleaseCaptured;
 							// Keeps the pointed object
-							pointedObject = whatIAmPointing;
+							//pointedObject = whatIAmPointing;
 						}
 						else {
 
@@ -345,10 +358,9 @@ public class MouseWorldPosition : MonoBehaviour {
 							// Set the state
 							MouseState = eMouseStates.CanCapture;
 							// Keeps the pointed object
-							pointedObject = whatIAmPointing;
+							//pointedObject = whatIAmPointing;
 						}
 					}	
-
 				}
 				else { // not a monkey
 
@@ -449,7 +461,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 						// Select this unit
 						selectedObject = selectedBaseEntity.Select();
-            Debug.Log("This is what is selected: " + selectedObject );
+
 						infoPanel.SetInfoLabel(selectedObject.gameObject.name);
 
 						if(selectedBaseEntity.Movable) {
@@ -486,7 +498,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 	/// <summary>
 	/// Execute when the player presses the right mouse button
-	/// Behaviours: when a le unit is selected, select where it should walk to
+	/// Behaviours: when a movable unit is selected, select where it should walk to
 	/// </summary>
 	void CheckRightMouseClick() {
 
@@ -524,6 +536,23 @@ public class MouseWorldPosition : MonoBehaviour {
 			}
 
 			capturedEntity.ReleaseMe();
+			return;
+		}
+
+		// Engineer monkey + sabotaged building = fix it!
+		if(MouseState == eMouseStates.EngineerFix) {
+
+			CBuilding pointedBuilding = pointedObject.GetComponent<CBuilding>();
+
+			if(!pointedBuilding) {
+
+				// DEBUG
+				Debug.LogError("Cannot find CBuilding in this building: " + pointedBuilding.name);
+			}
+
+			// Fix the building
+			pointedBuilding.FixByEngineer();
+
 			return;
 		}
 
@@ -655,12 +684,14 @@ public class MouseWorldPosition : MonoBehaviour {
 			if(selectedObject.tag == "Building") {
 
 				CBuilding selectedBuilding = selectedObject.gameObject.GetComponent<CBuilding>();
-				selectedBuilding.sabotado = !selectedBuilding.sabotado;
+				if(selectedBuilding.sabotado)
+					selectedBuilding.Desabotage();
+				else
+					selectedBuilding.Sabotage();
 
 				// DEBUG
-				Debug.Log("CHEAT: building " + selectedObject.name + " saboutage: " + selectedBuilding.sabotado);
+				Debug.Log("CHEAT: building " + selectedObject.name + " sabotage: " + selectedBuilding.sabotado);
 			}	
-
 		}
 	}
 }
