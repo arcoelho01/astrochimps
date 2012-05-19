@@ -114,9 +114,9 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		}
 		
 		if(!drone)
-			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),transform.rotation);		
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),Quaternion.Euler(0,0,0));		
 		else
-			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+3,transform.position.y,transform.position.z+3),transform.rotation);
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+3,transform.position.y+1,transform.position.z+3),Quaternion.Euler(0,0,0));
 			
 	}
 	
