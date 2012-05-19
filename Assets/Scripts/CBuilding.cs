@@ -94,11 +94,26 @@ public class CBuilding : CBaseEntity {
 		}
 		
 		// Get the mesh
-		meshObject = transform.Find("Mesh");
+		meshObject = GetMeshObject();
+		if(!meshObject) {
+
+			// DEBUG
+			Debug.LogError("Cannot find Mesh for " + this.transform);
+		}
+		else {
+
+			// Get one object to be check the renderer
+			foreach(Transform child in meshObject) {
+
+				if(child.GetComponent<Renderer>()) {
+	
+					mainRendererObject = child;
+					break;
+				}
+			}
+		}
 		
 		sweetSpot = GetSweetSpotPosition();
-		// DEBUG
-		Debug.Log("SweetSpot for " + this.transform + " " + sweetSpot);
 	}
 
 	/// <summary>
@@ -340,7 +355,7 @@ public class CBuilding : CBaseEntity {
 		if(sabotagedParticleSystem) {
 
 			// Instantiate the particle system
-				sabotagedPSObj = Instantiate(sabotagedParticleSystem, sweetSpot, 
+			sabotagedPSObj = Instantiate(sabotagedParticleSystem, sweetSpot, 
 						Quaternion.Euler(-90,0,0)) as Transform;
 
 			// Put it as child
@@ -375,6 +390,31 @@ public class CBuilding : CBaseEntity {
 
 			return this.transform.position;
 		}
+	}
+
+	/// <summary>
+	/// Get the mesh object in the hierarchy, as this:
+	/// Object -> collider
+	/// | - Icon
+	/// | - SweetSpot
+	/// | - Mesh -> animation
+	///	  | - Imported FBX
+	/// </summary>
+	Transform GetMeshObject() {
+
+		// First, find the "Mesh" in the hierarchy
+		Transform meshHierarchy = transform.Find("Mesh");
+
+		// Now, get the children of the Mesh, This will be the real model
+		if(meshHierarchy) {
+
+			foreach(Transform child in meshHierarchy) {
+				
+				return child;
+			}
+		}
+
+		return null;
 	}
 }
 

@@ -70,7 +70,6 @@ public class ShowInfoPanel : MonoBehaviour {
 
 			if(baseEntity.mainRendererObject != null) {
 
-				Debug.Log("Checking renderer in " + baseEntity.mainRendererObject);
 				rv = baseEntity.mainRendererObject.renderer.isVisible;
 			}
 		}
