@@ -1,0 +1,23 @@
+19.05.2012
+
+PACK DE PRÉDIOS "To TEXTURE 1"
+==============================
+
+Conteúdo:
+
+-> Seis pastas contendo:
+
+O Arquivo ".3ds" referente ao modelo Low Poly.
+Uma pasta "Maps" com os mapas de coordenadas UVW.
+Uma pasta "UVS" com os arquivos ".uvw" de cada peça do modelo. (Usadas, apenas, caso ocorra alguma perda de mapeamento).
+
+
+
+-> Uma pasta "Construction base" que contem os mapas e UVs para a base do prédio (já que esta é Comum a todos os prédios).
+
+Conteúdo:
+
+Uma pasta "Maps"
+Uma Pasta "UVs"
+
+Ambas com o mesmo propósito das demais acima.
