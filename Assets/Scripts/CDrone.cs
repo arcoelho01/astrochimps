@@ -164,6 +164,16 @@ public class CDrone : CBaseEntity {
 					stunnedObj.transform.parent = this.transform;
 				}
 
+				// Do the stunned animation
+				if(meshObject) {
+					meshObject.animation.Play("Deactivate");
+				}
+				else {
+
+					// DEBUG
+					Debug.Log("Nao vou tocar a animacao");
+				}
+
 				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
 				AIScript.Stop();
 				break;

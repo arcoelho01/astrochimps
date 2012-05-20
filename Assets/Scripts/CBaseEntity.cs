@@ -44,6 +44,9 @@ public class CBaseEntity : MonoBehaviour {
 	// whether is being rendered or not
 	public Transform mainRendererObject = null;	
 	
+	protected Transform meshObject = null;
+	protected Vector3 sweetSpot;
+
 	//
 	void Start() {
 
@@ -172,7 +175,7 @@ public class CBaseEntity : MonoBehaviour {
 	/// <summary>
 	/// Get the sweet spot position, if this object is defined. Otherwise, will return this object position
 	/// </summar>
-	public Vector3 GetSweetSpotPosition() {
+	protected Vector3 GetSweetSpotPosition() {
 
 		Transform sweetSpotObj = transform.Find("SweetSpot");
 
@@ -194,7 +197,7 @@ public class CBaseEntity : MonoBehaviour {
 	/// | - Mesh 
 	///	  | - Imported FBX -> animation
 	/// </summary>
-	public Transform GetMeshObject() {
+	protected Transform GetMeshObject() {
 
 		// First, find the "Mesh" in the hierarchy
 		Transform meshHierarchy = transform.Find("Mesh");
@@ -211,5 +214,32 @@ public class CBaseEntity : MonoBehaviour {
 		return null;
 	}
 
+	/// <summary>
+	/// Get the mesh object, the renderer and the sweet spot for this object
+	/// </summary>
+	protected void GetSweetSpotAndMeshObject() {
+
+		// Get the mesh
+		meshObject = GetMeshObject();
+		if(!meshObject) {
+
+			// DEBUG
+			Debug.LogError("Cannot find Mesh for " + this.transform);
+		}
+		else {
+
+			// Get one object to be check the renderer
+			foreach(Transform child in meshObject) {
+
+				if(child.GetComponent<Renderer>()) {
+	
+					mainRendererObject = child;
+					break;
+				}
+			}
+		}
+		
+		sweetSpot = GetSweetSpotPosition();
+	}
 }
 

@@ -31,9 +31,6 @@ public class CBuilding : CBaseEntity {
 
 	public Transform sabotagedParticleSystem;
 	Transform sabotagedPSObj = null;
-	Transform meshObject = null;
-
-	Vector3 sweetSpot;
 
 	// ================== MERGE
 
@@ -93,27 +90,8 @@ public class CBuilding : CBaseEntity {
 				vida = 100;
 		}
 		
-		// Get the mesh
-		meshObject = GetMeshObject();
-		if(!meshObject) {
-
-			// DEBUG
-			Debug.LogError("Cannot find Mesh for " + this.transform);
-		}
-		else {
-
-			// Get one object to be check the renderer
-			foreach(Transform child in meshObject) {
-
-				if(child.GetComponent<Renderer>()) {
-	
-					mainRendererObject = child;
-					break;
-				}
-			}
-		}
-		
-		sweetSpot = GetSweetSpotPosition();
+		// FIXME: put this in CBaseEntity, not here!
+		GetSweetSpotAndMeshObject();
 	}
 
 	/// <summary>
@@ -377,6 +355,5 @@ public class CBuilding : CBaseEntity {
 		if(sabotagedPSObj)
 			Destroy(sabotagedPSObj.gameObject);
 	}
-
 }
 
