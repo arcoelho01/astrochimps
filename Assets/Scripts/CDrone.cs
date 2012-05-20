@@ -63,6 +63,9 @@ public class CDrone : CBaseEntity {
 		
 		// FSM setup
 		eFSMCurrentState = FSMState.STATE_IDLE;
+
+		// Starts the object variables, like the sweet spot and the main mesh object
+		GetSweetSpotAndMeshObject();
 	}
 	
 	public void WalkTo(Vector3 walkTo){
@@ -166,15 +169,12 @@ public class CDrone : CBaseEntity {
 
 				// Do the stunned animation
 				if(meshObject) {
-					meshObject.animation.Play("Deactivate");
-				}
-				else {
 
-					// DEBUG
-					Debug.Log("Nao vou tocar a animacao");
+					meshObject.animation.Play("Deactivate");
 				}
 
 				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
+				
 				AIScript.Stop();
 				break;
 
@@ -292,6 +292,12 @@ public class CDrone : CBaseEntity {
 
 			case FSMState.STATE_STUNNED:
 				{
+
+					// Do the stunned animation
+					if(meshObject) {
+
+						meshObject.animation.Play("Reactivate");
+					}
 
 					// Destroys the 'stunned particle system', if exists
 					if(stunnedObj)
