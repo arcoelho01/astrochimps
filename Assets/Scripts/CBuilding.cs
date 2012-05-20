@@ -238,9 +238,12 @@ public class CBuilding : CBaseEntity {
 		AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
 		// FIXME: put all this in the monkey class, not here!!!
-		monkeyInside.transform.position =
-		 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
+		//monkeyInside.transform.position =
+		// 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
+		monkeyInside.transform.position = 
+			this.transform.position + new Vector3(2,1,gameObject.GetComponent<BoxCollider>().size.z);
 
+		Debug.Log(collider.GetType());
 		//this.Deselect();
 
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
