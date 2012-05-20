@@ -168,4 +168,48 @@ public class CBaseEntity : MonoBehaviour {
 
 		isCaptured = false;
 	}
+
+	/// <summary>
+	/// Get the sweet spot position, if this object is defined. Otherwise, will return this object position
+	/// </summar>
+	public Vector3 GetSweetSpotPosition() {
+
+		Transform sweetSpotObj = transform.Find("SweetSpot");
+
+		if(sweetSpotObj) {
+
+			return sweetSpotObj.transform.position;
+		}
+		else {
+
+			return this.transform.position;
+		}
+	}
+
+	/// <summary>
+	/// Get the mesh object in the hierarchy, as this:
+	/// Object -> collider
+	/// | - Icon
+	/// | - SweetSpot
+	/// | - Mesh 
+	///	  | - Imported FBX -> animation
+	/// </summary>
+	public Transform GetMeshObject() {
+
+		// First, find the "Mesh" in the hierarchy
+		Transform meshHierarchy = transform.Find("Mesh");
+
+		// Now, get the children of the Mesh, This will be the real model
+		if(meshHierarchy) {
+
+			foreach(Transform child in meshHierarchy) {
+				
+				return child;
+			}
+		}
+
+		return null;
+	}
+
 }
+
