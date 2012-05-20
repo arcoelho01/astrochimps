@@ -130,12 +130,24 @@ public class CBaseEntity : MonoBehaviour {
 		float objectRadius = Mathf.Max(transform.localScale.x, transform.localScale.z);
 
 		// 1 - Instantiate the selector
-		selector = Instantiate(selectorObject,transform.position, Quaternion.Euler(90,0,0)) as Transform;
+		selector = Instantiate(selectorObject,transform.position, Quaternion.identity) as Transform;
 		// 2 - Adjust the size of the selector
 		Projector projector = selector.GetComponent<Projector>();
-		projector.orthographicSize = objectRadius;	
-		// 3 - Put the projector as a child to this object, so it moves together
-		selector.transform.parent = this.transform;
+		if (projector != null ){
+			
+			selector.rotation = Quaternion.Euler(90,0,0);
+			projector.orthographicSize = objectRadius;	
+			// 3 - Put the projector as a child to this object, so it moves together
+			selector.transform.parent = this.transform;
+		}
+		
+		else{ // IN CASE ITS NOT A PROJECTOR, Example: AN ARROW 
+			
+			//selector = Instantiate(selectorObject,sweetSpot, Quaternion.Euler(90,0,0)) as Transform;
+			selector.transform.parent = this.transform;
+			selector.transform.position = sweetSpot;
+			selector.rotation = Quaternion.identity;
+		}
 	}
 
 	/// <summary>
@@ -180,11 +192,11 @@ public class CBaseEntity : MonoBehaviour {
 		Transform sweetSpotObj = transform.Find("SweetSpot");
 
 		if(sweetSpotObj) {
-
+			Debug.Log("SIM! Achei o sweetspot");
 			return sweetSpotObj.transform.position;
 		}
 		else {
-
+			Debug.Log("Nao achei o sweetspot");
 			return this.transform.position;
 		}
 	}
