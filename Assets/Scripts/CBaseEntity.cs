@@ -236,7 +236,7 @@ public class CBaseEntity : MonoBehaviour {
 		if(!meshObject) {
 
 			// DEBUG
-			Debug.LogError("Cannot find Mesh for " + this.transform);
+			//Debug.LogError("Cannot find Mesh for " + this.transform);
 		}
 		else {
 
