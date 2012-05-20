@@ -137,6 +137,10 @@ public class CDrone : CBaseEntity {
 				{
 					// DEBUG
 				//	Debug.Log("[EnterNewState: " + GetCurrentState() + "]");
+					//if(meshObject) {
+
+					//	meshObject.animation.CrossFade("Walk");
+					//}
 				}
 				break;
 			case FSMState.STATE_SELECTED:
@@ -145,6 +149,7 @@ public class CDrone : CBaseEntity {
 			case FSMState.STATE_WALKING:
 				// SET AISCRIPT TO MOVE TO TARGET
 				Debug.Log("XXXXXX Drone walking");
+				
 				AIScript.ClickedTargetPosition(walkTo);
 
 				break;
@@ -212,6 +217,11 @@ public class CDrone : CBaseEntity {
 				{
 					// DEBUG
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
+					// Do the floating animation
+					if(meshObject) {
+
+						meshObject.animation.PlayQueued("Walk", QueueMode.CompleteOthers);
+					}
 				}
 				break;
 			case FSMState.STATE_SELECTED:
