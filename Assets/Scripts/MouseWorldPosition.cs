@@ -574,24 +574,24 @@ public class MouseWorldPosition : MonoBehaviour {
 						// Unit not selected? // Since we are using right click this should not matter anymore
 						//if(!selectedBaseEntity.isSelected) {
 
-							// After all that, check if the clicked object is a building, so the monkey can get inside
-							if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
-								
-								if (whatIClicked.gameObject.layer != MainScript.enemyLayer){
+						// After all that, check if the clicked object is a building, so the monkey can get inside
+						if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
 
-									CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
+							if (whatIClicked.gameObject.layer != MainScript.enemyLayer){
 
-									// We can only use monkeys on the command center
-									if(selectedBuilding.buildingType != CBuilding.eBuildingType.CommandCenter)
-										return;
+								CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
 
-									// Puts the monkey inside the building. Actually, the building get the monkey
-									selectedBuilding.PutAMonkeyInside(selectedObject);
-									// Deselect the monkey
-									selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
-									selectedObject = null;
-								}
+								// We can only use monkeys on the command center
+								if(selectedBuilding.buildingType != CBuilding.eBuildingType.CommandCenter)
+									return;
+
+								// Puts the monkey inside the building. Actually, the building get the monkey
+								selectedBuilding.PutAMonkeyInside(selectedObject);
+								// Deselect the monkey
+								selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
+								selectedObject = null;
 							}
+						}
 						//}
 					}
 					// ITS A DRONE
@@ -605,26 +605,23 @@ public class MouseWorldPosition : MonoBehaviour {
 							}
 						}
 					}
-					
 				}
-
 			}
+			else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
 
-     if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+				// Get the basic info on the unit
+				CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+				selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
 
-       // Get the basic info on the unit
-       CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
-       selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
-
-       if(selectedBaseEntity != null) {
-          if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
-            if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
+				if(selectedBaseEntity != null) {
+					if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
+						if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
 							// FIXME: Broken code. Missing commits
 							//selectedDrone.Attack(whatIClicked);
-            }
-          }
-       }
-     }
+						}
+					}
+				}
+			}
 
 
 			// Only walk if the place we clicked is allowed to walk
