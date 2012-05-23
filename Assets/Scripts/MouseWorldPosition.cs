@@ -14,7 +14,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	Transform pointedObject = null;
 	public Transform cursorObject = null;
 	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, 
-		Targeting, CanCapture, CanReleaseCaptured, EngineerFix}; 
+		Targeting, CanCapture, CanReleaseCaptured, EngineerFix, CanSabotageBuilding, CanSabotageMovable};
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -502,6 +502,9 @@ public class MouseWorldPosition : MonoBehaviour {
 	/// </summary>
 	void CheckRightMouseClick() {
 
+    if(selectedObject)
+      Debug.Log("Clicked RightMouseButton while having " + selectedObject.name + " selected");
+
 		// Check if we're inside the game defined viewport
 		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom) 
 			return;
@@ -568,8 +571,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
 
-						// Unit not selected?
-						if(!selectedBaseEntity.isSelected) {
+						// Unit not selected? // Since we are using right click this should not matter anymore
+						//if(!selectedBaseEntity.isSelected) {
 
 							// After all that, check if the clicked object is a building, so the monkey can get inside
 							if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
@@ -589,7 +592,7 @@ public class MouseWorldPosition : MonoBehaviour {
 									selectedObject = null;
 								}
 							}
-						}
+						//}
 					}
 					// ITS A DRONE
 					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Drone) {
@@ -606,6 +609,22 @@ public class MouseWorldPosition : MonoBehaviour {
 				}
 
 			}
+
+     if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+
+       // Get the basic info on the unit
+       CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+       selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
+
+       if(selectedBaseEntity != null) {
+          if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
+            if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
+            selectedDrone.Attack(whatIClicked);
+            }
+          }
+       }
+     }
+
 
 			// Only walk if the place we clicked is allowed to walk
 			if(bnNodeStatus) {
