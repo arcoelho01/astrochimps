@@ -35,6 +35,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	public TipoEstrutura objetoAConstruir;
 	public string descricao;
 	public int nivelEstrutura;
+	public int[] custoMetalEvoluirNivel;
 	
     private float progressoAtual = 0;
 	private GameObject prefabConstrucao;
@@ -137,5 +138,11 @@ public class DefinicaoEstrutura : MonoBehaviour {
 				tempoDecorrido = 0;
 			}
 		}
+	}
+	
+	public void IncrementaNivel()
+	{
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(custoMetalEvoluirNivel[nivelEstrutura-1]);
+		nivelEstrutura++;
 	}
 }

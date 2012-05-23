@@ -78,22 +78,22 @@ ModelImporter:
     - name: Walk
       firstFrame: 0
       lastFrame: 120
-      wrapMode: 0
+      wrapMode: 2
       loop: 0
     - name: EnemyOnSight
       firstFrame: 121
       lastFrame: 280
-      wrapMode: 0
+      wrapMode: 1
       loop: 0
     - name: Deactivate
       firstFrame: 281
       lastFrame: 350
-      wrapMode: 0
+      wrapMode: 1
       loop: 0
     - name: Reactivate
       firstFrame: 351
       lastFrame: 380
-      wrapMode: 0
+      wrapMode: 1
       loop: 0
   meshes:
     lODScreenPercentages: []

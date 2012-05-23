@@ -44,6 +44,9 @@ public class CBaseEntity : MonoBehaviour {
 	// whether is being rendered or not
 	public Transform mainRendererObject = null;	
 	
+	protected Transform meshObject = null;
+	protected Vector3 sweetSpot;
+
 	//
 	void Start() {
 
@@ -127,12 +130,24 @@ public class CBaseEntity : MonoBehaviour {
 		float objectRadius = Mathf.Max(transform.localScale.x, transform.localScale.z);
 
 		// 1 - Instantiate the selector
-		selector = Instantiate(selectorObject,transform.position, Quaternion.Euler(90,0,0)) as Transform;
+		selector = Instantiate(selectorObject,transform.position, Quaternion.identity) as Transform;
 		// 2 - Adjust the size of the selector
 		Projector projector = selector.GetComponent<Projector>();
-		projector.orthographicSize = objectRadius;	
-		// 3 - Put the projector as a child to this object, so it moves together
-		selector.transform.parent = this.transform;
+		if (projector != null ){
+			
+			selector.rotation = Quaternion.Euler(90,0,0);
+			projector.orthographicSize = objectRadius;	
+			// 3 - Put the projector as a child to this object, so it moves together
+			selector.transform.parent = this.transform;
+		}
+		
+		else{ // IN CASE ITS NOT A PROJECTOR, Example: AN ARROW 
+			
+			//selector = Instantiate(selectorObject,sweetSpot, Quaternion.Euler(90,0,0)) as Transform;
+			selector.transform.parent = this.transform;
+			selector.transform.position = sweetSpot;
+			selector.rotation = Quaternion.identity;
+		}
 	}
 
 	/// <summary>
@@ -168,4 +183,75 @@ public class CBaseEntity : MonoBehaviour {
 
 		isCaptured = false;
 	}
+
+	/// <summary>
+	/// Get the sweet spot position, if this object is defined. Otherwise, will return this object position
+	/// </summar>
+	protected Vector3 GetSweetSpotPosition() {
+
+		Transform sweetSpotObj = transform.Find("SweetSpot");
+
+		if(sweetSpotObj) {
+			Debug.Log("SIM! Achei o sweetspot");
+			return sweetSpotObj.transform.position;
+		}
+		else {
+			Debug.Log("Nao achei o sweetspot");
+			return this.transform.position;
+		}
+	}
+
+	/// <summary>
+	/// Get the mesh object in the hierarchy, as this:
+	/// Object -> collider
+	/// | - Icon
+	/// | - SweetSpot
+	/// | - Mesh 
+	///	  | - Imported FBX -> animation
+	/// </summary>
+	protected Transform GetMeshObject() {
+
+		// First, find the "Mesh" in the hierarchy
+		Transform meshHierarchy = transform.Find("Mesh");
+
+		// Now, get the children of the Mesh, This will be the real model
+		if(meshHierarchy) {
+
+			foreach(Transform child in meshHierarchy) {
+				
+				return child;
+			}
+		}
+
+		return null;
+	}
+
+	/// <summary>
+	/// Get the mesh object, the renderer and the sweet spot for this object
+	/// </summary>
+	protected void GetSweetSpotAndMeshObject() {
+
+		// Get the mesh
+		meshObject = GetMeshObject();
+		if(!meshObject) {
+
+			// DEBUG
+			//Debug.LogError("Cannot find Mesh for " + this.transform);
+		}
+		else {
+
+			// Get one object to be check the renderer
+			foreach(Transform child in meshObject) {
+
+				if(child.GetComponent<Renderer>()) {
+	
+					mainRendererObject = child;
+					break;
+				}
+			}
+		}
+		
+		sweetSpot = GetSweetSpotPosition();
+	}
 }
+

@@ -1,0 +1,160 @@
+fileFormatVersion: 2
+guid: 402524cb032c832429ed81acbbab9e7d
+ModelImporter:
+  fileIDToRecycleName:
+    4300000: Telescope
+    4300002: Building
+    4300004: Construction  Base
+    7400000: Take 001 //// (TO TEX) Research Laboratory -- Low (MAP) (ANI F) Remodel
+    7400002: Telesc. Out //// (TO TEX) Research Laboratory -- Low (MAP) (ANI F) Remodel
+    7400004: Focus //// (TO TEX) Research Laboratory -- Low (MAP) (ANI F) Remodel
+    7400006: Scann //// (TO TEX) Research Laboratory -- Low (MAP) (ANI F) Remodel
+    7400008: Unfocus //// (TO TEX) Research Laboratory -- Low (MAP) (ANI F) Remodel
+    7400010: Telesc. In //// (TO TEX) Research Laboratory -- Low (MAP) (ANI F) Remodel
+  serializedVersion: 10
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    generateAnimations: 3
+    bakeSimulation: 0
+    splitAnimations: 1
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    clipAnimations:
+    - name: Telesc. Out
+      firstFrame: 0
+      lastFrame: 60
+      wrapMode: 1
+      loop: 0
+    - name: Focus
+      firstFrame: 61
+      lastFrame: 200
+      wrapMode: 1
+      loop: 0
+    - name: Scann
+      firstFrame: 221
+      lastFrame: 520
+      wrapMode: 2
+      loop: 0
+    - name: Unfocus
+      firstFrame: 521
+      lastFrame: 640
+      wrapMode: 1
+      loop: 0
+    - name: Telesc. In
+      firstFrame: 641
+      lastFrame: 665
+      wrapMode: 1
+      loop: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .100000001
+    meshCompression: 0
+    addColliders: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMesh: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  textMetaNamesToFileIDs:
+    //RootNode:
+      data:
+        first: 1
+        second: a6860100
+      data:
+        first: 4
+        second: 861a0600
+      data:
+        first: 111
+        second: 605fa900
+    Building:
+      data:
+        first: 1
+        second: a0860100
+      data:
+        first: 4
+        second: 801a0600
+      data:
+        first: 23
+        second: 60182300
+      data:
+        first: 33
+        second: a05a3200
+    Construction  Base:
+      data:
+        first: 1
+        second: ac860100
+      data:
+        first: 4
+        second: 8c1a0600
+      data:
+        first: 23
+        second: 62182300
+      data:
+        first: 33
+        second: a25a3200
+    Telescope:
+      data:
+        first: 1
+        second: a2860100
+      data:
+        first: 4
+        second: 821a0600
+    Telescope -- Bone A:
+      data:
+        first: 1
+        second: b2860100
+      data:
+        first: 4
+        second: 921a0600
+      data:
+        first: 137
+        second: a00bd100
+    Telescope -- Bone B:
+      data:
+        first: 1
+        second: b0860100
+      data:
+        first: 4
+        second: 901a0600
+    Telescope -- Bone C:
+      data:
+        first: 1
+        second: a4860100
+      data:
+        first: 4
+        second: 841a0600
+    Telescope -- Bone D:
+      data:
+        first: 1
+        second: ae860100
+      data:
+        first: 4
+        second: 8e1a0600
+    Telescope -- Bone E:
+      data:
+        first: 1
+        second: a8860100
+      data:
+        first: 4
+        second: 881a0600
+    Telescope Control:
+      data:
+        first: 1
+        second: aa860100
+      data:
+        first: 4
+        second: 8a1a0600

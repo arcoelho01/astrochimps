@@ -10,7 +10,6 @@ public class CDrone : CBaseEntity {
 	
 	// PUBLIC
 	public enum eDroneType { Patrol, Saboteur, Hunter, NONE }; // Drones types
-  public eDroneType droneType;
 	public Transform stunnedParticleSystem;
 	Transform stunnedObj = null;
 	float fRecycleTimer;
@@ -26,7 +25,6 @@ public class CDrone : CBaseEntity {
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
 	public Transform transTarget;   // Target Transform
-  public CBaseEntity.eObjType typeTarget; // Target type
 	public float attackRange;      //  Attack Range to disable drones.
 	private Vector3 walkTo;
 	
@@ -38,17 +36,12 @@ public class CDrone : CBaseEntity {
 		STATE_ATTACKING,					// Attacking an enemy
 		STATE_BEING_RECYCLED,			// Being recycled by an enemy
 		STATE_DESTROYED,					// Destroyed (recycled) by an enemy
-    STATE_PURSUIT,            // Walk until the target is in range, then attack it // NOT USE FOR NOW
 		STATE_NULL								// null
 	};
 	
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
 	float stunnedTimeCounter;
 	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
-
-  // Sorry I know this is bad but i'm not smart enough right now to make it better
-  private Saboteur saboteurScript;
-  private Patrol patrolScript;
 
 	/*
 	 * ===========================================================================================================
@@ -60,9 +53,6 @@ public class CDrone : CBaseEntity {
 	/// When the script is initialized
 	/// </summary>
 	void Awake() {
-
-    if(this.droneType == eDroneType.Patrol) patrolScript = this.gameObject.GetComponent<Patrol>();
-    else if(this.droneType == eDroneType.Saboteur) saboteurScript = this.gameObject.GetComponent<Saboteur>();
 
 		// Set the default settings for all the buildings
 		Selectable = true; // All drones are selectable
@@ -124,20 +114,6 @@ public class CDrone : CBaseEntity {
 		// If is a monkey, check in CMonkey the rules; some monkeys cause the drone to be disabled, others to 
 		// recycle it, etc
 		EnterNewState(FSMState.STATE_STUNNED);
-	}
-
-  /// <summary>
-  /// Attack the specified transTarget. Considering all the tests we need to do it's probably best just to send the gameobject. Or not gotta discuss
-  /// </summary>
-  /// <param name='transTarget'>
-  /// Transform transTarget.
-  /// </param>
-  public void Attack(Transform transTarget){
-
-    this.transTarget = transTarget;
-    this.typeTarget = transTarget.gameObject.GetComponent<CBaseEntity>().Type;
-    //EnterNewState(FSMState.STATE_PURSUIT);
-    EnterNewState(FSMState.STATE_ATTACKING);
  }
 
 	/// <summary>
@@ -191,10 +167,6 @@ public class CDrone : CBaseEntity {
 				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
 				AIScript.Stop();
 				break;
-
-    case FSMState.STATE_PURSUIT:
-      //Go to target position and start attack
-      break;
 
 			case FSMState.STATE_ATTACKING:
 				// Get the target to attack
@@ -267,7 +239,7 @@ public class CDrone : CBaseEntity {
         if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building){
           Debug.LogWarning("Sabot target: " + transTarget);
           saboteurScript.SabotageBuilding(transTarget.gameObject);
-        }
+				}
 				break;
 
 			case FSMState.STATE_BEING_RECYCLED:
@@ -314,6 +286,12 @@ public class CDrone : CBaseEntity {
 
 			case FSMState.STATE_STUNNED:
 				{
+
+					// Do the stunned animation
+					if(meshObject) {
+
+						meshObject.animation.Play("Reactivate");
+					}
 
 					// Destroys the 'stunned particle system', if exists
 					if(stunnedObj)

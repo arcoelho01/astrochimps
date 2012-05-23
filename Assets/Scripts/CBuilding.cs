@@ -31,9 +31,6 @@ public class CBuilding : CBaseEntity {
 
 	public Transform sabotagedParticleSystem;
 	Transform sabotagedPSObj = null;
-	Transform meshObject = null;
-
-	Vector3 sweetSpot;
 
 	// ================== MERGE
 
@@ -93,27 +90,8 @@ public class CBuilding : CBaseEntity {
 				vida = 100;
 		}
 		
-		// Get the mesh
-		meshObject = GetMeshObject();
-		if(!meshObject) {
-
-			// DEBUG
-			Debug.LogError("Cannot find Mesh for " + this.transform);
-		}
-		else {
-
-			// Get one object to be check the renderer
-			foreach(Transform child in meshObject) {
-
-				if(child.GetComponent<Renderer>()) {
-	
-					mainRendererObject = child;
-					break;
-				}
-			}
-		}
-		
-		sweetSpot = GetSweetSpotPosition();
+		// FIXME: put this in CBaseEntity, not here!
+		GetSweetSpotAndMeshObject();
 	}
 
 	/// <summary>
@@ -238,9 +216,12 @@ public class CBuilding : CBaseEntity {
 		AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
 		// FIXME: put all this in the monkey class, not here!!!
-		monkeyInside.transform.position =
-		 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
+		//monkeyInside.transform.position =
+		// 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
+		monkeyInside.transform.position = 
+			this.transform.position + new Vector3(2,1,gameObject.GetComponent<BoxCollider>().size.z);
 
+		Debug.Log(collider.GetType());
 		//this.Deselect();
 
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
@@ -373,48 +354,6 @@ public class CBuilding : CBaseEntity {
 
 		if(sabotagedPSObj)
 			Destroy(sabotagedPSObj.gameObject);
-	}
-
-	/// <summary>
-	/// Get the sweet spot position, if this object is defined. Otherwise, will return this object position
-	/// </summar>
-	Vector3 GetSweetSpotPosition() {
-
-		Transform sweetSpotObj = transform.Find("SweetSpot");
-
-		if(sweetSpotObj) {
-
-			return sweetSpotObj.transform.position;
-		}
-		else {
-
-			return this.transform.position;
-		}
-	}
-
-	/// <summary>
-	/// Get the mesh object in the hierarchy, as this:
-	/// Object -> collider
-	/// | - Icon
-	/// | - SweetSpot
-	/// | - Mesh -> animation
-	///	  | - Imported FBX
-	/// </summary>
-	Transform GetMeshObject() {
-
-		// First, find the "Mesh" in the hierarchy
-		Transform meshHierarchy = transform.Find("Mesh");
-
-		// Now, get the children of the Mesh, This will be the real model
-		if(meshHierarchy) {
-
-			foreach(Transform child in meshHierarchy) {
-				
-				return child;
-			}
-		}
-
-		return null;
 	}
 }
 

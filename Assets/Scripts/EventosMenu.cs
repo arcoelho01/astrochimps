@@ -133,7 +133,17 @@ public class EventosMenu : MonoBehaviour {
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
 				}
-			}		
+			}
+		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FAZENDA)
+		{
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)
+			{
+				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().IncrementaNivel();
+					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+				}
+			}
+		}
 	}
 	
 	
