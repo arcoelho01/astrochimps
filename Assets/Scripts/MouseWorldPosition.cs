@@ -619,7 +619,8 @@ public class MouseWorldPosition : MonoBehaviour {
        if(selectedBaseEntity != null) {
           if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
             if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
-            selectedDrone.Attack(whatIClicked);
+							// FIXME: Broken code. Missing commits
+							//selectedDrone.Attack(whatIClicked);
             }
           }
        }

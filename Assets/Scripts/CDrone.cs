@@ -236,10 +236,12 @@ public class CDrone : CBaseEntity {
 					EnterNewState(FSMState.STATE_IDLE);
 					
 				}*/
+				/* Code is broken. Missing commits, perhaps?
         if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building){
           Debug.LogWarning("Sabot target: " + transTarget);
           saboteurScript.SabotageBuilding(transTarget.gameObject);
 				}
+				*/
 				break;
 
 			case FSMState.STATE_BEING_RECYCLED:
