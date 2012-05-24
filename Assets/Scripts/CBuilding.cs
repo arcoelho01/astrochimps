@@ -31,6 +31,8 @@ public class CBuilding : CBaseEntity {
 
 	public Transform sabotagedParticleSystem;
 	Transform sabotagedPSObj = null;
+	Vector3 v3ControlSpot;
+	Vector3 v3ExitSpot;
 
 	// ================== MERGE
 
@@ -90,8 +92,15 @@ public class CBuilding : CBaseEntity {
 				vida = 100;
 		}
 		
-		// FIXME: put this in CBaseEntity, not here!
+		// Get the position of some helpers objects
 		GetSweetSpotAndMeshObject();
+
+		// if is the Command Center, get the position of the monkey when inside the building
+		if(buildingType == eBuildingType.CommandCenter) {
+
+			GetControlRoomSpot();
+			GetExitSpot();
+		}
 	}
 
 	/// <summary>
@@ -105,11 +114,6 @@ public class CBuilding : CBaseEntity {
 
 		// Check if we need to show a menu
 		if(isSelected && monkeyInside != null) {
-
-			/*
-			// DEBUG
-			Debug.Log("enabling menu for removing the monkey");
-			//*/
 
 			mainScript.bottomMenu.BuildingInfoMenuEnable(this);
 		}
@@ -175,19 +179,12 @@ public class CBuilding : CBaseEntity {
 	/// <param name ="monkeyIn">Transform of the monkey that will be inside the building</param>
 	public void PutAMonkeyInside(Transform monkeyIn) {
 
-		// TODO: Modify some of the building stats according to the type of monkey inside
-		
-		
-		
-		
 		if(monkeyInside != null) {
 			
 			// DEBUG
 			Debug.Log("There's already a monkey inside this building!");
 			return;
 		}
-		
-		
 		
 		monkeyInside = monkeyIn;
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Deselect();
@@ -198,8 +195,8 @@ public class CBuilding : CBaseEntity {
 		//this.Select();//gameObject.GetComponent<CBaseEntity>().Select();
 		
 		// TODO: for now we put the monkey model on top of the building :P
-		monkeyInside.transform.position = 
-			this.transform.position + new Vector3(0,this.transform.localScale.y * 0.5f + 1, 0);
+		monkeyInside.transform.position =	v3ControlSpot;
+		monkeyInside.transform.rotation = Quaternion.identity;
 	}
 
 	/// <summary>
@@ -218,11 +215,8 @@ public class CBuilding : CBaseEntity {
 		// FIXME: put all this in the monkey class, not here!!!
 		//monkeyInside.transform.position =
 		// 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
-		monkeyInside.transform.position = 
-			this.transform.position + new Vector3(2,1,gameObject.GetComponent<BoxCollider>().size.z);
-
-		Debug.Log(collider.GetType());
-		//this.Deselect();
+		monkeyInside.transform.position = v3ExitSpot;
+			//this.transform.position + new Vector3(2,1,gameObject.GetComponent<BoxCollider>().size.z);
 
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
 		
@@ -355,5 +349,43 @@ public class CBuilding : CBaseEntity {
 		if(sabotagedPSObj)
 			Destroy(sabotagedPSObj.gameObject);
 	}
-}
+
+	/// <summary>
+	/// Find the object "ControlSpot", which designates where the monkey should be when inside the building
+	/// </summary>
+	void GetControlRoomSpot() {
+
+			GameObject controlRoomSpotObj = GameObject.Find("ControlSpot");
+
+			if(!controlRoomSpotObj) {
+
+				// DEBUG
+				Debug.LogError("Object 'ControlSpot' not found for this Command Center");
+			}
+			else {
+			
+				v3ControlSpot = controlRoomSpotObj.transform.position;
+			}
+	}
+	
+	/// <summary>
+	///	Find the coordinates for the object 'ExitSpot', which designates where an unit should be when exiting
+	///	the building
+	/// </summary>
+	void GetExitSpot() {
+
+			GameObject exitSpotObj = GameObject.Find("ExitSpot");
+
+			if(!exitSpotObj) {
+
+				// DEBUG
+				Debug.LogError("Object 'ControlSpot' not found for this Command Center");
+			}
+			else {
+			
+				v3ExitSpot = exitSpotObj.transform.position;
+			}
+
+	}
+	}
 
