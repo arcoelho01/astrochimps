@@ -35,6 +35,9 @@ public class CMonkey : CBaseEntity {
 	private float stunnedTimeCounter;
 	public eMonkeyType monkeyClass; // Which class this monkey belongs
 
+	CharacterController myController;
+	public Transform iconPrefab;
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -54,6 +57,12 @@ public class CMonkey : CBaseEntity {
 		
 		// FSM setup
 		eFSMCurrentState = FSMState.STATE_IDLE;
+
+		// Get info about the collider
+		GetColliderInfo();
+
+		// Load the icon for this unit
+		LoadMinimapIcon();
 	}
 
 	/// <summary>
@@ -342,4 +351,29 @@ public class CMonkey : CBaseEntity {
 		}
 	}
 
+	/// <summary>
+	/// Get info about the collider in this object. This is needed so we know what are the boundaries of the
+	/// object. With this, we can calculate the distance of the object from others, knowing if we can attack 
+	/// them, for instance
+	void GetColliderInfo() {
+
+		// Get the collider - actually a CharacterController
+		myController = gameObject.GetComponent<CharacterController>();
+
+		// DEBUG: display it's info
+		Debug.Log("Object position: " + this.transform.position + " Center: " + myController.center);
+	}
+
+	/// <summary>
+	/// Loads the appropriate icon to display in the minimap. It should depends on the side (allied or opponent),
+	/// type of object and visibility
+	/// </summary>
+	void LoadMinimapIcon() {
+
+		Transform myIcon = Instantiate(iconPrefab, this.transform.position, Quaternion.identity) as Transform;
+
+		myIcon.transform.parent = this.transform;
+		myIcon.name = "Icon";
+
+	}
 }
