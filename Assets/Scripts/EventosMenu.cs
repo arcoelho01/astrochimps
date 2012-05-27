@@ -65,8 +65,6 @@ public class EventosMenu : MonoBehaviour {
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 					}
-					//Construir(DefinicaoEstrutura.TipoEstrutura.FAZENDA);		
-					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
 				}
 				
 				if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Garagem")){
@@ -81,8 +79,6 @@ public class EventosMenu : MonoBehaviour {
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabGaragem.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 					}
-					//Construir(DefinicaoEstrutura.TipoEstrutura.GARAGEM);
-					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
 				}
 				
 				if(GUI.Button(new Rect(155* 2,Screen.height -44,70 * 1.25f,70 * 0.53f),"Laboratorio")){
@@ -97,8 +93,6 @@ public class EventosMenu : MonoBehaviour {
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabLaboratorio.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 					}
-					//Construir(DefinicaoEstrutura.TipoEstrutura.LABORATORIO);
-					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
 				}	
 
 				if(GUI.Button(new Rect(230 * 1.78f,Screen.height - 44,70 * 1.74f,70 * 0.53f),"Fabrica de Drones")){
@@ -113,8 +107,6 @@ public class EventosMenu : MonoBehaviour {
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 					}
-					//Construir(DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES);
-					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().construido = true;
 				}	
 			}
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO)
@@ -135,8 +127,20 @@ public class EventosMenu : MonoBehaviour {
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
 				}
+				
+				if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.80f,70 * 0.53f),"Drone de Vigilancia")){
+				
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_NORMAL;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
+				}
+				
+				if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3)
+					if(GUI.Button(new Rect(195 * 1.78f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
+					}				
 			}
-			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO){
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao != DefinicaoEstrutura.StatusProgresso.LIBERADO){
 				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
 			}
 		}
@@ -148,12 +152,12 @@ public class EventosMenu : MonoBehaviour {
 			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3))
 			{
 				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
-					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
 					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().IncrementaNivel();
 					
 				}
 			}
-			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO){
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO){
 				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
 			}
 		}
