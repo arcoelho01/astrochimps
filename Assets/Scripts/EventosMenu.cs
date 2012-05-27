@@ -48,7 +48,7 @@ public class EventosMenu : MonoBehaviour {
 		
 		//GUI.Box(new Rect(0,Screen.height - 100,Screen.width,100),"Menu");
 
-		
+		//Eventos de Menu dos Slots
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.SLOT)
 		{
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)
@@ -124,8 +124,10 @@ public class EventosMenu : MonoBehaviour {
 			}
 			
 		}
+		//Fim eventos de menu dos  Slots
 		
-		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES)
+		//Eventos de menu das fabricas de drones
+		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES){
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO){
 				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Drone")){
 				
@@ -134,16 +136,28 @@ public class EventosMenu : MonoBehaviour {
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
 				}
 			}
-		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FAZENDA)
-		{
-			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)
-			{
-				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
-					objetoSelecionado.GetComponent<DefinicaoEstrutura>().IncrementaNivel();
-					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-				}
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO){
+				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
 			}
 		}
+		//Fim eventos de menu das fabricas de drones
+		
+		//Eventos de menu das fazendas
+		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FAZENDA)
+		{
+			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3))
+			{
+				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().IncrementaNivel();
+					
+				}
+			}
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO){
+				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
+			}
+		}
+		//Fim ventos de menu das fazendas
 	}
 	
 	
