@@ -23,6 +23,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	public enum StatusProgresso{
 		LIBERADO,
 		EM_PROGRESSO,
+		EM_ATUALIZACAO,
 		CONCLUIDO
 	};
 	public int vida;
@@ -57,7 +58,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-		if(statusProgressao == StatusProgresso.EM_PROGRESSO)
+		if((statusProgressao == StatusProgresso.EM_PROGRESSO)||(statusProgressao == StatusProgresso.EM_ATUALIZACAO))
 		{
 			tempoAtualConstrucao = MedeProgresso(tempoConstrucao);
 		}
@@ -75,9 +76,9 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		else 
 		{
 			progressoAtual = tempoTotal;
-			if(tipo != TipoEstrutura.FAZENDA)
+			if(statusProgressao == StatusProgresso.EM_PROGRESSO)
 				Construir();
-			else
+			if(statusProgressao == StatusProgresso.EM_ATUALIZACAO)
 				IncrementaNivel();
 		}
 		
