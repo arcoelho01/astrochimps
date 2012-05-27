@@ -75,7 +75,10 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		else 
 		{
 			progressoAtual = tempoTotal;
-			Construir();
+			if(tipo != TipoEstrutura.FAZENDA)
+				Construir();
+			else
+				IncrementaNivel();
 		}
 		
 		if(progressoAtual ==0)
@@ -117,7 +120,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		if(!drone)
 			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),Quaternion.Euler(0,0,0));		
 		else
-			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+3,transform.position.y+1,transform.position.z+3),Quaternion.Euler(0,0,0));
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+4,transform.position.y+1,transform.position.z+3),Quaternion.Euler(0,0,0));
 			
 	}
 	
@@ -140,9 +143,12 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		}
 	}
 	
-	public void IncrementaNivel()
+	void IncrementaNivel()
 	{
 		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(custoMetalEvoluirNivel[nivelEstrutura-1]);
 		nivelEstrutura++;
+		statusProgressao = StatusProgresso.LIBERADO;
+		progressoAtual = 0;
 	}
+	
 }
