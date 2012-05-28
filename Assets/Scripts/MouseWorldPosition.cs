@@ -502,16 +502,15 @@ public class MouseWorldPosition : MonoBehaviour {
 	/// </summary>
 	void CheckRightMouseClick() {
 
-    if(selectedObject)
-      Debug.Log("Clicked RightMouseButton while having " + selectedObject.name + " selected");
-
+    
 		// Check if we're inside the game defined viewport
 		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom) 
 			return;
 
 		// Checks if we clicked in an unit
 		Transform whatIClicked = GetWhatIClicked();
-
+		if(selectedObject)
+			Debug.Log("Clicked: "+ whatIClicked.name +" RightMouseButton while having " + selectedObject.name + " selected");
 		// TESTING!!!
 		// Using the mouseState instead of doing a bunch of tests here. Should work...
 		if(MouseState == eMouseStates.CanCapture) {
@@ -617,7 +616,7 @@ public class MouseWorldPosition : MonoBehaviour {
 					if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
 						if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
 							// FIXME: Broken code. Missing commits
-							//selectedDrone.Attack(whatIClicked);
+							selectedDrone.Attack(whatIClicked);
 						}
 					}
 				}

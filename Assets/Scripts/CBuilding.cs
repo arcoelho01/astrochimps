@@ -126,9 +126,16 @@ public class CBuilding : CBaseEntity {
 				Debug.LogError("Extractor without an associated resource site");
 			}
 
-			if(idleStatus || sabotado) {
-
-				//renderer.material = materialDisabled;
+			if(sabotado) {
+	
+				//if(meshObject.renderer)
+				//	meshObject.renderer.material = materialDisabled;
+				
+				foreach(Transform child in meshObject) {
+					if(child.renderer)
+						child.renderer.material = materialDisabled;
+					//Debug.Log(child.name);
+				}
 
 				return;
 			}

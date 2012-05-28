@@ -10,7 +10,7 @@ public class CDrone : CBaseEntity {
 	
 	// PUBLIC
 	public enum eDroneType { Patrol, Saboteur, Hunter, NONE }; // Drones types
-  public eDroneType droneType;
+  	public eDroneType droneType;
 	public Transform stunnedParticleSystem;
 	Transform stunnedObj = null;
 	float fRecycleTimer;
@@ -26,7 +26,7 @@ public class CDrone : CBaseEntity {
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
 	public Transform transTarget;   // Target Transform
-  public CBaseEntity.eObjType typeTarget; // Target type
+  	public CBaseEntity.eObjType typeTarget; // Target type
 	public float attackRange;      //  Attack Range to disable drones.
 	private Vector3 walkTo;
 	
@@ -132,13 +132,13 @@ public class CDrone : CBaseEntity {
   /// <param name='transTarget'>
   /// Transform transTarget.
   /// </param>
-  public void Attack(Transform transTarget){
+  	public void Attack(Transform transTarget){
 
     this.transTarget = transTarget;
     this.typeTarget = transTarget.gameObject.GetComponent<CBaseEntity>().Type;
     //EnterNewState(FSMState.STATE_PURSUIT);
     EnterNewState(FSMState.STATE_ATTACKING);
- }
+ 	}
 
 	/// <summary>
 	/// Changes the FSM to a new state
@@ -264,10 +264,11 @@ public class CDrone : CBaseEntity {
 					EnterNewState(FSMState.STATE_IDLE);
 					
 				}*/
-        if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building){
-          Debug.LogWarning("Sabot target: " + transTarget);
-          saboteurScript.SabotageBuilding(transTarget.gameObject);
-        }
+        		if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building){
+          			Debug.LogWarning("Sabotage target: " + transTarget);
+          			saboteurScript.SabotageBuilding(transTarget.gameObject);
+					EnterNewState(FSMState.STATE_IDLE);
+        		}
 				break;
 
 			case FSMState.STATE_BEING_RECYCLED:

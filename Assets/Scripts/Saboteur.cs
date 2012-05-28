@@ -35,7 +35,6 @@ public class Saboteur : MonoBehaviour {
     if(!targetBuilding.sabotado)
       targetBuilding.Sabotage();
     else Debug.Log("Ja sabotado");
-
   }
 
 }
