@@ -219,8 +219,6 @@ public class CBaseEntity : MonoBehaviour {
 
 			foreach(Transform child in meshHierarchy) {
 				
-				// 
-				Debug.Log("Mesh object for " + this.name + " is " + child.name);
 				return child;
 			}
 		}
