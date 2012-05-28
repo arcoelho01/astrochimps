@@ -25,11 +25,18 @@ public class Saboteur : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	if(cdroneScript == null)
+      Debug.LogError("My script is empty go back");
+
+	
 	}
 
 
   public void SabotageBuilding (GameObject goTarget) {
-
+		
+ 	if(cdroneScript.isStunned())
+      return;
+		
     CBuilding targetBuilding = goTarget.GetComponent<CBuilding>();
 
     if(!targetBuilding.sabotado)

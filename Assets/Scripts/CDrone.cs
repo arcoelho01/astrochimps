@@ -140,7 +140,7 @@ public class CDrone : CBaseEntity {
     this.transTarget = transTarget;
     this.typeTarget = transTarget.gameObject.GetComponent<CBaseEntity>().Type;
     //EnterNewState(FSMState.STATE_PURSUIT);
-    EnterNewState(FSMState.STATE_ATTACKING);
+    EnterNewState(FSMState.STATE_PURSUIT);
  	}
 
 	/// <summary>
@@ -202,9 +202,9 @@ public class CDrone : CBaseEntity {
 				AIScript.Stop();
 				break;
 
-    case FSMState.STATE_PURSUIT:
-      //Go to target position and start attack
-      break;
+    		case FSMState.STATE_PURSUIT:
+				AIScript.ClickedTargetPosition(transTarget.position);
+     			break;
 
 			case FSMState.STATE_ATTACKING:
 				// Get the target to attack
@@ -242,7 +242,7 @@ public class CDrone : CBaseEntity {
 					// Do the floating animation
 					if(meshObject) {
 						
-						meshObject.animation.PlayQueued("Walk", QueueMode.CompleteOthers);
+						//meshObject.animation.PlayQueued("Walk", QueueMode.CompleteOthers);
 					}
 				}
 				break;
@@ -256,7 +256,33 @@ public class CDrone : CBaseEntity {
 				if ( stunnedTimeCounter <=0)
 					EnterNewState(FSMState.STATE_IDLE);
 				break;
+    		case FSMState.STATE_PURSUIT:
+     			//Go to target position and start attack
+				if (transTarget == null){
+					Debug.Log("TARGET INVALID");
+					EnterNewState(FSMState.STATE_IDLE);
+					break;
+				}
 
+				// DEBUG
+				//Debug.Log("TARGET VALID");
+
+				Vector3 diff = transTarget.transform.position - gameObject.transform.position;
+				float curDistance = diff.sqrMagnitude; 
+
+				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target 
+				// collider
+				if (curDistance < 40.0f)
+				{
+					EnterNewState(FSMState.STATE_ATTACKING);
+				}
+				else {
+					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
+					// keep walking to the new target position
+					// DEBUG
+					Debug.Log("Distance from target: " + curDistance);
+				}
+     			break;
 			case FSMState.STATE_ATTACKING:
 				// LEO: POR ENQUANTO ELE NAO ESTA SE MOVIMENTANDO EM DIRECAO AO INIMIGO POIS JA ESTA SENDO FEITO FORA DAQUI, MAS ACHO QUE DEVERIA ENTRAR NO WALKING E TB NO ATTACKING
 				/*if (transTarget == null){
@@ -324,6 +350,9 @@ public class CDrone : CBaseEntity {
 			
 			case FSMState.STATE_WALKING:
 				break;
+			case FSMState.STATE_PURSUIT:
+     			//Go to target position and start attack
+     			break;
 
 			case FSMState.STATE_STUNNED:
 				{
