@@ -171,8 +171,6 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_PURSUIT:
-				// DEBUG
-				Debug.Log("Entering STATE_PURSUIT");
 				AIScript.ClickedTargetPosition(transTarget.position);
 				break;
 
@@ -267,38 +265,29 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_PURSUIT:
-				// ADDED by Alexandre: pursuit is the combination of walk and attack modes. First, walk to the target. 
-				// Here, test if the target is in range, then switch to the ATTACK state
-				// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
-				if (transTarget == null){
-					Debug.Log("TARGET INVALID");
-					EnterNewState(FSMState.STATE_IDLE);
-					break;
-				}
-
-				// DEBUG
-				Debug.Log("TARGET VALID");
-
-				Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
-				float curDistance = diff.sqrMagnitude; 
-
-				// Added to check the distance from the enemy
-				CheckIfEnemyIsInRange();
-
-
-				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target 
-				// collider
-				if(CheckIfEnemyIsInRange())
 				{
+					// ADDED by Alexandre: pursuit is the combination of walk and attack modes. First, walk to the target. 
+					// Here, test if the target is in range, then switch to the ATTACK state
+					// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
+					if (transTarget == null){
+						// DEBUG
+						Debug.Log("TARGET INVALID");
 
-					EnterNewState(FSMState.STATE_ATTACKING);
-				}
-				else {
+						EnterNewState(FSMState.STATE_IDLE);
+						break;
+					}
 
-					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
-					// keep walking to the new target position
 					// DEBUG
-					//Debug.Log("Distance from target: " + curDistance);
+					Debug.Log("TARGET VALID");
+
+					Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
+					float curDistance = diff.sqrMagnitude; 
+
+					// Check if the enemy is range for be attacked
+					if(CheckIfEnemyIsInRange())	{
+
+						EnterNewState(FSMState.STATE_ATTACKING);
+					}
 				}
 				break;
 
@@ -333,6 +322,7 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_WALKING:
+				AIScript.Stop();
 				break;
 
 			case FSMState.STATE_STUNNED:
@@ -346,6 +336,8 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_PURSUIT:
+				// Stop the 'walk to the target'
+				AIScript.Stop();
 				break;
 
 			case FSMState.STATE_NULL:
