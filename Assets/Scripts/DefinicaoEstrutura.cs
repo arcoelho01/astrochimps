@@ -110,8 +110,8 @@ public class DefinicaoEstrutura : MonoBehaviour {
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabFabricaDrones;
 		if(objetoAConstruir == TipoEstrutura.LABORATORIO)
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabLaboratorio;
-		if(objetoAConstruir == TipoEstrutura.GARAGEM)
-			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabGaragem;
+		if(objetoAConstruir == TipoEstrutura.CENTRAL_SEGURANCA)
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabCentralSeguranca;
 		//drones
 		if(objetoAConstruir == TipoEstrutura.DRONE_NORMAL){
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabUnidadeDrone;
