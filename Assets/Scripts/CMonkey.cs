@@ -38,6 +38,9 @@ public class CMonkey : CBaseEntity {
 	CharacterController myController;
 	public Transform iconPrefab;
 
+	Vector3 v3Direction;
+	float fAttackRange;
+	
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -279,9 +282,13 @@ public class CMonkey : CBaseEntity {
 				Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
 				float curDistance = diff.sqrMagnitude; 
 
+				// Added to check the distance from the enemy
+				CheckIfEnemyIsInRange();
+
+
 				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target 
 				// collider
-				if (curDistance < 6.5f)
+				if(CheckIfEnemyIsInRange())
 				{
 
 					EnterNewState(FSMState.STATE_ATTACKING);
@@ -291,7 +298,7 @@ public class CMonkey : CBaseEntity {
 					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
 					// keep walking to the new target position
 					// DEBUG
-					Debug.Log("Distance from target: " + curDistance);
+					//Debug.Log("Distance from target: " + curDistance);
 				}
 				break;
 
@@ -375,5 +382,45 @@ public class CMonkey : CBaseEntity {
 		myIcon.transform.parent = this.transform;
 		myIcon.name = "Icon";
 
+	}
+
+	/// <summary>
+	/// Throws a raycast to check if the enemy is in range
+	/// </summary>
+	/// <returns> A boolean if the enemy is in range </returns>
+	bool CheckIfEnemyIsInRange() {
+
+		bool rv = false;
+
+		// No target? Get out!
+		if(!transTarget)
+			return rv;
+	
+		RaycastHit hit;
+		fAttackRange = 3.0f;
+		// Direction from here to the target
+		v3Direction = transTarget.transform.position - transform.position;
+
+		if(Physics.Raycast(transform.position, v3Direction, out hit, fAttackRange, 1 << MainScript.enemyLayer)) {
+
+			Debug.Log("Monkey hit in " + hit.transform.name);
+
+			rv = true;
+		}
+
+		return rv;
+	}
+
+	/// <summary>
+	/// Draw some helpers on screen
+	/// </summary>
+	void OnDrawGizmos() {
+
+		if(!transTarget)
+			return;
+
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay(transform.position, v3Direction);
+		Gizmos.DrawWireSphere(transform.position, fAttackRange);
 	}
 }
