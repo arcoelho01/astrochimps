@@ -45,6 +45,7 @@ public class CDrone : CBaseEntity {
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
 	float stunnedTimeCounter;
 	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
+	private float sabotageTime;
 
   // Sorry I know this is bad but i'm not smart enough right now to make it better
   private Saboteur saboteurScript;
@@ -64,6 +65,7 @@ public class CDrone : CBaseEntity {
     if(this.droneType == eDroneType.Patrol) patrolScript = this.gameObject.GetComponent<Patrol>();
     else if(this.droneType == eDroneType.Saboteur) saboteurScript = this.gameObject.GetComponent<Saboteur>();
 
+		sabotageTime = 2.0f;
 		// Set the default settings for all the buildings
 		Selectable = true; // All drones are selectable
 		Movable = true; // All drones are movable
@@ -267,12 +269,12 @@ public class CDrone : CBaseEntity {
 				// DEBUG
 				//Debug.Log("TARGET VALID");
 
-				Vector3 diff = transTarget.transform.position - gameObject.transform.position;
-				float curDistance = diff.sqrMagnitude; 
+				Vector3 diffPursuit = transTarget.transform.position - gameObject.transform.position;
+				float curDistancePursuit = diffPursuit.sqrMagnitude; 
 
 				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target 
 				// collider
-				if (curDistance < 40.0f)
+				if (curDistancePursuit < 50.0f)
 				{
 					EnterNewState(FSMState.STATE_ATTACKING);
 				}
@@ -280,32 +282,35 @@ public class CDrone : CBaseEntity {
 					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
 					// keep walking to the new target position
 					// DEBUG
-					Debug.Log("Distance from target: " + curDistance);
+					Debug.Log("Distance from target: " + curDistancePursuit);
 				}
      			break;
 			case FSMState.STATE_ATTACKING:
 				// LEO: POR ENQUANTO ELE NAO ESTA SE MOVIMENTANDO EM DIRECAO AO INIMIGO POIS JA ESTA SENDO FEITO FORA DAQUI, MAS ACHO QUE DEVERIA ENTRAR NO WALKING E TB NO ATTACKING
-				/*if (transTarget == null){
+				if (transTarget == null){
 					EnterNewState(FSMState.STATE_IDLE);
 					break;
 				}
+				Vector3 diffAttack = transTarget.transform.position - gameObject.transform.position;       
+				float curDistanceAttack = diffAttack.sqrMagnitude; 
 				
-				Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
-				float curDistance = diff.sqrMagnitude; 
-				
-				if (curDistance < 500)
+				if (curDistanceAttack < 20.0f)
 				{
 					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-					if (droneTarget != null)
+					if (droneTarget != null){
 						droneTarget.EnterNewState(CDrone.FSMState.STATE_STUNNED);
-				
-					EnterNewState(FSMState.STATE_IDLE);
+						EnterNewState(FSMState.STATE_IDLE);
+					}
 					
-				}*/
+				}//*/
         		if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building){
+					sabotageTime = sabotageTime - Time.deltaTime;
+					if(sabotageTime < 0){
           			Debug.LogWarning("Sabotage target: " + transTarget);
           			saboteurScript.SabotageBuilding(transTarget.gameObject);
+					sabotageTime = 2.0f;
 					EnterNewState(FSMState.STATE_IDLE);
+					}
         		}
 				break;
 
