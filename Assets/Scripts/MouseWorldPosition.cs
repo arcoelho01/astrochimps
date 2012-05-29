@@ -544,18 +544,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Engineer monkey + sabotaged building = fix it!
 		if(MouseState == eMouseStates.EngineerFix) {
 
-			CBuilding pointedBuilding = pointedObject.GetComponent<CBuilding>();
-
-			if(!pointedBuilding) {
-
-				// DEBUG
-				Debug.LogError("Cannot find CBuilding in this building: " + pointedBuilding.name);
-			}
-
-			// FIXME: the engineer should be close enough to the building
-			// Fix the building
-			pointedBuilding.FixByEngineer();
-
+			selectedObject.GetComponent<CMonkey>().FixABuilding(pointedObject);
 			return;
 		}
 

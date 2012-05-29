@@ -374,6 +374,20 @@ public class CMonkey : CBaseEntity {
 	}
 
 	/// <summary>
+	/// Tells to the engineer to fix a building.
+	/// </summary>
+	public void FixABuilding(Transform targetBuilding) {
+
+		this.transTarget = targetBuilding;
+		
+		// DEBUG
+		Debug.Log("Received order to fix the building: " + targetBuilding.name);
+
+		// Walk to the building
+		EnterNewState(FSMState.STATE_PURSUIT);
+	}
+
+	/// <summary>
 	/// Performs the 'attack' of the monkey
 	/// </summary>
 	void MonkeyAttack() {
@@ -431,8 +445,6 @@ public class CMonkey : CBaseEntity {
 			// An allied building
 			if(transTarget.gameObject.layer == MainScript.alliedLayer) {
 
-				// Any monkey X Allied CommandCenter: entering the building
-
 				// DEBUG
 				Debug.Log("Attacking an allied building");
 
@@ -445,6 +457,7 @@ public class CMonkey : CBaseEntity {
 					return;
 				}
 
+				// Any monkey X Allied CommandCenter: entering the building
 				if(attackedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter) {
 
 					attackedBuilding.PutAMonkeyInside(this.transform);
@@ -452,6 +465,10 @@ public class CMonkey : CBaseEntity {
 
 					// Deselect this object
 					this.Deselect();
+				}
+				else if(attackedBuilding.sabotado && this.monkeyClass == eMonkeyType.Engineer) {
+					// Engineer monkey vs sabotaged building
+					attackedBuilding.FixByEngineer();
 				}
 			}
 		}
