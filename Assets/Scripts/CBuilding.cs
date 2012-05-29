@@ -131,11 +131,11 @@ public class CBuilding : CBaseEntity {
 				//if(meshObject.renderer)
 				//	meshObject.renderer.material = materialDisabled;
 				
-				foreach(Transform child in meshObject) {
-					if(child.renderer)
-						child.renderer.material = materialDisabled;
-					//Debug.Log(child.name);
-				}
+				//foreach(Transform child in meshObject) {
+				//	if(child.renderer)
+				//		child.renderer.material = materialDisabled;
+				//	//Debug.Log(child.name);
+				//}
 
 				return;
 			}
@@ -217,16 +217,11 @@ public class CBuilding : CBaseEntity {
 			return;
 		}
 		
-		AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
+		if(sfxLoadMonkey)
+			AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
-		// FIXME: put all this in the monkey class, not here!!!
-		//monkeyInside.transform.position =
-		// 	this.transform.position + new Vector3(0,0,this.transform.localScale.z * 0.5f + 1);
 		monkeyInside.transform.position = v3ExitSpot;
-			//this.transform.position + new Vector3(2,1,gameObject.GetComponent<BoxCollider>().size.z);
-
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
-		
 		monkeyInside = null;
 	}
 
@@ -392,7 +387,15 @@ public class CBuilding : CBaseEntity {
 			
 				v3ExitSpot = exitSpotObj.transform.position;
 			}
+	}
 
+	/// <summary>
+	/// Returns the position of the exit spot of this building
+	/// </summary>
+	/// <returns> A Vector3 with the position of the Exit Spot object </returns>
+	public Vector3 GetExitSpotPosition() {
+
+		return v3ExitSpot;
 	}
-	}
+}
 

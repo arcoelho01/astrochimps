@@ -552,6 +552,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				Debug.LogError("Cannot find CBuilding in this building: " + pointedBuilding.name);
 			}
 
+			// FIXME: the engineer should be close enough to the building
 			// Fix the building
 			pointedBuilding.FixByEngineer();
 
@@ -562,6 +563,8 @@ public class MouseWorldPosition : MonoBehaviour {
 		if(selectedObject != null) {
 
 			if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+
+				CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 
 				// Get the basic info on the unit
 				selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
@@ -584,8 +587,11 @@ public class MouseWorldPosition : MonoBehaviour {
 								if(selectedBuilding.buildingType != CBuilding.eBuildingType.CommandCenter)
 									return;
 
+								// Change the Monkey FSM
+								cMonkeyScript.EnterInTheCommandCenter(whatIClicked);
+
 								// Puts the monkey inside the building. Actually, the building get the monkey
-								selectedBuilding.PutAMonkeyInside(selectedObject);
+								//selectedBuilding.PutAMonkeyInside(selectedObject);
 								// Deselect the monkey
 								selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
 								selectedObject = null;
@@ -597,7 +603,6 @@ public class MouseWorldPosition : MonoBehaviour {
 					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Drone) {
 						// ITS AN ENEMY
 						if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
-							CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 							// MONKEY ATTACKs DRONE
 							if (cMonkeyScript != null){
 								cMonkeyScript.Attack(whatIClicked);

@@ -84,10 +84,10 @@ public class CMonkey : CBaseEntity {
 	// BEING ATTACKED
 	public void Attacked(){
 		
-		AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
+		if(sfxAttacked)
+			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
 			
 		EnterNewState(FSMState.STATE_STUNNED);
-		
 	}
 	
 	public void WalkTo(Vector3 walkTo){
@@ -218,50 +218,7 @@ public class CMonkey : CBaseEntity {
 			
 				// DEBUG
 				Debug.Log("Executing attack");
-
-				// TODO here applies the following rules:
-				// Astronaut: disable only the patrol drone
-				// Saboteur:	attack a building, disabling it;
-				//						attack a disabled drone, reprogramming it
-				//						attack any drone, temporarily disabling it (CHECK)
-				// Cientist:	get rocket parts
-				// Engineer:	attack a disabled drone, turning it in metal
-				//						'attack' a saboutaged building, repairing it 
-			
-				CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-				if (droneTarget != null){
-
-					Debug.Log("XXXX MONKEY  attacking");
-
-					// Astronaut only attack drones that are not stunned
-					if(monkeyClass == eMonkeyType.Astronaut && !droneTarget.isStunned()) {
-
-						if(sfxAttack) {
-
-							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
-						}
-
-						droneTarget.Attacked();
-					}
-					else if(monkeyClass == eMonkeyType.Engineer && droneTarget.isStunned()) {
-					
-						if(sfxAttack) {
-
-							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
-						}
-
-						droneTarget.Recycled();
-					}
-					else if(monkeyClass == eMonkeyType.Saboteur && droneTarget.isStunned()) {
-
-						// DEBUG
-						Debug.Log("Drone being attacked by a Saboteur. Should be reprogrammed");
-					}
-					
-					// TODO: PLAY SOME ATTACKING SOUND
-
-					EnterNewState(FSMState.STATE_IDLE);
-				}
+				MonkeyAttack();
 				break;
 
 			case FSMState.STATE_PURSUIT:
@@ -280,11 +237,8 @@ public class CMonkey : CBaseEntity {
 					// DEBUG
 					Debug.Log("TARGET VALID");
 
-					Vector3 diff = transTarget.transform.position - gameObject.transform.position;       
-					float curDistance = diff.sqrMagnitude; 
-
 					// Check if the enemy is range for be attacked
-					if(CheckIfEnemyIsInRange())	{
+					if(CheckIfTargetIsInRange())	{
 
 						EnterNewState(FSMState.STATE_ATTACKING);
 					}
@@ -330,8 +284,6 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_ATTACKING:
-				// DEBUG
-				Debug.Log("Leaving STATE_ATTACKING");
 				transTarget = null;
 				break;
 
@@ -354,6 +306,7 @@ public class CMonkey : CBaseEntity {
 	/// Get info about the collider in this object. This is needed so we know what are the boundaries of the
 	/// object. With this, we can calculate the distance of the object from others, knowing if we can attack 
 	/// them, for instance
+	/// </summary>
 	void GetColliderInfo() {
 
 		// Get the collider - actually a CharacterController
@@ -377,10 +330,10 @@ public class CMonkey : CBaseEntity {
 	}
 
 	/// <summary>
-	/// Throws a raycast to check if the enemy is in range
+	/// Throws a raycast to check if the target is in range
 	/// </summary>
-	/// <returns> A boolean if the enemy is in range </returns>
-	bool CheckIfEnemyIsInRange() {
+	/// <returns> True if the target is in range, false otherwise </returns>
+	bool CheckIfTargetIsInRange() {
 
 		bool rv = false;
 
@@ -393,7 +346,7 @@ public class CMonkey : CBaseEntity {
 		// Direction from here to the target
 		v3Direction = transTarget.transform.position - transform.position;
 
-		if(Physics.Raycast(transform.position, v3Direction, out hit, fAttackRange, 1 << MainScript.enemyLayer)) {
+		if(Physics.Raycast(transform.position, v3Direction, out hit, fAttackRange)) {
 
 			Debug.Log("Monkey hit in " + hit.transform.name);
 
@@ -401,6 +354,85 @@ public class CMonkey : CBaseEntity {
 		}
 
 		return rv;
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public void EnterInTheCommandCenter(Transform targetBuilding) {
+
+		this.transTarget = targetBuilding;
+		
+		// DEBUG
+		Debug.Log("Received order to enter the building: " + targetBuilding.name);
+
+		// Walk to the command center
+		EnterNewState(FSMState.STATE_PURSUIT);
+		// Enter the command center
+	}
+
+	/// <summary>
+	/// Performs the 'attack' of the monkey
+	/// </summary>
+	void MonkeyAttack() {
+
+		// TODO here applies the following rules:
+		// Astronaut: disable only the patrol drone
+		// Saboteur:	attack a building, disabling it;
+		//						attack a disabled drone, reprogramming it
+		//						attack any drone, temporarily disabling it (CHECK)
+		// Cientist:	get rocket parts
+		// Engineer:	attack a disabled drone, turning it in metal
+		//						'attack' a saboutaged building, repairing it 
+		// All monkeys: 'attack' the command center, entering in it
+
+		// Check the type of target
+		// Drone
+		if(transTarget.gameObject.tag == "Drone") {
+
+			CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+			if (droneTarget != null){
+
+				Debug.Log("XXXX MONKEY  attacking");
+
+				// Astronaut only attack drones that are not stunned
+				if(monkeyClass == eMonkeyType.Astronaut && !droneTarget.isStunned()) {
+
+					if(sfxAttack) {
+
+						AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+					}
+
+					droneTarget.Attacked();
+				}
+				else if(monkeyClass == eMonkeyType.Engineer && droneTarget.isStunned()) {
+
+					if(sfxAttack) {
+
+						AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+					}
+
+					droneTarget.Recycled();
+				}
+				else if(monkeyClass == eMonkeyType.Saboteur && droneTarget.isStunned()) {
+
+					// DEBUG
+					Debug.Log("Drone being attacked by a Saboteur. Should be reprogrammed");
+				}
+			}
+
+			EnterNewState(FSMState.STATE_IDLE);
+		}
+		else if(transTarget.gameObject.tag == "Building") {
+
+			// Attacking a building? Could be:
+			// Any monkey X Allied CommandCenter: entering the building
+			if(transTarget.gameObject.layer == MainScript.alliedLayer) {
+
+				// DEBUG
+				Debug.Log("Attacking an allied building");
+			}
+		}
 	}
 
 	/// <summary>
