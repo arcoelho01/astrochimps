@@ -100,6 +100,8 @@ public class CBaseEntity : MonoBehaviour {
 				// Destroy this instance of the projector
 				Destroy(selector.gameObject);
 			}
+
+			MainScript.mouseInputScript.DeselectedObject();
 		}
 	}
 

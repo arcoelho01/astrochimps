@@ -158,6 +158,8 @@ public class CMonkey : CBaseEntity {
 					AudioSource.PlayClipAtPoint(sfxAck, transform.position);
 				}
 				AIScript.ClickedTargetPosition(walkTo);
+				// Clear the target
+				transTarget = null;
 			
 				break;
 
@@ -426,11 +428,31 @@ public class CMonkey : CBaseEntity {
 		else if(transTarget.gameObject.tag == "Building") {
 
 			// Attacking a building? Could be:
-			// Any monkey X Allied CommandCenter: entering the building
+			// An allied building
 			if(transTarget.gameObject.layer == MainScript.alliedLayer) {
+
+				// Any monkey X Allied CommandCenter: entering the building
 
 				// DEBUG
 				Debug.Log("Attacking an allied building");
+
+				CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
+
+				if(!attackedBuilding) {
+
+					// DEBUG
+					Debug.LogError("CBuilding component not found for " + transTarget.name);
+					return;
+				}
+
+				if(attackedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter) {
+
+					attackedBuilding.PutAMonkeyInside(this.transform);
+					EnterNewState(FSMState.STATE_IDLE);
+
+					// Deselect this object
+					this.Deselect();
+				}
 			}
 		}
 	}

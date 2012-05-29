@@ -590,11 +590,9 @@ public class MouseWorldPosition : MonoBehaviour {
 								// Change the Monkey FSM
 								cMonkeyScript.EnterInTheCommandCenter(whatIClicked);
 
-								// Puts the monkey inside the building. Actually, the building get the monkey
-								//selectedBuilding.PutAMonkeyInside(selectedObject);
 								// Deselect the monkey
-								selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
-								selectedObject = null;
+								//selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
+								//selectedObject = null;
 							}
 						}
 						//}
@@ -693,6 +691,15 @@ public class MouseWorldPosition : MonoBehaviour {
 			Destroy(projectorSelectTargetPosition.gameObject);
 	
 		//Destroy(myProjector.gameObject);
+	}
+
+	/// <summary>
+	/// Called from an external script, when a unit is deselected
+	/// </summary>
+	public void DeselectedObject() {
+
+		if(selectedObject)
+			selectedObject = null;
 	}
 
 	/// <summary>

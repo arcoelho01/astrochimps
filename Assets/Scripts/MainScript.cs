@@ -36,6 +36,9 @@ public class MainScript : MonoBehaviour {
 	List<Transform> neutralResources = new List<Transform>();
 	List<Transform> neutralRocketParts = new List<Transform>();
 
+	// Shortcut for some scripts
+	public static MouseWorldPosition mouseInputScript = null;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -55,6 +58,13 @@ public class MainScript : MonoBehaviour {
 
 		// FIXME: added only for now
 		GetCurrentUnitsInScene();
+
+		mouseInputScript = gameObject.GetComponent<MouseWorldPosition>();
+		if(!mouseInputScript) {
+
+			// DEBUG
+			Debug.LogError("Cannot find the MouseWorldPosition component. Please check.");
+		}
 	}
 	
 	// Update is called once per frame
