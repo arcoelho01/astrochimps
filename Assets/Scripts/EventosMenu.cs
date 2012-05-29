@@ -8,7 +8,7 @@ public class EventosMenu : MonoBehaviour {
 	public float largura;
 	public GameObject prefabFazenda;
 	public GameObject prefabLaboratorio;
-	public GameObject prefabGaragem;
+	public GameObject prefabCentralSeguranca;
 	public GameObject prefabFabricaDrones;
 	public GameObject prefabUnidadeDrone;
 	public Transform objetoSelecionado;
@@ -67,17 +67,17 @@ public class EventosMenu : MonoBehaviour {
 					}
 				}
 				
-				if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Garagem")){
+				if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Central de Seguranca")){
 					
-					if((prefabGaragem.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
-						(prefabGaragem.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
+					if((prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
+						(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
 					{						
-						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabGaragem.GetComponent<DefinicaoEstrutura>().custoMetal);
-						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabGaragem.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal);
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoOxigenio);
 						
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.GARAGEM;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabGaragem.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 					}
 				}
 				
@@ -134,11 +134,7 @@ public class EventosMenu : MonoBehaviour {
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
 				}
-				
-				if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3)
-					if(GUI.Button(new Rect(195 * 1.78f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
-					}				
+		
 			}
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao != DefinicaoEstrutura.StatusProgresso.LIBERADO){
 				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
@@ -161,7 +157,21 @@ public class EventosMenu : MonoBehaviour {
 				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
 			}
 		}
-		//Fim ventos de menu das fazendas
+		//Fim eventos de menu das fazendas
+		
+		//Eventos de menu da central de seguranca
+		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA)
+		{
+			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3))
+				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
+			}
+			
+			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO){
+				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");
+			}
+		}
+		//Fim eventos de menu da central de seguranca
 	}
 	
 	
@@ -183,8 +193,8 @@ public class EventosMenu : MonoBehaviour {
 			case DefinicaoEstrutura.TipoEstrutura.FAZENDA:
 				rv = prefabFazenda;
 				break;
-			case DefinicaoEstrutura.TipoEstrutura.GARAGEM:
-				rv = prefabGaragem;
+			case DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA:
+				rv = prefabCentralSeguranca;
 				break;
 			case DefinicaoEstrutura.TipoEstrutura.LABORATORIO:
 				rv = prefabLaboratorio;
