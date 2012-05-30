@@ -141,8 +141,8 @@ public class CBuilding : CBaseEntity {
 			}
 
 			// Adding animation
-			if(meshObject)
-				meshObject.animation.Play();
+			if(meshObject && !idleStatus && !sabotado)
+				meshObject.animation.Play("Cycle");
 
 			if(myTimer >= workTime) {
 
@@ -243,11 +243,6 @@ public class CBuilding : CBaseEntity {
 		float extractionAmount = level * 1.5f;
 		string resourceString = "";
 
-		// FIXME: a monkey will be inside the Command Center only
-		if(TheresAMonkeyInside() != null) {
-			extractionAmount *= 2.0f; // Have a monkey inside the building? Double the production!!!
-		}
-	
 		// Try to extract resources
 		extractedResource = resourceSite.GetComponent<CResource>().ExtractResource(extractionAmount);
 

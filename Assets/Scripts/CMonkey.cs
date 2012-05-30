@@ -370,7 +370,6 @@ public class CMonkey : CBaseEntity {
 
 		// Walk to the command center
 		EnterNewState(FSMState.STATE_PURSUIT);
-		// Enter the command center
 	}
 
 	/// <summary>
@@ -382,6 +381,20 @@ public class CMonkey : CBaseEntity {
 		
 		// DEBUG
 		Debug.Log("Received order to fix the building: " + targetBuilding.name);
+
+		// Walk to the building
+		EnterNewState(FSMState.STATE_PURSUIT);
+	}
+
+	/// <summary>
+	/// Tells the cientist to capture a Rocket Part
+	/// </summary>
+	public void CaptureARocketPart(Transform targetPart) {
+
+		this.transTarget = targetPart;
+		
+		// DEBUG
+		Debug.Log("Received order to capture the part: " + targetPart.name);
 
 		// Walk to the building
 		EnterNewState(FSMState.STATE_PURSUIT);
@@ -471,6 +484,19 @@ public class CMonkey : CBaseEntity {
 					attackedBuilding.FixByEngineer();
 				}
 			}
+		}
+		else if(transTarget.gameObject.tag == "RocketPart") {
+
+			// Cientist monkey capturing a RocketPart
+			CBaseEntity capturedEntity = transTarget.GetComponent<CBaseEntity>();
+
+			if(!capturedEntity) {
+
+				// DEBUG
+				Debug.LogError("Cannot find component CBaseEntity for this object: " + transTarget.name);
+			}
+
+			capturedEntity.CapturedBy(this.transform);
 		}
 	}
 
