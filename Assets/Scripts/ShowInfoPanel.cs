@@ -13,16 +13,26 @@ public class ShowInfoPanel : MonoBehaviour {
 	Transform myParent;
 	// Vertical offset, to make the text floats towards the top of the screen 
 	float offsetY;
+	// Horizontal offset, to leave the text centered
+	float offsetX;
 	// Text to be shown
 	string infoText = "";
 	// Starting position of the text in the world
 	Vector3 v3Position;
+	// The GUIContent to hold the text
+	GUIContent myContent;
+	// Added to try to calculate the text size in pixels
+	GUIStyle style = "Label";
+	// The label size
+	Vector2 labelSize;
+
 
 	// Use this for initialization
 	void Start () {
 	
 		myParent = transform.parent;
 		offsetY = 0.0f;
+
 	}
 	
 	// Update is called once per frame
@@ -41,7 +51,7 @@ public class ShowInfoPanel : MonoBehaviour {
 			// Find my position on the screen
 			Vector3 position = Camera.main.WorldToScreenPoint(v3Position);
 
-			GUI.Label(new Rect(position.x, Screen.height - position.y - offsetY, 150,50), infoText);
+			GUI.Label(new Rect(position.x - offsetX, Screen.height - position.y - offsetY, labelSize.x, labelSize.y), myContent);
 		}
 	}
 
@@ -54,6 +64,10 @@ public class ShowInfoPanel : MonoBehaviour {
 
 		infoText = newText;
 		v3Position = position;
+		
+		myContent = new GUIContent(infoText);
+		labelSize = style.CalcSize(myContent);
+		offsetX = labelSize.x * 0.5f;
 	}
 
 	/// <summary>

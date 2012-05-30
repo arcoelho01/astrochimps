@@ -287,7 +287,7 @@ public class CBuilding : CBaseEntity {
 		Transform myInfo = Instantiate(showInfoObject, this.transform.position, Quaternion.identity) as Transform;
 
 		myInfo.transform.parent = this.transform;
-		string infoText = stResource + " +" + amountExtracted;
+		string infoText = stResource + " " + amountExtracted;
 		myInfo.GetComponent<ShowInfoPanel>().SetInfoText(infoText, sweetSpot);
 
 		yield return new WaitForSeconds(2.0f);
