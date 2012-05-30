@@ -146,7 +146,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	
 	void IncrementaNivel()
 	{
-		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(custoMetalEvoluirNivel[nivelEstrutura-1]);
+		//GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(custoMetalEvoluirNivel[nivelEstrutura-1]);
 		nivelEstrutura++;
 		statusProgressao = StatusProgresso.LIBERADO;
 		progressoAtual = 0;
