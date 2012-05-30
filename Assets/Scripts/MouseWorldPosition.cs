@@ -290,8 +290,77 @@ public class MouseWorldPosition : MonoBehaviour {
 
 					// TODO AND FIXME: it's not that easy. Must check first if the monkey or drone can actually attack
 					// what we are pointing
-					cursorCurrent = cursorAttack;
-					MouseState = eMouseStates.Targeting;
+					// We have a monkey selected?
+					if(selectedObject.gameObject.tag == "Monkey") {
+
+						CMonkey selectedMonkey = selectedObject.gameObject.GetComponent<CMonkey>();
+
+						if(!selectedMonkey) {
+
+							// DEBUG
+							Debug.LogError("Could not find CMonkey component in " + selectedObject);
+						}
+
+						// Are we targeting a drone?
+						if(whatIAmPointing.gameObject.tag == "Drone") {
+
+							bool isThisDroneStunned = false;
+							// Is this drone stunned?
+							CDrone pointedDrone = whatIAmPointing.gameObject.GetComponent<CDrone>();
+							if(!pointedDrone) {
+
+								// DEBUG
+								Debug.LogError("Could not find CDrone component in " + whatIAmPointing);
+							}
+
+							isThisDroneStunned = pointedDrone.isStunned();
+
+							switch(selectedMonkey.monkeyClass) {
+							 
+								case CMonkey.eMonkeyType.Astronaut:
+									{
+										// The astronaut only attack working drones
+										if(!isThisDroneStunned) {
+
+											cursorCurrent = cursorAttack;
+											MouseState = eMouseStates.Targeting;
+										}
+									}
+									break;
+
+								case CMonkey.eMonkeyType.Cientist:
+									break;
+
+								case CMonkey.eMonkeyType.Engineer:
+									{
+										// The engineer only attack (recycle) stunned drones
+										if(isThisDroneStunned) {
+
+											cursorCurrent = cursorAttack;
+											MouseState = eMouseStates.Targeting;
+										}
+									}
+									break;
+
+								case CMonkey.eMonkeyType.Saboteur:
+									{
+										// The sabouter only attack (reprogram) stunned drones
+										if(isThisDroneStunned) {
+
+											cursorCurrent = cursorAttack;
+											MouseState = eMouseStates.Targeting;
+										}
+									}
+									break;
+
+								default:
+									// DEBUG
+									Debug.LogError("I should not be here...");
+									break;
+							}
+						}
+					}
+
 					return;
 				}
 
@@ -516,129 +585,98 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Checks if we clicked in an unit
 		Transform whatIClicked = GetWhatIClicked();
 		if(selectedObject)
-			Debug.Log("Clicked: "+ whatIClicked.name +" RightMouseButton while having " + selectedObject.name + " selected");
-		// TESTING!!!
-		// Using the mouseState instead of doing a bunch of tests here. Should work...
-		if(MouseState == eMouseStates.CanCapture) {
+			Debug.Log("Clicked: "+ whatIClicked.name + " RightMouseButton while having " + selectedObject.name + 
+					" selected with status " + MouseState);
 
-			CBaseEntity capturedEntity = pointedObject.GetComponent<CBaseEntity>();
+		// Check in which state we are
+		switch(MouseState) {
 
-			if(!capturedEntity) {
-
-				// DEBUG
-				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
-			}
-
-			selectedObject.GetComponent<CMonkey>().CaptureARocketPart(pointedObject, MouseState);
-			return;
-		}
-		else if(MouseState == eMouseStates.CanReleaseCaptured) {
-
-			CBaseEntity capturedEntity = pointedObject.GetComponent<CBaseEntity>();
-
-			if(!capturedEntity) {
-
-				// DEBUG
-				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
-			}
-
-			capturedEntity.ReleaseMe();
-			return;
-		}
-
-		// Engineer monkey + sabotaged building = fix it!
-		if(MouseState == eMouseStates.EngineerFix) {
-
-			selectedObject.GetComponent<CMonkey>().FixABuilding(pointedObject, MouseState);
-			return;
-		}
-
-		// FIXME: add monkey select, I clicked in a building
-		if(selectedObject != null) {
-
-			if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
-
-				CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
-
-				// Get the basic info on the unit
-				selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
-
-				if(selectedBaseEntity != null) {
-
-					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
-
-						// Unit not selected? // Since we are using right click this should not matter anymore
-						//if(!selectedBaseEntity.isSelected) {
-
-						// After all that, check if the clicked object is a building, so the monkey can get inside
-						if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
-
-							if (whatIClicked.gameObject.layer != MainScript.enemyLayer){
-
-								CBuilding selectedBuilding = whatIClicked.gameObject.GetComponent<CBuilding>();
-
-								// We can only use monkeys on the command center
-								if(selectedBuilding.buildingType != CBuilding.eBuildingType.CommandCenter)
-									return;
-
-								// Change the Monkey FSM
-								cMonkeyScript.EnterInTheCommandCenter(whatIClicked, MouseState);
-							}
-						}
-						//}
-					}
-					// ITS A DRONE
-					if(selectedBaseEntity.Type == CBaseEntity.eObjType.Drone) {
-						// ITS AN ENEMY
-						if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
-							// MONKEY ATTACKs DRONE
-							if (cMonkeyScript != null){
-								cMonkeyScript.Attack(whatIClicked, MouseState);
-							}
-						}
-					}
-				}
-			}
-			else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
-
-				// Get the basic info on the unit
-				CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
-				selectedBaseEntity = whatIClicked.gameObject.GetComponent<CBaseEntity>();
-
-				if(selectedBaseEntity != null) {
-					if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
-						if(selectedBaseEntity.Type == CBaseEntity.eObjType.Building) {
-							// FIXME: Broken code. Missing commits
-							selectedDrone.Attack(whatIClicked);
-						}
-					}
-				}
-			}
-
-
-			// Only walk if the place we clicked is allowed to walk
-			if(bnNodeStatus) {
-
-				// IF CLICK WASNT ON UNITS OR BUILDINGS
-				if(whatIClicked.gameObject.GetComponent<CBaseEntity>() == null) {
-
-					// WALK THE MONKEY
+			// Walk
+			case eMouseStates.CanWalk:
+				{
 					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+
 						selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
-
-						// Show where we clicked in the ground
-						StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
-					} 
-					// WALK THE DRONE
+					}
 					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
-						selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
 
-						// Show where we clicked in the ground
-						StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
+						selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+					}
+
+					// Show where we clicked in the ground
+					StartCoroutine(ShowSelectedPositionWithAProjector(WhatIsThePositionSelected(),2.0f));
+				}
+				break;
+
+			// Attacking something
+			case eMouseStates.Targeting:
+				{
+					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+						CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
+
+						cMonkeyScript.Attack(whatIClicked, MouseState);
+					}
+					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+						// Get the basic info on the unit
+						CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+						selectedDrone.Attack(whatIClicked);
 					}
 				}
-			}
+				break;
+
+			// Cientist capture a part
+			case eMouseStates.CanCapture:
+				{
+					CBaseEntity capturedEntity = pointedObject.GetComponent<CBaseEntity>();
+
+					if(!capturedEntity) {
+
+						// DEBUG
+						Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
+					}
+
+					selectedObject.GetComponent<CMonkey>().CaptureARocketPart(pointedObject, MouseState);
+				}
+				break;
+
+			// Cientist release a part
+			case eMouseStates.CanReleaseCaptured:
+				{
+					CBaseEntity capturedEntity = pointedObject.GetComponent<CBaseEntity>();
+
+					if(!capturedEntity) {
+
+						// DEBUG
+						Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
+					}
+
+					capturedEntity.ReleaseMe();
+				}
+				break;
+
+			// Engineer fix a sabotaged building
+			case eMouseStates.EngineerFix:
+				{
+
+					selectedObject.GetComponent<CMonkey>().FixABuilding(pointedObject, MouseState);
+				}
+				break;
+
+			// A monkey entering the command center
+			case eMouseStates.MonkeyCanEnterBuilding:
+				{
+
+					CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
+
+					// Change the Monkey FSM
+					cMonkeyScript.EnterInTheCommandCenter(whatIClicked, MouseState);
+				}
+				break;
+
+			default:
+				break;
 		}
+
 	}
 
 	/// <summary>

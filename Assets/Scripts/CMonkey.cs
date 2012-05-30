@@ -470,12 +470,38 @@ public class CMonkey : CBaseEntity {
 
 		// NEW CODE
 		// Perform the action according to the mouse state
-		if(mouseState == MouseWorldPosition.eMouseStates.EngineerFix) {
+		switch(mouseState) {
+			case MouseWorldPosition.eMouseStates.EngineerFix:
+				{
 
-			// Sets the time need to fix this building
-			workingTargetTime = 3.0f;
-			EnterNewState(FSMState.STATE_WORKING);
-			return;
+					// Sets the time need to fix this building
+					workingTargetTime = 3.0f; // FIXME: arbitrary value! Fix!
+					EnterNewState(FSMState.STATE_WORKING);
+				}
+				break;
+
+			case MouseWorldPosition.eMouseStates.MonkeyCanEnterBuilding:
+				{
+					CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
+
+					if(!attackedBuilding) {
+
+						// DEBUG
+						Debug.LogError("CBuilding component not found for " + transTarget.name);
+						return;
+					}
+
+					attackedBuilding.PutAMonkeyInside(this.transform);
+
+					// DEBUG
+					Debug.Log("MouseState for this action " + mouseState);
+					EnterNewState(FSMState.STATE_IDLE);
+
+					// Deselect this object
+					this.Deselect();
+				}
+				break;
+
 		}
 
 		// FIXME: remove this line
@@ -541,14 +567,14 @@ public class CMonkey : CBaseEntity {
 				// Any monkey X Allied CommandCenter: entering the building
 				if(attackedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter) {
 
-					attackedBuilding.PutAMonkeyInside(this.transform);
-
-					// DEBUG
-					Debug.Log("MouseState for this action " + mouseState);
-					EnterNewState(FSMState.STATE_IDLE);
-
-					// Deselect this object
-					this.Deselect();
+//					attackedBuilding.PutAMonkeyInside(this.transform);
+//
+//					// DEBUG
+//					Debug.Log("MouseState for this action " + mouseState);
+//					EnterNewState(FSMState.STATE_IDLE);
+//
+//					// Deselect this object
+//					this.Deselect();
 				}
 				else if(attackedBuilding.sabotado && this.monkeyClass == eMonkeyType.Engineer) {
 					// Engineer monkey vs sabotaged building
@@ -576,7 +602,8 @@ public class CMonkey : CBaseEntity {
 	}
 
 	/// <summary>
-	/// Work is done
+	/// The monkey is doing some task, and it's now finished. Check what task it is and call the appropriate
+	/// function
 	/// </summary>
 	void WorkIsDone() {
 
