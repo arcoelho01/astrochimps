@@ -70,43 +70,8 @@ public class CMonkey : CBaseEntity {
 	}
 
 	/// <summary>
-	/// Selected is override to play a sound
+	/// Update
 	/// </summary>
-	public override Transform Select() {
-
-		if(sfxSelected) {
-		
-			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
-		}
-		return base.Select();
-	}
-	
-	
-	// BEING ATTACKED
-	public void Attacked(){
-		
-		if(sfxAttacked)
-			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
-			
-		EnterNewState(FSMState.STATE_STUNNED);
-	}
-	
-	public void WalkTo(Vector3 walkTo){
-		this.walkTo = walkTo;
-		EnterNewState(FSMState.STATE_WALKING);
-	}
-	
-	// ATTACK THE TARGET
-	
-	public void Attack(Transform transTarget, MouseWorldPosition.eMouseStates currentMouseState){
-		 this.transTarget = transTarget;
-		 mouseState = currentMouseState;
-		 //EnterNewState(FSMState.STATE_ATTACKING);
-		 // Changed by Alexandre: instead of attacking, we first enter the pursuit mode. If the target is already 
-		 // at range, the FSM will change to ATTACKING
-		 EnterNewState(FSMState.STATE_PURSUIT);
-	}
-	
 	void Update(){
 		
 		ExecuteCurrentState();
@@ -306,6 +271,50 @@ public class CMonkey : CBaseEntity {
 		}
 	}
 
+	/*
+	 * ===========================================================================================================
+	 * FSM HELPER FUNCTIONS
+	 * ===========================================================================================================
+	 */
+
+	/// <summary>
+	/// Selected is override to play a sound
+	/// </summary>
+	public override Transform Select() {
+
+		if(sfxSelected) {
+		
+			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
+		}
+		return base.Select();
+	}
+	
+	
+	// BEING ATTACKED
+	public void Attacked(){
+		
+		if(sfxAttacked)
+			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
+			
+		EnterNewState(FSMState.STATE_STUNNED);
+	}
+	
+	public void WalkTo(Vector3 walkTo){
+		this.walkTo = walkTo;
+		EnterNewState(FSMState.STATE_WALKING);
+	}
+	
+	// ATTACK THE TARGET
+	
+	public void Attack(Transform transTarget, MouseWorldPosition.eMouseStates currentMouseState){
+		 this.transTarget = transTarget;
+		 mouseState = currentMouseState;
+		 //EnterNewState(FSMState.STATE_ATTACKING);
+		 // Changed by Alexandre: instead of attacking, we first enter the pursuit mode. If the target is already 
+		 // at range, the FSM will change to ATTACKING
+		 EnterNewState(FSMState.STATE_PURSUIT);
+	}
+
 	/// <summary>
 	/// Get info about the collider in this object. This is needed so we know what are the boundaries of the
 	/// object. With this, we can calculate the distance of the object from others, knowing if we can attack 
@@ -327,7 +336,6 @@ public class CMonkey : CBaseEntity {
 
 		myIcon.transform.parent = this.transform;
 		myIcon.name = "Icon";
-
 	}
 
 	/// <summary>
@@ -526,6 +534,12 @@ public class CMonkey : CBaseEntity {
 			Debug.Log("MouseState for this action " + mouseState);
 		}
 	}
+
+	/*
+	 * ===========================================================================================================
+	 * HELPERS
+	 * ===========================================================================================================
+	 */
 
 	/// <summary>
 	/// Draw some helpers on screen
