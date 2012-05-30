@@ -16,13 +16,6 @@ public class Minimap : MonoBehaviour {
 
 	public Transform mmCubeFocus;
 
-	public Rect minimapPosOnScreen;
-
-	public float x = 0.03f;
-	public float y = 0.78f;
-	public float xsize = 0.15f;
-	public float ysize = 0.15f;
-
 	// Use this for initialization
 	void Start () {
 	
@@ -48,8 +41,6 @@ public class Minimap : MonoBehaviour {
 			// DEBUG
 			Debug.LogError("Set a cube object to show the focus on the minimap");
 		}
-
-		minimapPosOnScreen = new Rect(x,y,xsize, ysize);
 
 		focusCubeOriginalSize = mmCubeFocus.localScale;
 
