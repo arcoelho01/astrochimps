@@ -158,6 +158,9 @@ public class CBaseEntity : MonoBehaviour {
 	/// <param name="capturer"> Transform for who is capturing this object </param>
 	public virtual void CapturedBy(Transform capturer) {
 
+		if(isCaptured)
+			return;
+
 		isCaptured = true;
 
 		capturedFormerParent = this.transform.parent;

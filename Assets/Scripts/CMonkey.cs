@@ -370,7 +370,34 @@ public class CMonkey : CBaseEntity {
 
 		// Walk to the command center
 		EnterNewState(FSMState.STATE_PURSUIT);
-		// Enter the command center
+	}
+
+	/// <summary>
+	/// Tells to the engineer to fix a building.
+	/// </summary>
+	public void FixABuilding(Transform targetBuilding) {
+
+		this.transTarget = targetBuilding;
+		
+		// DEBUG
+		Debug.Log("Received order to fix the building: " + targetBuilding.name);
+
+		// Walk to the building
+		EnterNewState(FSMState.STATE_PURSUIT);
+	}
+
+	/// <summary>
+	/// Tells the cientist to capture a Rocket Part
+	/// </summary>
+	public void CaptureARocketPart(Transform targetPart) {
+
+		this.transTarget = targetPart;
+		
+		// DEBUG
+		Debug.Log("Received order to capture the part: " + targetPart.name);
+
+		// Walk to the building
+		EnterNewState(FSMState.STATE_PURSUIT);
 	}
 
 	/// <summary>
@@ -431,8 +458,6 @@ public class CMonkey : CBaseEntity {
 			// An allied building
 			if(transTarget.gameObject.layer == MainScript.alliedLayer) {
 
-				// Any monkey X Allied CommandCenter: entering the building
-
 				// DEBUG
 				Debug.Log("Attacking an allied building");
 
@@ -445,6 +470,7 @@ public class CMonkey : CBaseEntity {
 					return;
 				}
 
+				// Any monkey X Allied CommandCenter: entering the building
 				if(attackedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter) {
 
 					attackedBuilding.PutAMonkeyInside(this.transform);
@@ -453,7 +479,24 @@ public class CMonkey : CBaseEntity {
 					// Deselect this object
 					this.Deselect();
 				}
+				else if(attackedBuilding.sabotado && this.monkeyClass == eMonkeyType.Engineer) {
+					// Engineer monkey vs sabotaged building
+					attackedBuilding.FixByEngineer();
+				}
 			}
+		}
+		else if(transTarget.gameObject.tag == "RocketPart") {
+
+			// Cientist monkey capturing a RocketPart
+			CBaseEntity capturedEntity = transTarget.GetComponent<CBaseEntity>();
+
+			if(!capturedEntity) {
+
+				// DEBUG
+				Debug.LogError("Cannot find component CBaseEntity for this object: " + transTarget.name);
+			}
+
+			capturedEntity.CapturedBy(this.transform);
 		}
 	}
 

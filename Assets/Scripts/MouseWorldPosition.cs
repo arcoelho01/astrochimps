@@ -241,7 +241,6 @@ public class MouseWorldPosition : MonoBehaviour {
 						cursorCurrent = cursorBuild;
 					}
 				}
-
 				infoPanel.SetInfoLabel(infoPanelMsg);
 				// And we're off!
 				return;
@@ -342,7 +341,7 @@ public class MouseWorldPosition : MonoBehaviour {
 							selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Cientist) {
 
 						// Ok, but it's this part already being carried by someone in my team?
-						if(whatIAmPointing.transform.parent.GetComponent<CRocketPart>().isCaptured) {
+						if(whatIAmPointing.GetComponent<CRocketPart>().isCaptured) {
 
 							// Set the cursor
 							cursorCurrent = cursorCaptureRay;
@@ -515,7 +514,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Using the mouseState instead of doing a bunch of tests here. Should work...
 		if(MouseState == eMouseStates.CanCapture) {
 
-			CBaseEntity capturedEntity = pointedObject.transform.parent.GetComponent<CBaseEntity>();
+			CBaseEntity capturedEntity = pointedObject.GetComponent<CBaseEntity>();
 
 			if(!capturedEntity) {
 
@@ -523,13 +522,12 @@ public class MouseWorldPosition : MonoBehaviour {
 				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
 			}
 
-			capturedEntity.CapturedBy(selectedObject);
-
+			selectedObject.GetComponent<CMonkey>().CaptureARocketPart(pointedObject);
 			return;
 		}
 		else if(MouseState == eMouseStates.CanReleaseCaptured) {
 
-			CBaseEntity capturedEntity = pointedObject.transform.parent.GetComponent<CBaseEntity>();
+			CBaseEntity capturedEntity = pointedObject.GetComponent<CBaseEntity>();
 
 			if(!capturedEntity) {
 
@@ -544,18 +542,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Engineer monkey + sabotaged building = fix it!
 		if(MouseState == eMouseStates.EngineerFix) {
 
-			CBuilding pointedBuilding = pointedObject.GetComponent<CBuilding>();
-
-			if(!pointedBuilding) {
-
-				// DEBUG
-				Debug.LogError("Cannot find CBuilding in this building: " + pointedBuilding.name);
-			}
-
-			// FIXME: the engineer should be close enough to the building
-			// Fix the building
-			pointedBuilding.FixByEngineer();
-
+			selectedObject.GetComponent<CMonkey>().FixABuilding(pointedObject);
 			return;
 		}
 
@@ -589,10 +576,6 @@ public class MouseWorldPosition : MonoBehaviour {
 
 								// Change the Monkey FSM
 								cMonkeyScript.EnterInTheCommandCenter(whatIClicked);
-
-								// Deselect the monkey
-								//selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
-								//selectedObject = null;
 							}
 						}
 						//}
