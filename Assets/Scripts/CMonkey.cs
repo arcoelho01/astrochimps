@@ -40,6 +40,7 @@ public class CMonkey : CBaseEntity {
 
 	Vector3 v3Direction;
 	float fAttackRange;
+	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
 	
 	/*
 	 * ===========================================================================================================
@@ -97,8 +98,9 @@ public class CMonkey : CBaseEntity {
 	
 	// ATTACK THE TARGET
 	
-	public void Attack(Transform transTarget){
+	public void Attack(Transform transTarget, MouseWorldPosition.eMouseStates currentMouseState){
 		 this.transTarget = transTarget;
+		 mouseState = currentMouseState;
 		 //EnterNewState(FSMState.STATE_ATTACKING);
 		 // Changed by Alexandre: instead of attacking, we first enter the pursuit mode. If the target is already 
 		 // at range, the FSM will change to ATTACKING
@@ -313,9 +315,6 @@ public class CMonkey : CBaseEntity {
 
 		// Get the collider - actually a CharacterController
 		myController = gameObject.GetComponent<CharacterController>();
-
-		// DEBUG: display it's info
-		Debug.Log("Object position: " + this.transform.position + " Center: " + myController.center);
 	}
 
 	/// <summary>
@@ -344,7 +343,8 @@ public class CMonkey : CBaseEntity {
 			return rv;
 	
 		RaycastHit hit;
-		fAttackRange = 3.0f;
+		fAttackRange = 3.0f; // FIXME: change this arbitrary value for something more meaningful
+
 		// Direction from here to the target
 		v3Direction = transTarget.transform.position - transform.position;
 
@@ -361,9 +361,10 @@ public class CMonkey : CBaseEntity {
 	/// <summary>
 	///
 	/// </summary>
-	public void EnterInTheCommandCenter(Transform targetBuilding) {
+	public void EnterInTheCommandCenter(Transform targetBuilding, MouseWorldPosition.eMouseStates currentMouseState) {
 
 		this.transTarget = targetBuilding;
+		mouseState = currentMouseState;
 		
 		// DEBUG
 		Debug.Log("Received order to enter the building: " + targetBuilding.name);
@@ -375,9 +376,10 @@ public class CMonkey : CBaseEntity {
 	/// <summary>
 	/// Tells to the engineer to fix a building.
 	/// </summary>
-	public void FixABuilding(Transform targetBuilding) {
+	public void FixABuilding(Transform targetBuilding, MouseWorldPosition.eMouseStates currentMouseState) {
 
 		this.transTarget = targetBuilding;
+		mouseState = currentMouseState;
 		
 		// DEBUG
 		Debug.Log("Received order to fix the building: " + targetBuilding.name);
@@ -389,9 +391,10 @@ public class CMonkey : CBaseEntity {
 	/// <summary>
 	/// Tells the cientist to capture a Rocket Part
 	/// </summary>
-	public void CaptureARocketPart(Transform targetPart) {
+	public void CaptureARocketPart(Transform targetPart, MouseWorldPosition.eMouseStates currentMouseState) {
 
 		this.transTarget = targetPart;
+		mouseState = currentMouseState;
 		
 		// DEBUG
 		Debug.Log("Received order to capture the part: " + targetPart.name);
@@ -401,8 +404,25 @@ public class CMonkey : CBaseEntity {
 	}
 
 	/// <summary>
+	/// Attack a target. Actually, 'attack' could be replaced by 'perform some action on...', because we using
+	/// this function also to repair buildings, capture rocket parts, etc.
+	/// </summary>
+	/// <param name="transTarget"> Transform of the targeted object </param>
+	/// <param name="currentMouseState"> A enum with the mouse state when the player issued an order </param>
+	/// <summary>
 	/// Performs the 'attack' of the monkey
 	/// </summary>
+	public void PerformAction(Transform transTarget, MouseWorldPosition.eMouseStates currentMouseState){
+
+		 this.transTarget = transTarget;
+
+		 mouseState = currentMouseState;
+		 
+		 // Go into pursuit mode -> walk to the target. When it is in range, perform the action
+		 EnterNewState(FSMState.STATE_PURSUIT);
+
+	}
+	
 	void MonkeyAttack() {
 
 		// TODO here applies the following rules:
@@ -422,7 +442,7 @@ public class CMonkey : CBaseEntity {
 			CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 			if (droneTarget != null){
 
-				Debug.Log("XXXX MONKEY  attacking");
+				Debug.Log("XXXX MONKEY  attacking with status " + mouseState);
 
 				// Astronaut only attack drones that are not stunned
 				if(monkeyClass == eMonkeyType.Astronaut && !droneTarget.isStunned()) {
@@ -474,6 +494,9 @@ public class CMonkey : CBaseEntity {
 				if(attackedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter) {
 
 					attackedBuilding.PutAMonkeyInside(this.transform);
+
+					// DEBUG
+					Debug.Log("MouseState for this action " + mouseState);
 					EnterNewState(FSMState.STATE_IDLE);
 
 					// Deselect this object
@@ -482,6 +505,8 @@ public class CMonkey : CBaseEntity {
 				else if(attackedBuilding.sabotado && this.monkeyClass == eMonkeyType.Engineer) {
 					// Engineer monkey vs sabotaged building
 					attackedBuilding.FixByEngineer();
+					// DEBUG
+					Debug.Log("MouseState for this action " + mouseState);
 				}
 			}
 		}
@@ -497,6 +522,8 @@ public class CMonkey : CBaseEntity {
 			}
 
 			capturedEntity.CapturedBy(this.transform);
+			// DEBUG
+			Debug.Log("MouseState for this action " + mouseState);
 		}
 	}
 

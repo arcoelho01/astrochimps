@@ -522,7 +522,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
 			}
 
-			selectedObject.GetComponent<CMonkey>().CaptureARocketPart(pointedObject);
+			selectedObject.GetComponent<CMonkey>().CaptureARocketPart(pointedObject, MouseState);
 			return;
 		}
 		else if(MouseState == eMouseStates.CanReleaseCaptured) {
@@ -542,7 +542,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Engineer monkey + sabotaged building = fix it!
 		if(MouseState == eMouseStates.EngineerFix) {
 
-			selectedObject.GetComponent<CMonkey>().FixABuilding(pointedObject);
+			selectedObject.GetComponent<CMonkey>().FixABuilding(pointedObject, MouseState);
 			return;
 		}
 
@@ -575,7 +575,7 @@ public class MouseWorldPosition : MonoBehaviour {
 									return;
 
 								// Change the Monkey FSM
-								cMonkeyScript.EnterInTheCommandCenter(whatIClicked);
+								cMonkeyScript.EnterInTheCommandCenter(whatIClicked, MouseState);
 							}
 						}
 						//}
@@ -586,7 +586,7 @@ public class MouseWorldPosition : MonoBehaviour {
 						if (whatIClicked.gameObject.layer == MainScript.enemyLayer){
 							// MONKEY ATTACKs DRONE
 							if (cMonkeyScript != null){
-								cMonkeyScript.Attack(whatIClicked);
+								cMonkeyScript.Attack(whatIClicked, MouseState);
 							}
 						}
 					}
@@ -695,6 +695,9 @@ public class MouseWorldPosition : MonoBehaviour {
 			if(selectedObject.tag == "Building") {
 
 				CBuilding selectedBuilding = selectedObject.gameObject.GetComponent<CBuilding>();
+				if(!selectedBuilding)
+					return;
+
 				if(selectedBuilding.sabotado)
 					selectedBuilding.Desabotage();
 				else
