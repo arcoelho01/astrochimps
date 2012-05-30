@@ -15,6 +15,8 @@ public class EventosMenu : MonoBehaviour {
    	public DefinicaoEstrutura.TipoEstrutura tipoObj;
 	
 	private bool slotsPosicionados = false;
+	private bool fazendaConstruida = false;
+	private bool centralSegurancaConstruida = false;
 	private float oxigenio;
 	private float metal;
 	CPlayer playerScript;
@@ -53,38 +55,38 @@ public class EventosMenu : MonoBehaviour {
 		{
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)
 			{
-				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Fazenda")){
-					
-					if((prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
-						(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
-					{
-						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal);
-						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+				if(!fazendaConstruida)
+					if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Fazenda")){
 						
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FAZENDA;
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
-					}
+						if(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)
+						{
+							GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal);
+							GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+							
+							objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FAZENDA;
+							objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+							objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+							fazendaConstruida = true;
+						}
 				}
-				
-				if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Central de Seguranca")){
+				if(!centralSegurancaConstruida)
+					if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Central de Seguranca")){
 					
-					if((prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
-						(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
-					{						
-						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal);
-						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoOxigenio);
-						
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA;
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
-					}
+						if(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)
+						{						
+							GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal);
+							GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+							
+							objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA;
+							objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+							objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+							centralSegurancaConstruida = true;
+						}
 				}
 				
 				if(GUI.Button(new Rect(155* 2,Screen.height -44,70 * 1.25f,70 * 0.53f),"Laboratorio")){
 					
-					if((prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
-						(prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
+					if(prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)
 					{
 						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal);
 						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoOxigenio);
@@ -97,8 +99,7 @@ public class EventosMenu : MonoBehaviour {
 
 				if(GUI.Button(new Rect(230 * 1.78f,Screen.height - 44,70 * 1.74f,70 * 0.53f),"Fabrica de Drones")){
 					
-					if((prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&
-						(prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoOxigenio <= GameObject.Find("Player").GetComponent<CPlayer>().oxygenLevel))
+					if(prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)
 					{
 						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal);
 						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoOxigenio);
@@ -145,12 +146,15 @@ public class EventosMenu : MonoBehaviour {
 		//Eventos de menu das fazendas
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FAZENDA)
 		{
+			metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
+			
 			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3))
 			{
 				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
-					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
-					//objetoSelecionado.GetComponent<DefinicaoEstrutura>().IncrementaNivel();
-					
+					if(metal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel){
+						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1]);
+					}
 				}
 			}
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO){
@@ -162,9 +166,15 @@ public class EventosMenu : MonoBehaviour {
 		//Eventos de menu da central de seguranca
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA)
 		{
-			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3))
+			metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
+			
+			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3)){
 				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
+					if(metal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel){
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
+						GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1]);
+					}
+				}
 			}
 			
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO){
