@@ -27,6 +27,7 @@ public class CMonkey : CBaseEntity {
 		STATE_STUNNED,					// Monkey stunned by an enemy drone, cannot move
 		STATE_ATTACKING,				// Attacking an enemy drone
 		STATE_PURSUIT,					// Walk until the target is in range, then attack it
+		STATE_WORKING,					// Monkey working on something. Action that requires a certain time
 		STATE_NULL							// null
 	};
 	
@@ -41,6 +42,9 @@ public class CMonkey : CBaseEntity {
 	Vector3 v3Direction;
 	float fAttackRange;
 	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
+	float workingTimer = 0.0f;	//< Timer for the working state
+	float workingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
+																	// the task is done
 	
 	/*
 	 * ===========================================================================================================
@@ -108,10 +112,8 @@ public class CMonkey : CBaseEntity {
 		switch(GetCurrentState()) {
 
 			case FSMState.STATE_IDLE:
-				{
-					// DEBUG
-					Debug.Log("[EnterNewState: " + GetCurrentState() + "]");
-				}
+				// Clear any previous targets
+				transTarget = null;
 				break;
 			case FSMState.STATE_SELECTED:
 				break;
@@ -141,6 +143,13 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_PURSUIT:
 				AIScript.ClickedTargetPosition(transTarget.position);
+				break;
+
+			case FSMState.STATE_WORKING:
+				// DEBUG
+				Debug.Log("FSM entered WORKING state");
+				// Resets the working timer
+				workingTimer = 0.0f;
 				break;
 
 			case FSMState.STATE_NULL:
@@ -214,6 +223,19 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
+			case FSMState.STATE_WORKING:
+				// Updates the working timer
+				workingTimer += Time.deltaTime;
+
+				if(workingTimer >= workingTargetTime) {
+
+					workingTimer = 0.0f;
+
+					// TODO: call the function to perform the desired task here
+					WorkIsDone();
+				}
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -253,12 +275,16 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_ATTACKING:
-				transTarget = null;
 				break;
 
 			case FSMState.STATE_PURSUIT:
 				// Stop the 'walk to the target'
 				AIScript.Stop();
+				break;
+
+			case FSMState.STATE_WORKING:
+				// DEBUG
+				Debug.Log("FSM leaving WORKING state");
 				break;
 
 			case FSMState.STATE_NULL:
@@ -428,7 +454,6 @@ public class CMonkey : CBaseEntity {
 		 
 		 // Go into pursuit mode -> walk to the target. When it is in range, perform the action
 		 EnterNewState(FSMState.STATE_PURSUIT);
-
 	}
 	
 	void MonkeyAttack() {
@@ -447,22 +472,10 @@ public class CMonkey : CBaseEntity {
 		// Perform the action according to the mouse state
 		if(mouseState == MouseWorldPosition.eMouseStates.EngineerFix) {
 
-			// DEBUG
-			Debug.Log("Engineer fixing building");
-
-			CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
-
-			if(!attackedBuilding) {
-
-				// DEBUG
-				Debug.LogError("CBuilding component not found for " + transTarget.name);
-				return;
-			}
-			
-			// Fix the broken building
-			attackedBuilding.FixByEngineer();
-			// Do nothing afterwrds
-			EnterNewState(FSMState.STATE_IDLE);
+			// Sets the time need to fix this building
+			workingTargetTime = 3.0f;
+			EnterNewState(FSMState.STATE_WORKING);
+			return;
 		}
 
 		// FIXME: remove this line
@@ -559,6 +572,42 @@ public class CMonkey : CBaseEntity {
 			capturedEntity.CapturedBy(this.transform);
 			// DEBUG
 			Debug.Log("MouseState for this action " + mouseState);
+		}
+	}
+
+	/// <summary>
+	/// Work is done
+	/// </summary>
+	void WorkIsDone() {
+
+		// DEBUG
+		Debug.Log("Entering WorkIsDone with mouseState " + mouseState);
+		if(!transTarget)
+			Debug.LogError("Target is null! Check");
+
+		switch(mouseState) {
+
+			case MouseWorldPosition.eMouseStates.EngineerFix:
+				{
+					// DEBUG
+					Debug.Log("Building fixed by the Engineer");
+
+					CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
+					if(!attackedBuilding) {
+
+						// DEBUG
+						Debug.LogError("CBuilding component not found for " + transTarget.name);
+						return;
+					}
+					// Fix the broken building
+					attackedBuilding.FixByEngineer();
+					// Do nothing afterwrds
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			default:
+				break;
 		}
 	}
 

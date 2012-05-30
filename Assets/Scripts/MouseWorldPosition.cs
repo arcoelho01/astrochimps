@@ -13,8 +13,19 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Transform selectedObject = null;	// Selected object itself (any)
 	Transform pointedObject = null;
 	public Transform cursorObject = null;
-	public enum eMouseStates { Hover, CanWalk, CannotWalk, SelectingPosition, MonkeyCanEnterBuilding, 
-		Targeting, CanCapture, CanReleaseCaptured, EngineerFix, CanSabotageBuilding, CanSabotageMovable};
+	public enum eMouseStates { 
+			Hover,  //< Mouse over, nothing selected
+			CanWalk,	// Movable object selected, can walk where the mouse is pointing
+			CannotWalk,	// Movable object selected, cannot walk where the mouse is pointing
+			SelectingPosition,	
+			MonkeyCanEnterBuilding,	// Monkey selected, mouse over Command Center, no monkey already in it
+			Targeting,	// Monkey select, cursor over an enemy
+			CanCapture, // Cientist monkey selected, mouse over a loose rocket part
+			CanReleaseCaptured, // Cientist monkey selected, mouse over a captured part
+			EngineerFix, // Engineer monkey selected, mouse over a sabotaged building
+			CanSabotageBuilding, 
+			CanSabotageMovable
+	};
 
 	// Mouse cursor
 	public Texture2D cursorNormal;	// regular cursor
@@ -296,10 +307,6 @@ public class MouseWorldPosition : MonoBehaviour {
 						Debug.LogError("Cannot find CMonkey component on " + selectedObject);
 						return;
 					}
-
-
-					// FIXING as 10/05: all monkeys can enter buildings, but only at the Command Center. Other buildings
-					// cannot be monkey operated
 
 					// are we pointing at one of ours buildings?
 					if(whatIAmPointing.tag == "Building" && whatIAmPointing.gameObject.layer == MainScript.alliedLayer)	{
