@@ -443,6 +443,33 @@ public class CMonkey : CBaseEntity {
 		//						'attack' a saboutaged building, repairing it 
 		// All monkeys: 'attack' the command center, entering in it
 
+		// NEW CODE
+		// Perform the action according to the mouse state
+		if(mouseState == MouseWorldPosition.eMouseStates.EngineerFix) {
+
+			// DEBUG
+			Debug.Log("Engineer fixing building");
+
+			CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
+
+			if(!attackedBuilding) {
+
+				// DEBUG
+				Debug.LogError("CBuilding component not found for " + transTarget.name);
+				return;
+			}
+			
+			// Fix the broken building
+			attackedBuilding.FixByEngineer();
+			// Do nothing afterwrds
+			EnterNewState(FSMState.STATE_IDLE);
+		}
+
+		// FIXME: remove this line
+		if(!transTarget)
+			return;
+
+
 		// Check the type of target
 		// Drone
 		if(transTarget.gameObject.tag == "Drone") {
@@ -512,9 +539,9 @@ public class CMonkey : CBaseEntity {
 				}
 				else if(attackedBuilding.sabotado && this.monkeyClass == eMonkeyType.Engineer) {
 					// Engineer monkey vs sabotaged building
-					attackedBuilding.FixByEngineer();
+					//attackedBuilding.FixByEngineer();
 					// DEBUG
-					Debug.Log("MouseState for this action " + mouseState);
+					//Debug.Log("MouseState for this action " + mouseState);
 				}
 			}
 		}
