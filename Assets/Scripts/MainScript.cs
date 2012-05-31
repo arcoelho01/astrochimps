@@ -29,7 +29,6 @@ public class MainScript : MonoBehaviour {
 	List<Transform> alliedDrones = new List<Transform>();
 	List<Transform> alliedBuildings = new List<Transform>();
 
-	List<Transform> opponentMonkeys = new List<Transform>();
 	List<Transform> opponentDrones = new List<Transform>();
 	List<Transform> opponentBuildings = new List<Transform>();
 
@@ -38,6 +37,12 @@ public class MainScript : MonoBehaviour {
 
 	// Shortcut for some scripts
 	public static MouseWorldPosition mouseInputScript = null;
+
+	// Shortcut for the four monkeys
+	public static Transform MonkeyAstronaut;
+	public static Transform MonkeyCientist;
+	public static Transform MonkeyEngineer;
+	public static Transform MonkeySaboteur;
 
 	// Use this for initialization
 	void Start () {
@@ -65,6 +70,9 @@ public class MainScript : MonoBehaviour {
 			// DEBUG
 			Debug.LogError("Cannot find the MouseWorldPosition component. Please check.");
 		}
+
+		// Get all the monkeys in the scene and assign their objects to some variables, so we have shortcuts to them
+		GetMonkeysObjects();
 	}
 	
 	// Update is called once per frame
@@ -97,17 +105,12 @@ public class MainScript : MonoBehaviour {
 
 		// Monkeys
 		GameObject[] goMonkeys;
-
 		goMonkeys = GameObject.FindGameObjectsWithTag("Monkey");
 		foreach(GameObject oneMonkey in goMonkeys) {
 
 			if(oneMonkey.layer == alliedLayer) {
 				
 				alliedMonkeys.Add(oneMonkey.transform);
-			}
-			else if(oneMonkey.layer == enemyLayer) {
-				
-				opponentMonkeys.Add(oneMonkey.transform);
 			}
 		}
 
@@ -151,7 +154,6 @@ public class MainScript : MonoBehaviour {
 
 		// 
 		Debug.Log("Resumo: macacos aliados: " + alliedMonkeys.Count);
-		Debug.Log("Resumo: macacos inimigos: " + opponentMonkeys.Count);
 
 		Debug.Log("Resumo: drones aliados: " + alliedDrones.Count);
 		Debug.Log("Resumo: drones inimigos: " + opponentDrones.Count);
@@ -160,5 +162,52 @@ public class MainScript : MonoBehaviour {
 		Debug.Log("Resumo: predios inimigos: " + opponentBuildings.Count);
 
 		Debug.Log("Resumo: recursos: " + neutralResources.Count);
+	}
+
+	/// <summary>
+	/// Get all monkeys in the scene, sort them by class and add their transforms to the variables declared
+	/// up in this script. With this, we get shortcuts to them
+	/// </summary>
+	void GetMonkeysObjects() {
+
+		GameObject[] goMonkeys;
+
+		goMonkeys = GameObject.FindGameObjectsWithTag("Monkey");
+		
+		foreach(GameObject oneMonkey in goMonkeys) {
+
+			CMonkey monkeyScript = oneMonkey.GetComponent<CMonkey>();
+
+			if(!monkeyScript)
+				continue;
+
+			switch(monkeyScript.monkeyClass) {
+
+				case CMonkey.eMonkeyType.Astronaut:
+					if(!MonkeyAstronaut)
+						MonkeyAstronaut = oneMonkey.transform;
+					break;
+
+				case CMonkey.eMonkeyType.Cientist:
+					if(!MonkeyCientist)
+						MonkeyCientist = oneMonkey.transform;
+					break;
+
+				case CMonkey.eMonkeyType.Engineer:
+					if(!MonkeyEngineer)
+						MonkeyEngineer = oneMonkey.transform;
+					break;
+
+				case CMonkey.eMonkeyType.Saboteur:
+					if(!MonkeySaboteur)
+						MonkeySaboteur = oneMonkey.transform;
+					break;
+
+				default:
+					break;
+			}
+
+		}
+
 	}
 }

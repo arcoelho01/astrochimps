@@ -43,6 +43,8 @@ public class RTSCam : MonoBehaviour {
 	Vector3 mouseDelta;
 
 	Transform objectInFocus = null;
+	bool bnLookAtTarget = false;
+
 	// PUBLIC
 	public static RTSCam Script; 
 	public float zoomMin = 10.0f;
@@ -140,25 +142,64 @@ public class RTSCam : MonoBehaviour {
 			ResetCamera();
 		}
 
+		bnLookAtTarget = false;
+
 		// FOCUS ON OBJECT
 		if(Input.GetKeyDown(KeyCode.Space)) {
 
 			// Is a unit selected?
 			objectInFocus = inputStuffScript.GetSelectedObject();
-			LookAtTarget(objectInFocus);
+			bnLookAtTarget = true;
 		}
 
+		// Shortcut to the Command Center
 		if(Input.GetKeyDown(KeyCode.H)) {
 		
 			if(commandCenter)	{
 			
 				objectInFocus = commandCenter;
-				LookAtTarget(objectInFocus);
+				bnLookAtTarget = true;
 			}
-
 		}
 
-		if(bnCamMoving) {
+		// Shortcut to the monkeys
+		if(Input.GetKeyDown(KeyCode.Alpha1)) {
+
+			if(MainScript.MonkeyAstronaut) {
+
+				objectInFocus = MainScript.MonkeyAstronaut;
+				bnLookAtTarget = true;
+			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha2)) {
+
+			if(MainScript.MonkeyCientist) {
+
+				objectInFocus = MainScript.MonkeyCientist;
+				bnLookAtTarget = true;
+			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha3)) {
+
+			if(MainScript.MonkeyEngineer) {
+
+				objectInFocus = MainScript.MonkeyEngineer;
+				bnLookAtTarget = true;
+			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha4)) {
+
+			if(MainScript.MonkeySaboteur) {
+
+				objectInFocus = MainScript.MonkeySaboteur;
+				bnLookAtTarget = true;
+			}
+		}
+
+		if(bnCamMoving || bnLookAtTarget) {
 
 			LookAtTarget(objectInFocus);
 		}
