@@ -553,46 +553,7 @@ public class CMonkey : CBaseEntity {
 		// FIXME:
 		// FIXME!!! CLEAN THIS CODE
 		
-		// Check the type of target
-		if(transTarget.gameObject.tag == "Building") {
-
-			// Attacking a building? Could be:
-			// An allied building
-			if(transTarget.gameObject.layer == MainScript.alliedLayer) {
-
-				// DEBUG
-				Debug.Log("Attacking an allied building");
-
-				CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
-
-				if(!attackedBuilding) {
-
-					// DEBUG
-					Debug.LogError("CBuilding component not found for " + transTarget.name);
-					return;
-				}
-
-				// Any monkey X Allied CommandCenter: entering the building
-				if(attackedBuilding.buildingType == CBuilding.eBuildingType.CommandCenter) {
-
-//					attackedBuilding.PutAMonkeyInside(this.transform);
-//
-//					// DEBUG
-//					Debug.Log("MouseState for this action " + mouseState);
-//					EnterNewState(FSMState.STATE_IDLE);
-//
-//					// Deselect this object
-//					this.Deselect();
-				}
-				else if(attackedBuilding.sabotado && this.monkeyClass == eMonkeyType.Engineer) {
-					// Engineer monkey vs sabotaged building
-					//attackedBuilding.FixByEngineer();
-					// DEBUG
-					//Debug.Log("MouseState for this action " + mouseState);
-				}
-			}
-		}
-		else if(transTarget.gameObject.tag == "RocketPart") {
+		if(transTarget.gameObject.tag == "RocketPart") {
 
 			// Cientist monkey capturing a RocketPart
 			CBaseEntity capturedEntity = transTarget.GetComponent<CBaseEntity>();
