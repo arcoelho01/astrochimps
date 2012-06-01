@@ -323,6 +323,11 @@ public class MouseWorldPosition : MonoBehaviour {
 								case CMonkey.eMonkeyType.Astronaut:
 									{
 										// The astronaut only attack working drones
+										// From the GDD:
+										// Astronaut vs visible saboteur drones: OK
+										// Astronaut vs hunter drones: get caught
+										// Astronaut vs patrol drones: not ok
+										// TODO: put this rules here!
 										if(!isThisDroneStunned) {
 
 											cursorCurrent = cursorAttack;

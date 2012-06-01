@@ -476,8 +476,9 @@ public class CMonkey : CBaseEntity {
 			// Saboteur monkey
 			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
 				{
-					// TODO: add code here
-
+					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+					droneTarget.Reprogrammed();
+					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
 

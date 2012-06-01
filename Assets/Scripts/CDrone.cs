@@ -410,4 +410,25 @@ public class CDrone : CBaseEntity {
 
 		EnterNewState(FSMState.STATE_BEING_RECYCLED);
 	}
+
+	/// <summary>
+	/// This drone has been reprogrammed, so it will change it's team
+	/// </summary>
+	public void Reprogrammed() {
+
+		// Change the drone layer and team
+		if(this.gameObject.layer == MainScript.enemyLayer) {
+
+			this.gameObject.layer = MainScript.alliedLayer;
+			this.Team = eObjTeam.Allied;
+		}
+		else {
+
+			this.gameObject.layer = MainScript.enemyLayer;
+			this.Team = eObjTeam.Opponent;
+		}
+
+		// Change the state of the drone
+		EnterNewState(FSMState.STATE_IDLE);
+	}
 }
