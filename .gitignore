@@ -10,6 +10,8 @@
 *.swp
 *.pidb
 
-# ignora arquivos do doygen por enquanto
+# ignora arquivos do doxygen por enquanto
 Docs/html/*
 .DS_Store
+Assets/Scripts/tags
+Assets/Scripts/tags.meta
