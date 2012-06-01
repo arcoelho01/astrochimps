@@ -10,23 +10,15 @@ public class CDrone : CBaseEntity {
 	
 	// PUBLIC
 	public enum eDroneType { Patrol, Saboteur, Hunter, NONE }; // Drones types
-  	public eDroneType droneType;
+	public eDroneType droneType;
 	public Transform stunnedParticleSystem;
 	Transform stunnedObj = null;
 	float fRecycleTimer;
-
-	/*
-	 * ===========================================================================================================
-	 * UNITY'S STUFF
-	 * ===========================================================================================================
-	 */
-	
-	
 	
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
 	public Transform transTarget;   // Target Transform
-  	public CBaseEntity.eObjType typeTarget; // Target type
+	public CBaseEntity.eObjType typeTarget; // Target type
 	public float attackRange;      //  Attack Range to disable drones.
 	private Vector3 walkTo;
 	
@@ -421,12 +413,16 @@ public class CDrone : CBaseEntity {
 
 			this.gameObject.layer = MainScript.alliedLayer;
 			this.Team = eObjTeam.Allied;
+
 		}
 		else {
 
 			this.gameObject.layer = MainScript.enemyLayer;
 			this.Team = eObjTeam.Opponent;
 		}
+
+		// Updates the drone list
+		MainScript.Script.ChangeDroneTeamAndUpdateList(this.gameObject.transform, this.gameObject.layer);
 
 		// Change the state of the drone
 		EnterNewState(FSMState.STATE_IDLE);

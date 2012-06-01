@@ -44,6 +44,19 @@ public class MainScript : MonoBehaviour {
 	public static Transform MonkeyEngineer;
 	public static Transform MonkeySaboteur;
 
+	// Shortcut to this script
+	public static MainScript Script;
+
+	/*
+	 * ===========================================================================================================
+	 * UNITY'S STUFF
+	 * ===========================================================================================================
+	 */
+	void Awake() {
+
+		Script = this;
+	}
+
 	// Use this for initialization
 	void Start () {
 	
@@ -80,6 +93,12 @@ public class MainScript : MonoBehaviour {
 	
 	}
 
+	/*
+	 * ===========================================================================================================
+	 * SCRIPT STUFF
+	 * ===========================================================================================================
+	 */
+
 	/// <summary>
 	/// Build a extractor and associate it to the caller (a resource site)
 	/// </summary>
@@ -114,20 +133,8 @@ public class MainScript : MonoBehaviour {
 			}
 		}
 
-		// Drones
-		GameObject[] goDrones;
-		goDrones = GameObject.FindGameObjectsWithTag("Drone");
-		foreach(GameObject oneDrone in goDrones) {
-
-			if(oneDrone.layer == alliedLayer) {
-				
-				alliedDrones.Add(oneDrone.transform);
-			}
-			else if(oneDrone.layer == enemyLayer) {
-				
-				opponentDrones.Add(oneDrone.transform);
-			}
-		}
+		// Get all drones
+		GetCurrentDronesInScene();
 
 		// Buildings
 		GameObject[] goBuildings;
@@ -155,13 +162,36 @@ public class MainScript : MonoBehaviour {
 		// 
 		Debug.Log("Resumo: macacos aliados: " + alliedMonkeys.Count);
 
-		Debug.Log("Resumo: drones aliados: " + alliedDrones.Count);
-		Debug.Log("Resumo: drones inimigos: " + opponentDrones.Count);
-
 		Debug.Log("Resumo: predios aliados: " + alliedBuildings.Count);
 		Debug.Log("Resumo: predios inimigos: " + opponentBuildings.Count);
 
 		Debug.Log("Resumo: recursos: " + neutralResources.Count);
+	}
+
+	/// <summary>
+	/// Get all drones in the scene
+	/// </summary>
+	void GetCurrentDronesInScene() {
+
+		GameObject[] goDrones;
+		goDrones = GameObject.FindGameObjectsWithTag("Drone");
+
+		foreach(GameObject oneDrone in goDrones) {
+
+			if(oneDrone.layer == alliedLayer) {
+				
+				alliedDrones.Add(oneDrone.transform);
+			}
+			else if(oneDrone.layer == enemyLayer) {
+				
+				opponentDrones.Add(oneDrone.transform);
+			}
+		}
+
+		// DEBUG
+		// Prints a summary
+		Debug.Log("Summary - Allied drones " + alliedDrones.Count);
+		Debug.Log("Summary - Enemy drones " + opponentDrones.Count);
 	}
 
 	/// <summary>
@@ -206,8 +236,29 @@ public class MainScript : MonoBehaviour {
 				default:
 					break;
 			}
+		}
+	}
 
+	/// <summary> 
+	/// Updates the drone's list when one of them change teams
+	/// </summary>
+	public void ChangeDroneTeamAndUpdateList(Transform droneObject, int droneLayer) {
+
+		if(droneLayer == alliedLayer) {
+
+			alliedDrones.Add(droneObject);
+			opponentDrones.Remove(droneObject);
+		}
+		else {
+
+			opponentDrones.Add(droneObject);
+			alliedDrones.Remove(droneObject);
 		}
 
+		// DEBUG
+		// Prints a summary
+		Debug.Log("Summary - Allied drones " + alliedDrones.Count);
+		Debug.Log("Summary - Enemy drones " + opponentDrones.Count);
 	}
+
 }
