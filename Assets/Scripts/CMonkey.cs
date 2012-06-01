@@ -512,6 +512,23 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
+			// Cientist monkey
+			case MouseWorldPosition.eMouseStates.CanCapture:
+				{
+					// Cientist monkey capturing a RocketPart
+					CBaseEntity capturedEntity = transTarget.GetComponent<CBaseEntity>();
+
+					if(!capturedEntity) {
+
+						// DEBUG
+						Debug.LogError("Cannot find component CBaseEntity for this object: " + transTarget.name);
+					}
+
+					capturedEntity.CapturedBy(this.transform);
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
 			// Saboteur monkey
 			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
 				{
@@ -543,30 +560,10 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
-		}
-
-		// FIXME: remove this line
-		if(!transTarget)
-			return;
-
-
-		// FIXME:
-		// FIXME!!! CLEAN THIS CODE
-		
-		if(transTarget.gameObject.tag == "RocketPart") {
-
-			// Cientist monkey capturing a RocketPart
-			CBaseEntity capturedEntity = transTarget.GetComponent<CBaseEntity>();
-
-			if(!capturedEntity) {
-
+			default:
 				// DEBUG
-				Debug.LogError("Cannot find component CBaseEntity for this object: " + transTarget.name);
-			}
-
-			capturedEntity.CapturedBy(this.transform);
-			// DEBUG
-			Debug.Log("MouseState for this action " + mouseState);
+				Debug.LogError("I shouldn't be here...");
+				break;
 		}
 	}
 
