@@ -25,7 +25,14 @@ public class ShowInfoPanel : MonoBehaviour {
 	GUIStyle style = "Label";
 	// The label size
 	Vector2 labelSize;
+	// Skin for this object
+	public GUISkin mySkin;
 
+	/*
+	 * ===========================================================================================================
+	 * UNITY STUFF
+	 * ===========================================================================================================
+	 */
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +52,8 @@ public class ShowInfoPanel : MonoBehaviour {
 	/// Actually draws the text on screen
 	/// </summary>
 	void OnGUI() {
+
+		GUI.skin = mySkin;
 
 		// Only show something if the object is actually on the screen
 		if(BeingRenderedOnCamera()) {
@@ -68,6 +77,9 @@ public class ShowInfoPanel : MonoBehaviour {
 		myContent = new GUIContent(infoText);
 		labelSize = style.CalcSize(myContent);
 		offsetX = labelSize.x * 0.5f;
+
+		// FIXME: added so the Impact font show above the base line
+		labelSize.y += 5;
 	}
 
 	/// <summary>
