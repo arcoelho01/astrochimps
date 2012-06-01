@@ -13,6 +13,3 @@
 # ignora arquivos do doygen por enquanto
 Docs/html/*
 .DS_Store
-ProjectSettings/EditorBuildSettings.asset
-Thumbs.*
-
