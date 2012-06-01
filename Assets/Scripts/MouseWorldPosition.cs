@@ -24,7 +24,10 @@ public class MouseWorldPosition : MonoBehaviour {
 			CanReleaseCaptured, // Cientist monkey selected, mouse over a captured part
 			EngineerFix, // Engineer monkey selected, mouse over a sabotaged building
 			CanSabotageBuilding, 
-			CanSabotageMovable
+			CanSabotageMovable,
+			TargetingForRecycle,	// Engineer vs disabled drone
+			TargetingForBrawl,	// Astronaut vs functional drone
+			TargetingForReprogram	// Saboteus vs disabled drone
 	};
 
 	// Mouse cursor
@@ -323,7 +326,7 @@ public class MouseWorldPosition : MonoBehaviour {
 										if(!isThisDroneStunned) {
 
 											cursorCurrent = cursorAttack;
-											MouseState = eMouseStates.Targeting;
+											MouseState = eMouseStates.TargetingForBrawl;
 										}
 									}
 									break;
@@ -337,7 +340,7 @@ public class MouseWorldPosition : MonoBehaviour {
 										if(isThisDroneStunned) {
 
 											cursorCurrent = cursorAttack;
-											MouseState = eMouseStates.Targeting;
+											MouseState = eMouseStates.TargetingForRecycle;
 										}
 									}
 									break;
@@ -348,7 +351,7 @@ public class MouseWorldPosition : MonoBehaviour {
 										if(isThisDroneStunned) {
 
 											cursorCurrent = cursorAttack;
-											MouseState = eMouseStates.Targeting;
+											MouseState = eMouseStates.TargetingForReprogram;
 										}
 									}
 									break;
@@ -584,6 +587,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		// Checks if we clicked in an unit
 		Transform whatIClicked = GetWhatIClicked();
+
+		// DEBUG
 		if(selectedObject)
 			Debug.Log("Clicked: "+ whatIClicked.name + " RightMouseButton while having " + selectedObject.name + 
 					" selected with status " + MouseState);
@@ -610,6 +615,9 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			// Attacking something
 			case eMouseStates.Targeting:
+			case eMouseStates.TargetingForRecycle:
+			case eMouseStates.TargetingForBrawl:
+			case eMouseStates.TargetingForReprogram:
 				{
 					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
 						CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();

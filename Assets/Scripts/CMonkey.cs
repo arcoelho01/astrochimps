@@ -471,6 +471,24 @@ public class CMonkey : CBaseEntity {
 		// NEW CODE
 		// Perform the action according to the mouse state
 		switch(mouseState) {
+			
+			// Astronaut monkey
+			case MouseWorldPosition.eMouseStates.TargetingForBrawl:
+				{
+
+					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+					if(droneTarget != null) {
+
+						if(sfxAttack) 
+							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+
+						droneTarget.Attacked();
+					}
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+			
+			// Engineer monkey
 			case MouseWorldPosition.eMouseStates.EngineerFix:
 				{
 
@@ -480,6 +498,29 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
+			case MouseWorldPosition.eMouseStates.TargetingForRecycle:
+				{
+
+					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+					if(sfxAttack) {
+
+						AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+					}
+
+					droneTarget.Recycled();
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			// Saboteur monkey
+			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
+				{
+					// TODO: add code here
+
+				}
+				break;
+
+			// All monkeys
 			case MouseWorldPosition.eMouseStates.MonkeyCanEnterBuilding:
 				{
 					CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
@@ -509,44 +550,11 @@ public class CMonkey : CBaseEntity {
 			return;
 
 
+		// FIXME:
+		// FIXME!!! CLEAN THIS CODE
+		
 		// Check the type of target
-		// Drone
-		if(transTarget.gameObject.tag == "Drone") {
-
-			CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-			if (droneTarget != null){
-
-				Debug.Log("XXXX MONKEY  attacking with status " + mouseState);
-
-				// Astronaut only attack drones that are not stunned
-				if(monkeyClass == eMonkeyType.Astronaut && !droneTarget.isStunned()) {
-
-					if(sfxAttack) {
-
-						AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
-					}
-
-					droneTarget.Attacked();
-				}
-				else if(monkeyClass == eMonkeyType.Engineer && droneTarget.isStunned()) {
-
-					if(sfxAttack) {
-
-						AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
-					}
-
-					droneTarget.Recycled();
-				}
-				else if(monkeyClass == eMonkeyType.Saboteur && droneTarget.isStunned()) {
-
-					// DEBUG
-					Debug.Log("Drone being attacked by a Saboteur. Should be reprogrammed");
-				}
-			}
-
-			EnterNewState(FSMState.STATE_IDLE);
-		}
-		else if(transTarget.gameObject.tag == "Building") {
+		if(transTarget.gameObject.tag == "Building") {
 
 			// Attacking a building? Could be:
 			// An allied building
