@@ -622,7 +622,7 @@ public class MouseWorldPosition : MonoBehaviour {
 					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
 						CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 
-						cMonkeyScript.Attack(whatIClicked, MouseState);
+						cMonkeyScript.PerformAction(whatIClicked, MouseState);
 					}
 					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
 						// Get the basic info on the unit
@@ -643,7 +643,7 @@ public class MouseWorldPosition : MonoBehaviour {
 						Debug.LogError("Cannot find component CBaseEntity for this object: " + capturedEntity);
 					}
 
-					selectedObject.GetComponent<CMonkey>().CaptureARocketPart(pointedObject, MouseState);
+					selectedObject.GetComponent<CMonkey>().PerformAction(pointedObject, MouseState);
 				}
 				break;
 
@@ -664,10 +664,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			// Engineer fix a sabotaged building
 			case eMouseStates.EngineerFix:
-				{
-
-					selectedObject.GetComponent<CMonkey>().FixABuilding(pointedObject, MouseState);
-				}
+				selectedObject.GetComponent<CMonkey>().PerformAction(pointedObject, MouseState);
 				break;
 
 			// A monkey entering the command center
@@ -677,7 +674,7 @@ public class MouseWorldPosition : MonoBehaviour {
 					CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 
 					// Change the Monkey FSM
-					cMonkeyScript.EnterInTheCommandCenter(whatIClicked, MouseState);
+					cMonkeyScript.PerformAction(whatIClicked, MouseState);
 				}
 				break;
 

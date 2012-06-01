@@ -330,17 +330,6 @@ public class CMonkey : CBaseEntity {
 		EnterNewState(FSMState.STATE_WALKING);
 	}
 	
-	// ATTACK THE TARGET
-	
-	public void Attack(Transform transTarget, MouseWorldPosition.eMouseStates currentMouseState){
-		 this.transTarget = transTarget;
-		 mouseState = currentMouseState;
-		 //EnterNewState(FSMState.STATE_ATTACKING);
-		 // Changed by Alexandre: instead of attacking, we first enter the pursuit mode. If the target is already 
-		 // at range, the FSM will change to ATTACKING
-		 EnterNewState(FSMState.STATE_PURSUIT);
-	}
-
 	/// <summary>
 	/// Get info about the collider in this object. This is needed so we know what are the boundaries of the
 	/// object. With this, we can calculate the distance of the object from others, knowing if we can attack 
@@ -390,51 +379,6 @@ public class CMonkey : CBaseEntity {
 		}
 
 		return rv;
-	}
-
-	/// <summary>
-	///
-	/// </summary>
-	public void EnterInTheCommandCenter(Transform targetBuilding, MouseWorldPosition.eMouseStates currentMouseState) {
-
-		this.transTarget = targetBuilding;
-		mouseState = currentMouseState;
-		
-		// DEBUG
-		Debug.Log("Received order to enter the building: " + targetBuilding.name);
-
-		// Walk to the command center
-		EnterNewState(FSMState.STATE_PURSUIT);
-	}
-
-	/// <summary>
-	/// Tells to the engineer to fix a building.
-	/// </summary>
-	public void FixABuilding(Transform targetBuilding, MouseWorldPosition.eMouseStates currentMouseState) {
-
-		this.transTarget = targetBuilding;
-		mouseState = currentMouseState;
-		
-		// DEBUG
-		Debug.Log("Received order to fix the building: " + targetBuilding.name);
-
-		// Walk to the building
-		EnterNewState(FSMState.STATE_PURSUIT);
-	}
-
-	/// <summary>
-	/// Tells the cientist to capture a Rocket Part
-	/// </summary>
-	public void CaptureARocketPart(Transform targetPart, MouseWorldPosition.eMouseStates currentMouseState) {
-
-		this.transTarget = targetPart;
-		mouseState = currentMouseState;
-		
-		// DEBUG
-		Debug.Log("Received order to capture the part: " + targetPart.name);
-
-		// Walk to the building
-		EnterNewState(FSMState.STATE_PURSUIT);
 	}
 
 	/// <summary>
