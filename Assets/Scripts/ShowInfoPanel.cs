@@ -22,11 +22,13 @@ public class ShowInfoPanel : MonoBehaviour {
 	// The GUIContent to hold the text
 	GUIContent myContent;
 	// Added to try to calculate the text size in pixels
-	GUIStyle style = "Label";
+	GUIStyle style;
 	// The label size
 	Vector2 labelSize;
 	// Skin for this object
 	public GUISkin mySkin;
+	// The text to be displayed has changed?
+	bool bnChangedText = false;
 
 	/*
 	 * ===========================================================================================================
@@ -39,7 +41,6 @@ public class ShowInfoPanel : MonoBehaviour {
 	
 		myParent = transform.parent;
 		offsetY = 0.0f;
-
 	}
 	
 	// Update is called once per frame
@@ -54,13 +55,24 @@ public class ShowInfoPanel : MonoBehaviour {
 	void OnGUI() {
 
 		GUI.skin = mySkin;
+		style = "Label";
+
+		// Only calculate this if the text has changed
+		if(bnChangedText) {
+
+			myContent = new GUIContent(infoText);
+			labelSize = style.CalcSize(myContent);
+			offsetX = labelSize.x * 0.5f;
+			bnChangedText = false;
+		}
 
 		// Only show something if the object is actually on the screen
 		if(BeingRenderedOnCamera()) {
 			// Find my position on the screen
 			Vector3 position = Camera.main.WorldToScreenPoint(v3Position);
 
-			GUI.Label(new Rect(position.x - offsetX, Screen.height - position.y - offsetY, labelSize.x, labelSize.y), myContent);
+			GUI.Label(new Rect(position.x - offsetX, Screen.height - position.y - offsetY, labelSize.x, labelSize.y), 
+					myContent);
 		}
 	}
 
@@ -73,14 +85,9 @@ public class ShowInfoPanel : MonoBehaviour {
 
 		infoText = newText;
 		v3Position = position;
-		
-		myContent = new GUIContent(infoText);
-		labelSize = style.CalcSize(myContent);
-		offsetX = labelSize.x * 0.5f;
-
-		// FIXME: added so the Impact font show above the base line
-		labelSize.y += 5;
+		bnChangedText = true;
 	}
+		
 
 	/// <summary>
 	/// Check if the object is being rendered in the screen. If not, there's no need to display the info text,
