@@ -6,6 +6,11 @@ ModelImporter:
     4300002: Glass Dome
     4300004: Construction Base
     4300006: Antenna
+    7400000: Take 001 //// (TO TEX) - Command Center -- Low (MAP)
+    7400002: Spin //// (TO TEX) - Command Center -- Low (MAP)
+    7400004: idle //// (TO TEX) - Command Center -- Low (MAP)
+    7400006: Spin (antenna) //// (TO TEX) - Command Center -- Low (MAP)
+    7400008: Scann (Antenna) //// (TO TEX) - Command Center -- Low (MAP)
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +25,17 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations: []
+    clipAnimations:
+    - name: Spin (antenna)
+      firstFrame: 0
+      lastFrame: 50
+      wrapMode: 2
+      loop: 0
+    - name: Scann (Antenna)
+      firstFrame: 50
+      lastFrame: 165
+      wrapMode: 2
+      loop: 0
   meshes:
     lODScreenPercentages: []
     globalScale: .100000001
@@ -38,7 +53,7 @@ ModelImporter:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 1
+    tangentImportMode: 0
   textMetaNamesToFileIDs:
     //RootNode:
       data:

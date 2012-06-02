@@ -1,9 +1,13 @@
 fileFormatVersion: 2
-guid: b6ee9b0aaadebd24fb22cd41a67dc15c
+guid: 23b1c692cdd81534a901c7ef549a7f54
 ModelImporter:
   fileIDToRecycleName:
     4300000: Building
     4300002: Construction Base
+    4300004: porta
+    7400000: Take 001 //// (TO TEX) - Factory Drones -- Low (MAP)
+    7400002: Factory Open //// (TO TEX) - Factory Drones -- Low (MAP)
+    7400004: Factory Close //// (TO TEX) - Factory Drones -- Low (MAP)
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -18,7 +22,17 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations: []
+    clipAnimations:
+    - name: Factory Open
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 1
+      loop: 0
+    - name: Factory Close
+      firstFrame: 80
+      lastFrame: 160
+      wrapMode: 1
+      loop: 0
   meshes:
     lODScreenPercentages: []
     globalScale: .100000001
@@ -41,14 +55,40 @@ ModelImporter:
     //RootNode:
       data:
         first: 1
+        second: a4860100
+      data:
+        first: 4
+        second: 841a0600
+      data:
+        first: 111
+        second: 605fa900
+    Building:
+      data:
+        first: 1
         second: a2860100
       data:
         first: 4
         second: 821a0600
       data:
-        first: 111
-        second: 605fa900
-    Building:
+        first: 23
+        second: 62182300
+      data:
+        first: 33
+        second: a25a3200
+    Construction Base:
+      data:
+        first: 1
+        second: a6860100
+      data:
+        first: 4
+        second: 861a0600
+      data:
+        first: 23
+        second: 64182300
+      data:
+        first: 33
+        second: a45a3200
+    porta:
       data:
         first: 1
         second: a0860100
@@ -61,16 +101,3 @@ ModelImporter:
       data:
         first: 33
         second: a05a3200
-    Construction Base:
-      data:
-        first: 1
-        second: a4860100
-      data:
-        first: 4
-        second: 841a0600
-      data:
-        first: 23
-        second: 62182300
-      data:
-        first: 33
-        second: a25a3200
