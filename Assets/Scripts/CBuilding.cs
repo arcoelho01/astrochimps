@@ -17,9 +17,6 @@ public class CBuilding : CBaseEntity {
 	public AudioClip sfxLoadMonkey;
 	public AudioClip sfxSelected;
 	
-	public float costTime; // Seconds needed to build this structure
-	public float costOxygen;	// Amount of oxygen units needed to build this structure
-	public float costMetal;	// Amount of metal resources needed to build this structure
 	public int level = 1;	// Level of this building
 	public float workTime = 1.0f;
 	public float myTimer = 0.0f;
@@ -311,7 +308,7 @@ public class CBuilding : CBaseEntity {
 			mainScript.player.SubResourceMetal(fRepairCost);
 
 			Desabotage();	
-			// Instantiate a info text
+			// Instantiate an info text
 			StartCoroutine(ShowInfoForExtractedResource("Metal ", -fRepairCost));
 		}
 	}
@@ -392,5 +389,6 @@ public class CBuilding : CBaseEntity {
 
 		return v3ExitSpot;
 	}
+
 }
 

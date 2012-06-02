@@ -26,6 +26,9 @@ public class CBaseEntity : MonoBehaviour {
 	public string objectName {get{return mName;} set{mName = value;}}
 	public bool isSelected {get{return mIsSelected;} set{mIsSelected = value;}}
 
+	public float costTime; // Seconds needed to build this structure
+	public float costMetal;	// Amount of metal resources needed to build this structure
+
 	// FIXME: put in the appropriate class!
 	public Transform selectorObject = null;
 	Transform selector;

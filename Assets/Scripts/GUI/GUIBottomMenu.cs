@@ -161,6 +161,7 @@ public class GUIBottomMenu : MonoBehaviour {
 		if(GUI.Button(new Rect(5, posY + 5, 120, 25),"Build Extractor")) {
 
 			caller.BuildIt();
+
 			// Disable the building menu
 			menuType = eMenuType.PlayerInfo;
 		}

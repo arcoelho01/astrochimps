@@ -95,18 +95,31 @@ public class CResource : CBaseEntity {
 	/// </summary>
 	public override void BuildIt() {
 
+		Transform prefabToBuild;
+
 		if(!mainScript) {
 
 			// DEBUG
 			Debug.LogError("MainScript not set!");
 		}
 
-		// With an extractor built, there's no need to be able to select this resource site anymore
+		// In a resource site we can only build an extractor...
+		prefabToBuild = MainScript.Script.prefabExtractor;
+		CBuilding myBuildingClass = prefabToBuild.GetComponent<CBuilding>();
+	
 		Deselect();
-		Selectable = false;
+		// Ok, first of all, let's check if we have the resources to actually build this
+		if(mainScript.CheckIfAreEnoughResourcesToBuild(prefabToBuild)) {
 
-		MainScript.Script.DeployUnderConstructionBox(this.transform, 
-				MainScript.Script.prefabExtractor, transform.position, 5.0f);
+			// With an extractor built, there's no need to be able to select this resource site anymore
+			Selectable = false;
+
+			// Charge the player!
+			mainScript.player.SubResourceMetal(myBuildingClass.costMetal);
+
+			mainScript.DeployUnderConstructionBox(this.transform, 
+					prefabToBuild, transform.position, myBuildingClass.costTime);
+		}
 	}
 
 	/// <summary>

@@ -245,6 +245,18 @@ public class MainScript : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Overloaded method: only deploys the construction box, wait the time and then destroy it. Doesn't 
+	/// instantiate the new building
+	/// </summary>
+	/// <param name="position"> A Vector3 with the position to create the box </param>
+	/// <param name="buildTime"> Time to build the building. When it's over, will show the complete animation 
+	/// and will destroy itself </param>
+	public void DeployUnderConstructionBox(Vector3 position, float buildTime) {
+
+		DeployUnderConstructionBox(null, null, position, buildTime);
+	}
+
+	/// <summary>
 	/// Create an instance of an 'Under Construction Box'
 	/// </summary>
 	/// <param name="builtOver"> Transform of the object where this Box is built. With this, we can pass a 
@@ -253,7 +265,7 @@ public class MainScript : MonoBehaviour {
 	/// <param name="position"> A Vector3 with the position to create the box and instantiate the new building,
 	/// if any </param>
 	/// <param name="buildTime"> Time to build the building. When it's over, it will instantiate a new building,
-	/// show the complete animation and itself </param>
+	/// show the complete animation and will destroy itself </param>
 	public void DeployUnderConstructionBox(Transform builtOver, Transform prefabToBuild, 
 			Vector3 position, float buildTime) {
 
@@ -296,5 +308,21 @@ public class MainScript : MonoBehaviour {
 
 		// Destroy the object
 		Destroy(underConstructionBox.gameObject);
+	}
+
+	/// <summary>
+	/// Just check if we have enough resources to build this unit/structure
+	/// </summary>
+	/// <returns> true if we have, false if we don't </returns>
+	public bool CheckIfAreEnoughResourcesToBuild(Transform objectToBuild) {
+
+		bool rv = false;
+		CBaseEntity myEntity = objectToBuild.GetComponent<CBaseEntity>();
+
+		// Check the costs
+		if(player.metalLevel >= myEntity.costMetal) 
+			rv = true;
+
+		return rv;
 	}
 }
