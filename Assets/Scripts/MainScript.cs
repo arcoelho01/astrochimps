@@ -9,6 +9,7 @@ public class MainScript : MonoBehaviour {
 	public Transform prefabFazenda;
 	public Transform prefabLaboratorio;
 	public Transform prefabGaragem;
+	public Transform prefabUnderConstructionBox;
 
 	public GUIBottomMenu bottomMenu;	// Pointer to the bottom menu bar
 	public Transform playerObject;	// Pointer to the player object
@@ -109,8 +110,16 @@ public class MainScript : MonoBehaviour {
 		// DEBUG
 		Debug.Log("Starting building extractor");
 
+		// TODO: the building must take some time to be built. And it will be nice to add
+		// Freddy's construction box
 		position.y += prefabExtractor.transform.localScale.y;
 
+		// DEBUG
+		Debug.Log("Deploying construction box");
+
+		// Instantiate the construction box
+		StartCoroutine(DeployConstructionBox(position, 5.0f));
+ 
 		Transform extractorClone = Instantiate(prefabExtractor, position, Quaternion.identity) 
 			as Transform;
 
@@ -261,4 +270,33 @@ public class MainScript : MonoBehaviour {
 		Debug.Log("Summary - Enemy drones " + opponentDrones.Count);
 	}
 
+	/// <summary>
+	/// Create a version of Freddy's construction box
+	/// </summary>
+	/// <param name="position"> Where to create the construction box </param>
+	/// <param name="timeToBuild">Time taken to build this building. Actually, it's how long the construction box
+	/// will be shown</param>
+	IEnumerator DeployConstructionBox(Vector3 position, float timeToBuild) {
+
+		Transform underConstructionBox = Instantiate(prefabUnderConstructionBox, position, Quaternion.identity)
+			as Transform;
+
+		//AnimationClip clip = underConstructionBox.animation["Complete"].clip;
+		yield return new WaitForSeconds(timeToBuild);
+		
+		// Completed? Call the completed animation
+		underConstructionBox.animation.Play("Complete");
+
+		//AnimationEvent destroyAfterComplete = new AnimationEvent();
+		//destroyAfterComplete.functionName = "DestroyConstructionBox";
+		//destroyAfterComplete.time = clip.length;
+
+		//clip.AddEvent(destroyAfterComplete);
+			
+		// Wait for the animation finish
+		yield return new WaitForSeconds(underConstructionBox.animation["Complete"].clip.length);
+
+		// Destroy the object
+		Destroy(underConstructionBox.gameObject);
+	}
 }
