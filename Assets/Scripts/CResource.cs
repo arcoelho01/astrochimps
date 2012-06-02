@@ -91,7 +91,7 @@ public class CResource : CBaseEntity {
 
 	/// <summary>
 	/// Override from the CBaseEntity
-	/// Build a extractor in this resource site
+	/// Build an extractor in this resource site
 	/// </summary>
 	public override void BuildIt() {
 
@@ -101,13 +101,12 @@ public class CResource : CBaseEntity {
 			Debug.LogError("MainScript not set!");
 		}
 
-		associatedExtractor = mainScript.BuildExtractor(transform.position);
-		// Associate the extractor with the resource site
-		associatedExtractor.GetComponent<CBuilding>().resourceSite = this;
-		associatedExtractor.GetComponent<CBuilding>().IsIdle(false);	// activate the extractor
 		// With an extractor built, there's no need to be able to select this resource site anymore
 		Deselect();
 		Selectable = false;
+
+		MainScript.Script.DeployUnderConstructionBox(this.transform, 
+				MainScript.Script.prefabExtractor, transform.position, 5.0f);
 	}
 
 	/// <summary>
@@ -120,6 +119,9 @@ public class CResource : CBaseEntity {
 		bool rv = true;
 
 		if(resourceDrained)
+			rv = false;
+
+		if(!Selectable)
 			rv = false;
 
 		if(associatedExtractor != null)

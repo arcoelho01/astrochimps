@@ -101,32 +101,6 @@ public class MainScript : MonoBehaviour {
 	 */
 
 	/// <summary>
-	/// Build a extractor and associate it to the caller (a resource site)
-	/// </summary>
-	/// <param name="position">A Vector3 with the position to build the extractor</param>
-	/// <returns> Transform of the instantiated extractor </returns>
-	public Transform BuildExtractor(Vector3 position) {
-
-		// DEBUG
-		Debug.Log("Starting building extractor");
-
-		// TODO: the building must take some time to be built. And it will be nice to add
-		// Freddy's construction box
-		position.y += prefabExtractor.transform.localScale.y;
-
-		// DEBUG
-		Debug.Log("Deploying construction box");
-
-		// Instantiate the construction box
-		StartCoroutine(DeployConstructionBox(position, 5.0f));
- 
-		Transform extractorClone = Instantiate(prefabExtractor, position, Quaternion.identity) 
-			as Transform;
-
-		return extractorClone;
-	}
-
-	/// <summary>
 	/// Get all units in the scene, filters them and add them to the corresponding list
 	/// </summary>
 	void GetCurrentUnitsInScene() {
@@ -271,6 +245,37 @@ public class MainScript : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Create an instance of an 'Under Construction Box'
+	/// </summary>
+	/// <param name="builtOver"> Transform of the object where this Box is built. With this, we can pass a 
+	/// Resource back to a built extractor, for instance. We can call it as null </param>
+	/// <param name="prefabToBuild"> Prefab to the building which will be built we te timer is over.</param>
+	/// <param name="position"> A Vector3 with the position to create the box and instantiate the new building,
+	/// if any </param>
+	/// <param name="buildTime"> Time to build the building. When it's over, it will instantiate a new building,
+	/// show the complete animation and itself </param>
+	public void DeployUnderConstructionBox(Transform builtOver, Transform prefabToBuild, 
+			Vector3 position, float buildTime) {
+
+		// Create a new box
+		Transform myUnderConstructionBox = Instantiate(prefabUnderConstructionBox, position, Quaternion.identity)
+			as Transform;
+
+		UnderConstructionBox myUCBoxComponent = 
+			myUnderConstructionBox.gameObject.GetComponent<UnderConstructionBox>();
+
+		// Set the prefab
+		myUCBoxComponent.SetPrefabToBuild(prefabToBuild);
+
+		// Set it's timer
+		myUCBoxComponent.SetBuildingTime(buildTime);
+
+		// Set the object where this will be built over
+		myUCBoxComponent.SetBuiltOverObject(builtOver);
+	}
+
+
+	/// <summary>
 	/// Create a version of Freddy's construction box
 	/// </summary>
 	/// <param name="position"> Where to create the construction box </param>
@@ -281,18 +286,11 @@ public class MainScript : MonoBehaviour {
 		Transform underConstructionBox = Instantiate(prefabUnderConstructionBox, position, Quaternion.identity)
 			as Transform;
 
-		//AnimationClip clip = underConstructionBox.animation["Complete"].clip;
 		yield return new WaitForSeconds(timeToBuild);
 		
 		// Completed? Call the completed animation
 		underConstructionBox.animation.Play("Complete");
 
-		//AnimationEvent destroyAfterComplete = new AnimationEvent();
-		//destroyAfterComplete.functionName = "DestroyConstructionBox";
-		//destroyAfterComplete.time = clip.length;
-
-		//clip.AddEvent(destroyAfterComplete);
-			
 		// Wait for the animation finish
 		yield return new WaitForSeconds(underConstructionBox.animation["Complete"].clip.length);
 

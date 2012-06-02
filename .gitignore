@@ -15,3 +15,5 @@ Docs/html/*
 .DS_Store
 Assets/Scripts/tags
 Assets/Scripts/tags.meta
+Thumbs.*
+*.userprefs
