@@ -79,6 +79,8 @@ public class RTSCam : MonoBehaviour {
 		Script = this;
 
 		myCam = gameObject.GetComponent<Camera>();
+		
+		
 
 		inputStuffScript = GameObject.Find("Codigo").gameObject.GetComponent<MouseWorldPosition>();
 		if(inputStuffScript == null) {
@@ -168,6 +170,7 @@ public class RTSCam : MonoBehaviour {
 			if(MainScript.MonkeyAstronaut) {
 
 				objectInFocus = MainScript.MonkeyAstronaut;
+				inputStuffScript.SelectObject(objectInFocus);
 				bnLookAtTarget = true;
 			}
 		}
@@ -177,6 +180,7 @@ public class RTSCam : MonoBehaviour {
 			if(MainScript.MonkeyCientist) {
 
 				objectInFocus = MainScript.MonkeyCientist;
+				inputStuffScript.SelectObject(objectInFocus);
 				bnLookAtTarget = true;
 			}
 		}
@@ -186,6 +190,7 @@ public class RTSCam : MonoBehaviour {
 			if(MainScript.MonkeyEngineer) {
 
 				objectInFocus = MainScript.MonkeyEngineer;
+				inputStuffScript.SelectObject(objectInFocus);
 				bnLookAtTarget = true;
 			}
 		}
@@ -195,6 +200,7 @@ public class RTSCam : MonoBehaviour {
 			if(MainScript.MonkeySaboteur) {
 
 				objectInFocus = MainScript.MonkeySaboteur;
+				inputStuffScript.SelectObject(objectInFocus);
 				bnLookAtTarget = true;
 			}
 		}

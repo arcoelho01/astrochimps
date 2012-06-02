@@ -11,7 +11,7 @@ public class SetaAnima : MonoBehaviour {
 	void Start () {
 		
 		Seta_ANI = Seta.GetComponent<Animation>().animation; // Passa a pista completa de animação para a variável
-		Seta_ANI.Play("Grow"); // Toca a animação I (Erguendo a caixa)
+		Seta_ANI.Play("Arrow2Appear"); // Toca a animação I (Erguendo a caixa)
 		
 	}
 	
@@ -19,7 +19,7 @@ public class SetaAnima : MonoBehaviour {
 	void Update () {
 		
 		if ( !Seta_ANI.isPlaying )
-			Seta_ANI.Play("Bounce");
+			Seta_ANI.Play("Arrow2Bounce");
 	
 	}
 }

@@ -578,7 +578,50 @@ public class MouseWorldPosition : MonoBehaviour {
 			}
 		}
 	}
+	
+	// SelectObject
+	public void SelectObject (Transform targetObject)
+	{
+		// Get the basic info on the unit
+		selectedBaseEntity = targetObject.gameObject.GetComponent<CBaseEntity>();
 
+		if(selectedBaseEntity != null) {
+
+				// Do not let we select enemy units
+				if(selectedBaseEntity.Team == CBaseEntity.eObjTeam.Opponent) {
+
+					return;
+				}
+
+				if(selectedBaseEntity.Selectable) {
+
+					// Unit not selected?
+					if(!selectedBaseEntity.isSelected) {
+
+						// Unselect previous units
+						if(selectedObject != null) {
+
+							selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
+							RemoveCursor();
+						}
+
+						// Select this unit
+						selectedObject = selectedBaseEntity.Select();
+
+						infoPanel.SetInfoLabel(selectedObject.gameObject.name);
+
+						if(selectedBaseEntity.Movable) {
+
+							// Change the mouse state
+							MouseState = eMouseStates.CanWalk;
+						}
+				}
+			}
+		
+		}
+	}
+	
+	
 	/// <summary>
 	/// Execute when the player presses the right mouse button
 	/// Behaviours: when a movable unit is selected, select where it should walk to
