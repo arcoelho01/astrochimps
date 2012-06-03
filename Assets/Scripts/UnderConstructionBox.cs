@@ -9,10 +9,13 @@ public class UnderConstructionBox : MonoBehaviour {
 	Transform builtOver;
 	Transform newBuilding;
 	float fTimer = 0.0f;
+	Transform ProgressIcon;
 
 	// Use this for initialization
 	void Start () {
 	
+		// Get the progress icon, bar, or whatever
+		ProgressIcon = this.transform.FindChild("ProgressBar");
 	}
 	
 	// Update is called once per frame
@@ -25,6 +28,13 @@ public class UnderConstructionBox : MonoBehaviour {
 
 		// Timer running
 		if(fTimer < buildTime) {
+
+			if(ProgressIcon) {
+
+
+				ProgressIcon.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(0, buildTime, fTimer));
+				Debug.Log("Timer: " + fTimer + " Progress: " + Mathf.InverseLerp(0, buildTime, fTimer));
+			}
 
 			return;
 		}
