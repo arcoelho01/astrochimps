@@ -11,15 +11,15 @@ public class SetaAnima : MonoBehaviour {
 	void Start () {
 		
 		Seta_ANI = Seta.GetComponent<Animation>().animation; // Passa a pista completa de animação para a variável
-	//	Seta_ANI.Play("Arrow2Appear"); // Toca a animação I (Erguendo a caixa)
+		Seta_ANI.Play("ArrowAppear"); // Toca a animação I (Erguendo a caixa)
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-	//	if ( !Seta_ANI.isPlaying )
-	//		Seta_ANI.Play("Arrow2Bounce");
+		if ( !Seta_ANI.isPlaying )
+			Seta_ANI.Play("ArrowFloat");
 	
 	}
 }
