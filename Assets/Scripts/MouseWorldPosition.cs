@@ -39,6 +39,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorWalkNotOk;	// Walk cursor, but indicating we can't walk here
 	public Texture2D cursorBuild;	// cursor to show that we can build something
 	public Texture2D cursorCaptureRay;	// cursor showing that we can use the capture ray
+	public Texture2D cursorReprogramEnable;	// Saboteur can reprogram this drone
 	public Texture2D cursorSabotageEnable;		// shows that we can sabotage this unit/building
 	public Texture2D cursorRecycleEnable;	// Enginner can recycle a stunned drone
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
@@ -356,7 +357,7 @@ public class MouseWorldPosition : MonoBehaviour {
 										// The sabouter only attack (reprogram) stunned drones
 										if(isThisDroneStunned) {
 
-											cursorCurrent = cursorAttack;
+											cursorCurrent = cursorReprogramEnable;
 											MouseState = eMouseStates.TargetingForReprogram;
 										}
 										else {
