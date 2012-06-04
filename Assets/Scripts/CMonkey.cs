@@ -486,9 +486,9 @@ public class CMonkey : CBaseEntity {
 			case MouseWorldPosition.eMouseStates.CanSabotageBuilding:
 				{
 
-					CBuilding buildingTarget = transTarget.gameObject.GetComponent<CBuilding>();
-					buildingTarget.TemporarySabotage(8.0f);
-					EnterNewState(FSMState.STATE_IDLE);
+					// Sets the time needed to sabotage a building
+					workingTargetTime = 3.0f; // FIXME: arbitratry value!
+					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
 
@@ -549,7 +549,18 @@ public class CMonkey : CBaseEntity {
 					}
 					// Fix the broken building
 					attackedBuilding.FixByEngineer();
-					// Do nothing afterwrds
+					// Do nothing afterwards
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			case MouseWorldPosition.eMouseStates.CanSabotageBuilding:
+				{
+					CBuilding buildingTarget = transTarget.gameObject.GetComponent<CBuilding>();
+
+					// TODO: the sabotage time could be taken from the building itself
+					buildingTarget.TemporarySabotage(8.0f);
+
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
