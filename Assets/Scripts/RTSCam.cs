@@ -134,10 +134,10 @@ public class RTSCam : MonoBehaviour {
 		CheckCameraZoom();
 
 		// Only pan when not rotating with the mouse
-		if(!bnCamRotateWithMouse) {
+		//if(!bnCamRotateWithMouse) {
 
 			CheckCameraPan();
-		}
+	//	}
 
 		if(Input.GetMouseButton(2)) {
 
@@ -209,7 +209,7 @@ public class RTSCam : MonoBehaviour {
 
 			LookAtTarget(objectInFocus);
 		}
-
+http://answers.unity3d.com/questions/29586/what-is-the-config-dialog-banner-splash-image-size.html
 		// Any changes to the camera? Redraw it!
 		if(bnCamModified) {
 
