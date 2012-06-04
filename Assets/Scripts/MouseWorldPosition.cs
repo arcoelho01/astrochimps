@@ -24,7 +24,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			CanReleaseCaptured, // Cientist monkey selected, mouse over a captured part
 			EngineerFix, // Engineer monkey selected, mouse over a sabotaged building
 			CanSabotageBuilding, 
-			CanSabotageMovable,
+			CanSabotageDrone,
 			TargetingForRecycle,	// Engineer vs disabled drone
 			TargetingForBrawl,	// Astronaut vs functional drone
 			TargetingForReprogram	// Saboteus vs disabled drone
@@ -40,7 +40,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorBuild;	// cursor to show that we can build something
 	public Texture2D cursorCaptureRay;	// cursor showing that we can use the capture ray
 	public Texture2D cursorSabotageEnable;		// shows that we can sabotage this unit/building
-	public Texture2D cursorSabotageDisabled;	// unit/building cannot be sabotaged at this moment
+	public Texture2D cursorRecycleEnable;	// Enginner can recycle a stunned drone
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
@@ -345,7 +345,7 @@ public class MouseWorldPosition : MonoBehaviour {
 										// The engineer only attack (recycle) stunned drones
 										if(isThisDroneStunned) {
 
-											cursorCurrent = cursorAttack;
+											cursorCurrent = cursorRecycleEnable;
 											MouseState = eMouseStates.TargetingForRecycle;
 										}
 									}
@@ -358,6 +358,13 @@ public class MouseWorldPosition : MonoBehaviour {
 
 											cursorCurrent = cursorAttack;
 											MouseState = eMouseStates.TargetingForReprogram;
+										}
+										else {
+
+											// Drone not stunned. Well, we still can sabotage it
+											cursorCurrent = cursorAttack;
+											// FIXME: for now using the same attack as the astronaut...
+											MouseState = eMouseStates.TargetingForBrawl;
 										}
 									}
 									break;
