@@ -33,7 +33,6 @@ public class UnderConstructionBox : MonoBehaviour {
 
 
 				ProgressIcon.renderer.material.SetFloat("_Cutoff", Mathf.InverseLerp(0, buildTime, fTimer));
-				Debug.Log("Timer: " + fTimer + " Progress: " + Mathf.InverseLerp(0, buildTime, fTimer));
 			}
 
 			return;
