@@ -375,7 +375,8 @@ public class CMonkey : CBaseEntity {
 
 			Debug.Log("Monkey hit in " + hit.transform.name);
 
-			rv = true;
+			if(hit.transform == transTarget)
+				rv = true;
 		}
 
 		return rv;
@@ -486,12 +487,10 @@ public class CMonkey : CBaseEntity {
 				{
 
 					CBuilding buildingTarget = transTarget.gameObject.GetComponent<CBuilding>();
-					buildingTarget.Sabotage();
+					buildingTarget.TemporarySabotage(8.0f);
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
-
-
 
 			// All monkeys
 			case MouseWorldPosition.eMouseStates.MonkeyCanEnterBuilding:

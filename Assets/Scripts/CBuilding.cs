@@ -314,6 +314,37 @@ public class CBuilding : CBaseEntity {
 	}
 
 	/// <summary>
+	/// Call a coroutine to use a timed sabotage. When the timer if over, the building will be restored to it's
+	/// functional status.
+	/// Useful for the player sabotaging enemy building
+	/// </summary>
+	/// <param name="fTimer"> Time that the building will stay sabotaged </param>
+	public void TemporarySabotage(float fTimer) {
+
+		if(sabotado)
+			return;
+
+		StartCoroutine(TimedSabotageCoroutine(fTimer));
+	}
+
+	/// <summary>
+	/// Coroutine that implements the timed sabotage. First, sabotage the building. Then, after the timer expired,
+	/// restore it to the functional status.
+	/// </summary>
+	/// <param name="fTimer"> Time that the building will remain sabotaged. </param>
+	IEnumerator TimedSabotageCoroutine(float fTimer) {
+
+		// Do the sabotage to the building
+		Sabotage();
+
+		// Wait some time...
+		yield return new WaitForSeconds(fTimer);
+
+		// ... and restore the building
+		Desabotage();
+	}
+
+	/// <summary>
 	/// Sabotage this building, adding a visual aid to the player
 	/// </summary>
 	public void Sabotage() {
