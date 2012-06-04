@@ -212,9 +212,6 @@ public class CMonkey : CBaseEntity {
 						break;
 					}
 
-					// DEBUG
-					Debug.Log("TARGET VALID");
-
 					// Check if the enemy is range for be attacked
 					if(CheckIfTargetIsInRange())	{
 

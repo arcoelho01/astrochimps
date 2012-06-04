@@ -9,9 +9,9 @@ ModelImporter:
     materialName: 0
     materialSearch: 1
   animations:
-    generateAnimations: 3
+    generateAnimations: 0
     bakeSimulation: 0
-    splitAnimations: 1
+    splitAnimations: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -44,9 +44,6 @@ ModelImporter:
       data:
         first: 4
         second: 801a0600
-      data:
-        first: 111
-        second: 605fa900
     default:
       data:
         first: 1
