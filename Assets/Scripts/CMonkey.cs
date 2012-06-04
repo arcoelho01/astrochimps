@@ -482,6 +482,17 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
+			case MouseWorldPosition.eMouseStates.CanSabotageBuilding:
+				{
+
+					CBuilding buildingTarget = transTarget.gameObject.GetComponent<CBuilding>();
+					buildingTarget.Sabotage();
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+
+
 			// All monkeys
 			case MouseWorldPosition.eMouseStates.MonkeyCanEnterBuilding:
 				{

@@ -330,6 +330,9 @@ public class CBuilding : CBaseEntity {
 			// Put it as child
 			sabotagedPSObj.transform.parent = this.transform;
 		}
+
+		// TODO: if this an enemy building, we must put the sabotage effects on a timer. Also, if there's a monkey
+		// trapped in here, we must set it free
 	}
 
 	/// <summary>
