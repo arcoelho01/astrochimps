@@ -50,6 +50,15 @@ public class CBaseEntity : MonoBehaviour {
 	protected Transform meshObject = null;
 	protected Vector3 sweetSpot;
 
+	// Visual aid to show that object was captured
+	Transform captureForceField;
+
+	/*
+	 * ===========================================================================================================
+	 * UNITY'S STUFF
+	 * ===========================================================================================================
+	 */
+
 	//
 	void Start() {
 
@@ -170,10 +179,20 @@ public class CBaseEntity : MonoBehaviour {
 		capturedFormerPosition = transform.position;
 
 		// Move it as child of the capturer. This way, it will move together
+		this.transform.rotation = capturer.transform.rotation;
 		this.transform.parent = capturer.transform;
 
 		Vector3 newPosition = new Vector3(0, 3, -3);
 		transform.position = capturer.transform.position + newPosition;
+
+		if(MainScript.Script.prefabForceField && !captureForceField) {
+
+			// TODO: add some visual aid to help the player to see that stuff floating around is actually something
+			// that was captured
+			captureForceField = Instantiate(MainScript.Script.prefabForceField, this.transform.position, 
+					Quaternion.identity) as Transform;
+			captureForceField.transform.parent = this.transform;
+		}
 	}
 
 	/// <summary>
@@ -190,6 +209,9 @@ public class CBaseEntity : MonoBehaviour {
 		transform.position = putMeBackInTheGround;
 
 		isCaptured = false;
+
+		if(captureForceField)
+			Destroy(captureForceField.gameObject);
 	}
 
 	/// <summary>

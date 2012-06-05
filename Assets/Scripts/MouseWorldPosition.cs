@@ -24,7 +24,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			CanReleaseCaptured, // Cientist monkey selected, mouse over a captured part
 			EngineerFix, // Engineer monkey selected, mouse over a sabotaged building
 			CanSabotageBuilding, 
-			CanSabotageMovable,
+			CanSabotageDrone,
 			TargetingForRecycle,	// Engineer vs disabled drone
 			TargetingForBrawl,	// Astronaut vs functional drone
 			TargetingForReprogram	// Saboteus vs disabled drone
@@ -39,6 +39,8 @@ public class MouseWorldPosition : MonoBehaviour {
 	public Texture2D cursorWalkNotOk;	// Walk cursor, but indicating we can't walk here
 	public Texture2D cursorBuild;	// cursor to show that we can build something
 	public Texture2D cursorCaptureRay;	// cursor showing that we can use the capture ray
+	public Texture2D cursorSabotageEnable;		// shows that we can sabotage this unit/building
+	public Texture2D cursorRecycleEnable;	// Enginner can recycle a stunned drone
 	Texture2D cursorCurrent;	// pointer to the current cursor texture
 
 	// PRIVATE
@@ -261,7 +263,8 @@ public class MouseWorldPosition : MonoBehaviour {
 				infoPanel.SetInfoLabel(infoPanelMsg);
 				// And we're off!
 				return;
-			}
+			} // END IF - nothing selected
+
 
 			// 2 - Ok, we have an unit selected.
 			CBaseEntity selectedObjectEntity = selectedObject.gameObject.GetComponent<CBaseEntity>();
@@ -269,7 +272,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			// 2.1 - if it's movable (a monkey or a drone, for instance), them we use mostly the 'walk' cursor
 			if(selectedObjectEntity.Movable) {
 
-				// we're pointing at the ground? Walk!
+				// Are we pointing at the ground? Walk!
 				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer) {
 					
 					cursorCurrent = cursorWalk;
@@ -294,8 +297,6 @@ public class MouseWorldPosition : MonoBehaviour {
 				// are we pointing at an enemy?
 				if(whatIAmPointing.gameObject.layer == MainScript.enemyLayer) {
 
-					// TODO AND FIXME: it's not that easy. Must check first if the monkey or drone can actually attack
-					// what we are pointing
 					// We have a monkey selected?
 					if(selectedObject.gameObject.tag == "Monkey") {
 
@@ -347,7 +348,7 @@ public class MouseWorldPosition : MonoBehaviour {
 										// The engineer only attack (recycle) stunned drones
 										if(isThisDroneStunned) {
 
-											cursorCurrent = cursorAttack;
+											cursorCurrent = cursorRecycleEnable;
 											MouseState = eMouseStates.TargetingForRecycle;
 										}
 									}
@@ -361,6 +362,13 @@ public class MouseWorldPosition : MonoBehaviour {
 											cursorCurrent = cursorAttack;
 											MouseState = eMouseStates.TargetingForReprogram;
 										}
+										else {
+
+											// Drone not stunned. Well, we still can sabotage it
+											cursorCurrent = cursorAttack;
+											// FIXME: for now using the same attack as the astronaut...
+											MouseState = eMouseStates.TargetingForBrawl;
+										}
 									}
 									break;
 
@@ -369,7 +377,30 @@ public class MouseWorldPosition : MonoBehaviour {
 									Debug.LogError("I should not be here...");
 									break;
 							}
-						}
+						} // END IF - Monkey selected - Targeting an enemy drone
+						else if(whatIAmPointing.gameObject.tag == "Building") {
+							// No, we are targeting an enemy building.
+							// Only saboteurs can do something here?
+							if(selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Saboteur) {
+
+								// Get info about the building target
+								CBuilding targetBuilding = whatIAmPointing.GetComponent<CBuilding>();
+
+								if(!targetBuilding) {
+
+									// DEBUG
+									Debug.Log("Could not find CBuiding component in " + whatIAmPointing);
+								}
+
+								if(!targetBuilding.sabotado) {
+
+									cursorCurrent = cursorSabotageEnable;
+									MouseState = eMouseStates.CanSabotageBuilding;
+
+								}
+							}
+						} // END IF - Monkey selected - Targeting an enemy building
+
 					}
 
 					return;
@@ -447,11 +478,11 @@ public class MouseWorldPosition : MonoBehaviour {
 							//pointedObject = whatIAmPointing;
 						}
 					}	
-				}
-				else { // not a monkey
+				} // END IF - Monkey selected - not pointing at the ground, not pointing at an enemy
+				else { // not a monkey selected
 
 				}
-			}
+			} // END IF - Movable selected
 			else {
 
 				// Object is not movable: building, resource, etc.
@@ -722,6 +753,18 @@ public class MouseWorldPosition : MonoBehaviour {
 
 			// A monkey entering the command center
 			case eMouseStates.MonkeyCanEnterBuilding:
+				{
+
+					CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
+
+					// Change the Monkey FSM
+					cMonkeyScript.PerformAction(whatIClicked, MouseState);
+				}
+				break;
+
+
+			// Saboteur sabotaging a building
+			case eMouseStates.CanSabotageBuilding:
 				{
 
 					CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();

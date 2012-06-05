@@ -212,9 +212,6 @@ public class CMonkey : CBaseEntity {
 						break;
 					}
 
-					// DEBUG
-					Debug.Log("TARGET VALID");
-
 					// Check if the enemy is range for be attacked
 					if(CheckIfTargetIsInRange())	{
 
@@ -375,7 +372,8 @@ public class CMonkey : CBaseEntity {
 
 			Debug.Log("Monkey hit in " + hit.transform.name);
 
-			rv = true;
+			if(hit.transform == transTarget)
+				rv = true;
 		}
 
 		return rv;
@@ -482,6 +480,15 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
+			case MouseWorldPosition.eMouseStates.CanSabotageBuilding:
+				{
+
+					// Sets the time needed to sabotage a building
+					workingTargetTime = 3.0f; // FIXME: arbitratry value!
+					EnterNewState(FSMState.STATE_WORKING);
+				}
+				break;
+
 			// All monkeys
 			case MouseWorldPosition.eMouseStates.MonkeyCanEnterBuilding:
 				{
@@ -539,7 +546,18 @@ public class CMonkey : CBaseEntity {
 					}
 					// Fix the broken building
 					attackedBuilding.FixByEngineer();
-					// Do nothing afterwrds
+					// Do nothing afterwards
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			case MouseWorldPosition.eMouseStates.CanSabotageBuilding:
+				{
+					CBuilding buildingTarget = transTarget.gameObject.GetComponent<CBuilding>();
+
+					// TODO: the sabotage time could be taken from the building itself
+					buildingTarget.TemporarySabotage(8.0f);
+
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;

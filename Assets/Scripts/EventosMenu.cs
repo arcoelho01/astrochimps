@@ -66,6 +66,7 @@ public class EventosMenu : MonoBehaviour {
 							objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FAZENDA;
 							objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 							objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+							MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
 							fazendaConstruida = true;
 						}
 				}
@@ -80,6 +81,7 @@ public class EventosMenu : MonoBehaviour {
 							objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA;
 							objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 							objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+							MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
 							centralSegurancaConstruida = true;
 						}
 				}
@@ -94,6 +96,7 @@ public class EventosMenu : MonoBehaviour {
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.LABORATORIO;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabLaboratorio.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+						MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabLaboratorio.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
 					}
 				}	
 
@@ -107,6 +110,7 @@ public class EventosMenu : MonoBehaviour {
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FABRICA_DRONES;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+						MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
 					}
 				}	
 			}
