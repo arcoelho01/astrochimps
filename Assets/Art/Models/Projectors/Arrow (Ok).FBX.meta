@@ -1,11 +1,12 @@
 fileFormatVersion: 2
-guid: 88e5dbc3f5b7b4b2fa3d73180044ea39
+guid: 75590e800a35341fd8d8d3b7896dda66
 ModelImporter:
   fileIDToRecycleName:
     4300000: (FB) Arrow A-01
-    7400000: Take 001 //// FeedBack Arrow
-    7400002: Grow //// FeedBack Arrow
-    7400004: Bounce //// FeedBack Arrow
+    7400000: Take 001 //// Arrow (Ok)
+    7400002: ArrowAppear //// Arrow (Ok)
+    7400004: idle //// Arrow (Ok)
+    7400006: ArrowFloat //// Arrow (Ok)
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -19,21 +20,21 @@ ModelImporter:
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
-    animationWrapMode: 8
+    animationWrapMode: 0
     clipAnimations:
-    - name: Grow
-      firstFrame: 1
-      lastFrame: 30
+    - name: ArrowAppear
+      firstFrame: 0
+      lastFrame: 10
       wrapMode: 1
       loop: 0
-    - name: Bounce
-      firstFrame: 31
-      lastFrame: 75
+    - name: ArrowFloat
+      firstFrame: 10
+      lastFrame: 130
       wrapMode: 2
       loop: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: .00999999978
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0
