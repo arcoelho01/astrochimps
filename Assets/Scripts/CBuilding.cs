@@ -255,13 +255,13 @@ public class CBuilding : CBaseEntity {
 			case CResource.eResourceType.Oxygen:
 				// Adds the resource extracted to the player
 				mainScript.player.AddResourceOxygen(extractedResource.amount);
-				resourceString = "Oxygen ";
+				resourceString = CGameText.Script.GetText(CGameText.eTextMessages.RESOURCE_OXYGEN) + " ";
 				break;
 
 			case CResource.eResourceType.Metal:
 				// Adds the resource extracted to the player
 				mainScript.player.AddResourceMetal(extractedResource.amount);
-				resourceString = "Metal ";
+				resourceString = CGameText.Script.GetText(CGameText.eTextMessages.RESOURCE_METAL) + " ";
 				break;
 
 			case CResource.eResourceType.NONE:
@@ -309,7 +309,8 @@ public class CBuilding : CBaseEntity {
 
 			Desabotage();	
 			// Instantiate an info text
-			StartCoroutine(ShowInfoForExtractedResource("Metal ", -fRepairCost));
+			StartCoroutine(ShowInfoForExtractedResource(
+						CGameText.Script.GetText(CGameText.eTextMessages.RESOURCE_METAL), -fRepairCost));
 		}
 	}
 
@@ -361,9 +362,6 @@ public class CBuilding : CBaseEntity {
 			// Put it as child
 			sabotagedPSObj.transform.parent = this.transform;
 		}
-
-		// TODO: if this an enemy building, we must put the sabotage effects on a timer. Also, if there's a monkey
-		// trapped in here, we must set it free
 	}
 
 	/// <summary>
@@ -423,6 +421,5 @@ public class CBuilding : CBaseEntity {
 
 		return v3ExitSpot;
 	}
-
 }
 
