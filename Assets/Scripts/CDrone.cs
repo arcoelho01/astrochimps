@@ -36,12 +36,12 @@ public class CDrone : CBaseEntity {
 	
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
 	float stunnedTimeCounter;
-	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
+	public AstarAIFollow AIScript = null; // Cache a pointer to the AI script
 	private float sabotageTime;
 
   // Sorry I know this is bad but i'm not smart enough right now to make it better
-  private Saboteur saboteurScript;
-  private Patrol patrolScript;
+  public Saboteur saboteurScript;
+  public Patrol patrolScript;
 
 	/*
 	 * ===========================================================================================================
@@ -86,6 +86,10 @@ public class CDrone : CBaseEntity {
 		
 			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
 		}
+		
+		if(this.droneType == eDroneType.Patrol)
+			mainScript.bottomMenu.PatrolDroneMenuEnable(this);
+		
 		return base.Select();
 	}
 

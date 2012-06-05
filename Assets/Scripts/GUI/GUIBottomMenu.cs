@@ -15,7 +15,7 @@ public class GUIBottomMenu : MonoBehaviour {
 	float marginBottom = 0;	// Margin from the bottom of the screen
 	string stLabelText = "";
 	CPlayer player;
-	enum eMenuType { BuildExtractor, PlayerInfo, BuildingInfo, NONE} ;
+	enum eMenuType { BuildExtractor, PlayerInfo, BuildingInfo, PatrolDrone, NONE} ;
 	eMenuType menuType = eMenuType.PlayerInfo;
 	CBaseEntity caller;	// Caller of a menu. Can be a building, for instance
 	CBuilding callerBuilding;
@@ -77,6 +77,9 @@ public class GUIBottomMenu : MonoBehaviour {
 			case eMenuType.BuildingInfo:
 				BuildingInfoMenu();
 				break;
+			case eMenuType.PatrolDrone:
+				PatrolDroneMenu();
+				break;
 			case eMenuType.NONE:
 				break;
 			default:
@@ -137,6 +140,17 @@ public class GUIBottomMenu : MonoBehaviour {
 		menuType = eMenuType.BuildingInfo;
 		this.callerBuilding = caller;
 	}
+	/// <summary>
+	/// Enables the patrol route selection menu.
+	/// </summary>
+	/// <param name='caller'>
+	/// Caller.
+	/// </param>
+	public void PatrolDroneMenuEnable(CBaseEntity caller) {
+
+		menuType = eMenuType.PatrolDrone;
+		this.caller = caller;
+	}
 	
 	/*
 	 * ===========================================================================================================
@@ -177,6 +191,16 @@ public class GUIBottomMenu : MonoBehaviour {
 			callerBuilding.GetTheMonkeyOut();
 			// Disable the info menu
 			menuType = eMenuType.PlayerInfo;
+		}
+	}
+	/// <summary>
+	/// Shows the possible patrol route options.
+	/// </summary>
+	void PatrolDroneMenu() {
+
+		if(GUI.Button(new Rect(5, posY + 5, 120, 25),"Square")) {
+			Debug.Log("Clicked the button");
+			caller.GetComponent<CDrone>().patrolScript.SquarePatrol();			
 		}
 	}
 }
