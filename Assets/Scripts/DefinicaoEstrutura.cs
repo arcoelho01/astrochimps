@@ -95,6 +95,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	{
 		GameObject construcaoNova;
 		bool drone = false;
+		string nomeProvisorio ="";
 		
 		if(tipo == TipoEstrutura.SLOT)
 			statusProgressao = StatusProgresso.CONCLUIDO;
@@ -105,21 +106,35 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		
 		//construcoes
 		if(objetoAConstruir == TipoEstrutura.FAZENDA)
+		{
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabFazenda;
+			nomeProvisorio = "HydroponicFarm";
+		}
 		if(objetoAConstruir == TipoEstrutura.FABRICA_DRONES)
+		{
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabFabricaDrones;
+			nomeProvisorio = "DroneFactory";
+		}
 		if(objetoAConstruir == TipoEstrutura.LABORATORIO)
+		{
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabLaboratorio;
+			nomeProvisorio = "ResearchLab";
+		}
 		if(objetoAConstruir == TipoEstrutura.CENTRAL_SEGURANCA)
+		{
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabCentralSeguranca;
+			nomeProvisorio = "SecurityCenter";
+		}
 		//drones
 		if(objetoAConstruir == TipoEstrutura.DRONE_NORMAL){
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabUnidadeDrone;
 			drone = true;
 		}
 		
-		if(!drone)
-			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),Quaternion.Euler(0,0,0));		
+		if(!drone){
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),Quaternion.Euler(0,0,0));
+			construcaoNova.name = nomeProvisorio + this.name.Substring(4,1);
+		}
 		else
 			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+4,transform.position.y+1,transform.position.z+3),Quaternion.Euler(0,0,0));
 			

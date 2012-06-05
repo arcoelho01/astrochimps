@@ -8,6 +8,8 @@ ModelImporter:
     4300006: Vigilance Camera A
     4300008: Vigilance Camera B
     4300010: Meter
+    7400000: Take 001 //// (TO TEX) Security Center -- Low (MAP)
+    7400002: SecurityCenter_Cams //// (TO TEX) Security Center -- Low (MAP)
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -22,7 +24,12 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations: []
+    clipAnimations:
+    - name: SecurityCenter_Cams
+      firstFrame: 0
+      lastFrame: 180
+      wrapMode: 2
+      loop: 0
   meshes:
     lODScreenPercentages: []
     globalScale: .100000001
