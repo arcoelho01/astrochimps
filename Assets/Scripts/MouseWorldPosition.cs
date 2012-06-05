@@ -48,11 +48,12 @@ public class MouseWorldPosition : MonoBehaviour {
 	bool bnPositionAlreadySelected = false;	// Is the object already selected?
 	bool bnNodeStatus = false;	// keep if current node at the mouse cursor is walkable or not
 	Vector3 mouseNow;	// Mouse position now
+	public static Vector3 mouseHitPointNow;
 	Vector3 mouseBefore;	// Previous mouse position
 	GUIBottomMenu infoPanel = null;	// Pointer to the bottom menu bar
 	Transform projectorSelectTargetPosition = null;	// Pointer to the cursor, when some object is selected
 	CBaseEntity selectedBaseEntity = null;	// CBaseEntity stuff for the selected object, if exists
-	Vector3 targetPosition;	// Target to the pathfinding
+	public static Vector3 targetPosition;	// Target to the pathfinding
 	eMouseStates MouseState;	// Current mouse state
 	MainScript mainScript;
 	
@@ -211,6 +212,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			pointedObject = null;
 
 			mouseBefore = mouseNow;
+			
 
 			// Converts the mouse position to world position
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -220,6 +222,7 @@ public class MouseWorldPosition : MonoBehaviour {
 					Mathf.Infinity, ~(1 << MainScript.minimapLayer | 1 << MainScript.minimapGroundLayer))) {
 
 				whatIAmPointing = hit.transform;
+				mouseHitPointNow = hit.point;
 			}
 
 			if(whatIAmPointing == null)
@@ -684,8 +687,10 @@ public class MouseWorldPosition : MonoBehaviour {
 						selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
 					}
 					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
-
-						selectedObject.gameObject.GetComponent<CDrone>().WalkTo(WhatIsThePositionSelected());
+						CDrone thisSelectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+						if(thisSelectedDrone.droneType == CDrone.eDroneType.Patrol && thisSelectedDrone.patrolScript.setNewPatrol)
+							thisSelectedDrone.patrolScript.patrolSet = true;
+						else thisSelectedDrone.WalkTo(WhatIsThePositionSelected());
 					}
 
 					// Show where we clicked in the ground
