@@ -854,5 +854,25 @@ public class MouseWorldPosition : MonoBehaviour {
 				Debug.Log("CHEAT: building " + selectedObject.name + " sabotage: " + selectedBuilding.sabotado);
 			}	
 		}
+
+		if(Input.GetKeyDown(KeyCode.Period)) {
+
+			// Change the visibility of all rocket parts
+			GameObject[] goRocketParts;
+			goRocketParts = GameObject.FindGameObjectsWithTag("RocketPart");
+
+			foreach(GameObject oneRocketPart in goRocketParts) {
+
+				CRocketPart componentRocketPart = oneRocketPart.GetComponent<CRocketPart>(); 
+				if(!componentRocketPart)
+					Debug.LogError("Could not find CRocketPart component in " + oneRocketPart);
+				
+				if(!componentRocketPart.isRevealed)
+					componentRocketPart.PartIsRevealed();
+				else
+					componentRocketPart.PartIsUnrevealed();
+			}
+		}
+		
 	}
 }
