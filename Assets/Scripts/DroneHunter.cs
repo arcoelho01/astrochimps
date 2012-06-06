@@ -138,50 +138,19 @@ public class DroneHunter : MonoBehaviour {
 
 		// Ok, all enemies sorted. Now let's decide what to do
 		// Let's check the monkeys
-		if(ltMonkeysInSight.Count != 0)  {
+		Transform candidateToBeEngaged = PickClosestTargetFromTheList(ltMonkeysInSight);
+		if(candidateToBeEngaged) {
 
-			Transform candidateMonkey = null;
-
-			if(ltMonkeysInSight.Count > 1) {
-
-				float fCloserDistance = Mathf.Infinity;
-				Transform tCloserMonkey = null;
-				// And we have more than one in sight! Let's choose the best to engage
-				foreach(Transform tempMonkey in ltMonkeysInSight) {
-
-					float fDistance = (this.transform.position - tempMonkey.transform.position).sqrMagnitude;
-					
-					// DEBUG
-					Debug.Log("Checking monkey " + tempMonkey.transform + " distance (squared)" + fDistance );
-
-					if(fDistance < fCloserDistance) {
-
-						fCloserDistance = fDistance;
-						tCloserMonkey = tempMonkey;
-					}	
-				}
-
-				candidateMonkey = tCloserMonkey;
-			} // END IF - ltMonkeysInSight > 1
-			else {
-
-				// One monkey in sight, it's candidate to be engaged
-				candidateMonkey = ltMonkeysInSight[0];
-			}
-
-			// Let's not attack the same monkey if we already attacking it
-			if(candidateMonkey != currentTarget) {
+			// Let's not attack the same target if we already attacking it
+			if(candidateToBeEngaged != currentTarget) {
 
 				// Well, the candidate monkey is the new target!!!
-				currentTarget = candidateMonkey;
+				currentTarget = candidateToBeEngaged;
 			}
-
-			// Monkeys have higher priority over other targets so we can leave... or not?
 			return;
-		} // END -IF Checking monkeys in the list
+		}
 
-		Transform candidateToBeEngaged = PickClosestTargetFromTheList(ltDronesInSight);
-
+		candidateToBeEngaged = PickClosestTargetFromTheList(ltDronesInSight);
 		// Let's not attack the same target if we already attacking it
 		if(candidateToBeEngaged != currentTarget) {
 
