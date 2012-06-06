@@ -9,6 +9,7 @@ public class Patrol : MonoBehaviour {
   private Transform myTransform;
 
   private Transform target;
+  private CBaseEntity targetEntity;
   private Vector3 targetVector;
   
   private float pulseTime;
@@ -22,8 +23,8 @@ public class Patrol : MonoBehaviour {
   
   //Field of View
   private float detectionDistance = 14.0f;
-  private float detectionRadius = 10.0f;
-  private float alertRadius = 45.0f;
+  private float detectionRadius = 25.0f;
+  private float alertRadius = 60.0f;
 
   public Vector3[] patrolTarget;
   public GameObject[] patrolMarkers;
@@ -54,7 +55,7 @@ public class Patrol : MonoBehaviour {
   // Use this for initialization
   void Start () {
 
-    pulseTime = 1.0f;
+    pulseTime = 2.0f;
 
   }
 
@@ -93,7 +94,7 @@ public class Patrol : MonoBehaviour {
        if(scannedColliders.Length > 0)
          enemyAround = true;
        else enemyAround = false;
-      pulseTime = 1.0f;
+      pulseTime = 2.0f;
     }
 
     if(enemyAround){
@@ -103,20 +104,31 @@ public class Patrol : MonoBehaviour {
         float tempdistance = Vector3.Distance(myTransform.position,scannedColliders[0].transform.position);
         for(int i = 0; i < scannedColliders.Length; i ++ ){
           target = scannedColliders[i].transform;
+          targetEntity = target.GetComponent<CBaseEntity>();
+          Debug.Log("targetEntity: " + targetEntity);
+          if(!targetEntity) return;
+          if(targetEntity.Type == CBaseEntity.eObjType.Building) continue;
           float tempdistanceindex = Vector3.Distance(myTransform.position,target.position);
           if(tempdistanceindex < tempdistance){
             tempdistance = tempdistanceindex;
             break;
-          }else target = scannedColliders[0].transform;
+          }else{
+            target = scannedColliders[0].transform;
+            targetEntity = target.GetComponent<CBaseEntity>();
+          }
         }
 
-      }else target = scannedColliders[0].transform;
+      }else{
+        target = scannedColliders[0].transform;
+        targetEntity = target.GetComponent<CBaseEntity>();
+      }
 
       targetVector = target.position - myTransform.position;
 
 
        if(Vector3.Distance(myTransform.position,target.position) < detectionDistance  && Vector3.Angle(targetVector,myTransform.forward) < detectionRadius){
-          pulseTime = 5.0f;
+        if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
+          pulseTime = 2.0f;
           status = eAlertLevel.DETECT;
           existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
        }else if(Vector3.Distance(myTransform.position,target.position) < detectionDistance && Vector3.Angle(targetVector,myTransform.forward) < alertRadius){
@@ -140,7 +152,8 @@ void Alerta () {
 
   if(Vector3.Distance(myTransform.position,target.position) < detectionDistance){
     if(Vector3.Angle(targetVector,myTransform.forward) < detectionRadius ){
-        pulseTime = 5.0f;
+        if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
+        pulseTime = 2.0f;
         status = eAlertLevel.DETECT;
         existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
     }
@@ -162,8 +175,8 @@ void Alerta () {
 	
 	public void SquarePatrol () {
 		
-		Debug.Log("Set patrol:" + patrolTarget);
-		
+		//Debug.Log("Set patrol:" + patrolTarget);
+		patrolSet = false;
 		setNewPatrol = true;
 		
 		patrolTarget[0] = new Vector3(20.0f,0.0f,20.0f); patrolTarget[0] += MouseWorldPosition.targetPosition;
@@ -193,6 +206,10 @@ void Alerta () {
 	}
 	
 	public void StartPatrol () {
+		
+		for(int x = 0; x < patrolTarget.Length; x++){
+			GameObject.Destroy(patrolMarkers[x]);
+		}
 		
 		if(setNewPatrol){
 			cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[0]);
