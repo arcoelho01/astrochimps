@@ -10,6 +10,7 @@ public class MainScript : MonoBehaviour {
 	public Transform prefabLaboratorio;
 	public Transform prefabUnderConstructionBox;
 	public Transform prefabForceField;
+	public Transform prefabCaptureRay;
 
 	public GUIBottomMenu bottomMenu;	// Pointer to the bottom menu bar
 	public Transform playerObject;	// Pointer to the player object

@@ -52,6 +52,7 @@ public class CBaseEntity : MonoBehaviour {
 
 	// Visual aid to show that object was captured
 	Transform captureForceField;
+	Transform captureRay;
 
 	/*
 	 * ===========================================================================================================
@@ -182,7 +183,7 @@ public class CBaseEntity : MonoBehaviour {
 		this.transform.rotation = capturer.transform.rotation;
 		this.transform.parent = capturer.transform;
 
-		Vector3 newPosition = new Vector3(0, 3, -3);
+		Vector3 newPosition = new Vector3(0, 6, -6);
 		transform.position = capturer.transform.position + newPosition;
 
 		if(MainScript.Script.prefabForceField && !captureForceField) {
@@ -193,6 +194,22 @@ public class CBaseEntity : MonoBehaviour {
 					Quaternion.identity) as Transform;
 			captureForceField.transform.parent = this.transform;
 		}
+
+		if(MainScript.Script.prefabCaptureRay && !captureRay) {
+
+			captureRay = Instantiate(MainScript.Script.prefabCaptureRay, this.transform.position, 
+					Quaternion.identity) as Transform;
+			captureRay.transform.parent = this.transform;
+
+			Vector3 direction = capturer.transform.position - this.transform.position;
+			Vector3 newSize = new Vector3(captureRay.transform.localScale.x,captureRay.transform.localScale.y, 
+					direction.magnitude);
+			captureRay.transform.localScale = newSize;
+
+			captureRay.transform.LookAt(capturer);
+
+		}
+
 	}
 
 	/// <summary>
@@ -212,6 +229,9 @@ public class CBaseEntity : MonoBehaviour {
 
 		if(captureForceField)
 			Destroy(captureForceField.gameObject);
+
+		if(captureRay)
+			Destroy(captureRay.gameObject);
 	}
 
 	/// <summary>
@@ -222,11 +242,9 @@ public class CBaseEntity : MonoBehaviour {
 		Transform sweetSpotObj = transform.Find("SweetSpot");
 
 		if(sweetSpotObj) {
-			Debug.Log("SIM! Achei o sweetspot");
 			return sweetSpotObj.transform.position;
 		}
 		else {
-			Debug.Log("Nao achei o sweetspot");
 			return this.transform.position;
 		}
 	}
