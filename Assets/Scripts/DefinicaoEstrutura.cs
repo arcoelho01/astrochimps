@@ -134,6 +134,8 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		if(!drone){
 			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),Quaternion.Euler(0,0,0));
 			construcaoNova.name = nomeProvisorio + this.name.Substring(4,1);
+			GameObject.Find("Regiao"+this.name.Substring(4,1)).GetComponent<Regiao>().setor[1] = construcaoNova;
+			GameObject.Find("CommandCenter").GetComponent<GerenciadorSlots>().slots[int.Parse(this.name.Substring(4,1))-1] = construcaoNova;
 		}
 		else
 			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+4,transform.position.y+1,transform.position.z+3),Quaternion.Euler(0,0,0));
