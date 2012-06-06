@@ -39,30 +39,31 @@ public class Regiao : MonoBehaviour {
 				}
 				else
 					goCheckRenderer = setor[i];
-
-				if(goCheckRenderer.renderer.active)
-				{
-					
-					if(setor[i].GetComponent<DefinicaoEstrutura>().tipo == DefinicaoEstrutura.TipoEstrutura.CANO_CENTRAL)
+				
+				if(goCheckRenderer.renderer != null)
+					if(goCheckRenderer.renderer.active)
 					{
-	
-						if(setor[i].GetComponent<DefinicaoEstrutura>().vida <= 0)
-							problema = true;
 						
-						if(setor[i].GetComponent<DefinicaoEstrutura>().sabotado)
-							problema = true;
+						if(setor[i].GetComponent<DefinicaoEstrutura>().tipo == DefinicaoEstrutura.TipoEstrutura.CANO_CENTRAL)
+						{
+		
+							if(setor[i].GetComponent<DefinicaoEstrutura>().vida <= 0)
+								problema = true;
+							
+							if(setor[i].GetComponent<DefinicaoEstrutura>().sabotado)
+								problema = true;
+							
+						}
+						
+						if(setor[i].GetComponent<DefinicaoEstrutura>().tipo == DefinicaoEstrutura.TipoEstrutura.SLOT)
+						{
+		
+							if(setor[i].GetComponent<DefinicaoEstrutura>().sabotado)
+								problema = true;
+							
+						}
 						
 					}
-					
-					if(setor[i].GetComponent<DefinicaoEstrutura>().tipo == DefinicaoEstrutura.TipoEstrutura.SLOT)
-					{
-	
-						if(setor[i].GetComponent<DefinicaoEstrutura>().sabotado)
-							problema = true;
-						
-					}
-					
-				}
 	
 				if(problema)
 					conectado = false;
