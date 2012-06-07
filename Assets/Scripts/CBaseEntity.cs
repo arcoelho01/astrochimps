@@ -223,7 +223,7 @@ public class CBaseEntity : MonoBehaviour {
 		Vector3 putMeBackInTheGround = new Vector3(transform.position.x, capturedFormerPosition.y, 
 				transform.position.z);
 		
-		transform.position = putMeBackInTheGround;
+		//transform.position = putMeBackInTheGround;
 
 		isCaptured = false;
 

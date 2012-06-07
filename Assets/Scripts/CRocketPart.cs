@@ -12,17 +12,45 @@ public class CRocketPart : CBaseEntity {
 	// Enumeration for the rockets parts
 	public enum eRocketPartType { Engine, Cockpit, FuelTank, NavSystem, SurvivalCapsule };
 	public eRocketPartType rocketPartType;
+	// This part was already revealed? If it was, everyone can see it
+	public bool isRevealed; 
+
+	//
+	void Awake() {
+
+		isRevealed = false;
+		GetSweetSpotAndMeshObject();
+
+	}
 
 	// Use this for initialization
 	void Start () {
-	
+
+		if(meshObject)
+			meshObject.gameObject.renderer.enabled = isRevealed;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-		if(isCaptured) {
+	
+	}
 
-		}
+	/// <summary>
+	/// Reveal a part in the scene, enabling it's rendering
+	/// </summary>
+	public void PartIsRevealed() {
+
+		isRevealed = true;
+		meshObject.gameObject.renderer.enabled = true;
+	}
+
+	/// <summary>
+	/// Hide a part in the scene, disabling it's rendering
+	/// </summary>
+	public void PartIsUnrevealed() {
+
+		isRevealed = false;
+		meshObject.gameObject.renderer.enabled = false;
 	}
 }

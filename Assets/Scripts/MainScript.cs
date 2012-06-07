@@ -135,6 +135,8 @@ public class MainScript : MonoBehaviour {
 			}
 		}
 
+		GetCurrentRocketPartsInScene();
+
 		// Resources
 		GameObject[] goResources;
 		goResources = GameObject.FindGameObjectsWithTag("Resource");
@@ -142,6 +144,8 @@ public class MainScript : MonoBehaviour {
 
 			neutralResources.Add(oneResource.transform);
 		}
+		
+
 
 		// 
 		Debug.Log("Resumo: macacos aliados: " + alliedMonkeys.Count);
@@ -176,6 +180,24 @@ public class MainScript : MonoBehaviour {
 		// Prints a summary
 		Debug.Log("Summary - Allied drones " + alliedDrones.Count);
 		Debug.Log("Summary - Enemy drones " + opponentDrones.Count);
+	}
+
+	/// <summary>
+	/// Get all the rocket parts currently in the game
+	/// </summary>
+	void GetCurrentRocketPartsInScene() {
+
+		GameObject[] goRocketParts;
+		goRocketParts = GameObject.FindGameObjectsWithTag("RocketPart");
+
+		foreach(GameObject oneRocketPart in goRocketParts) {
+
+			neutralRocketParts.Add(oneRocketPart.transform);
+		}
+
+		// DEBUG
+		// Prints a summary
+		Debug.Log("Summary - Rocket Parts " + neutralRocketParts.Count);
 	}
 
 	/// <summary>

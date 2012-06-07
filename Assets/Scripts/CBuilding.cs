@@ -11,7 +11,7 @@ public class CBuilding : CBaseEntity {
 	
 	// PUBLIC
 	public enum eBuildingType { CommandCenter, ResourceExtractor, Farm, SecurityCenter, 
-		DroneFactory, ResearchLab }; // Building type
+		DroneFactory, ResearchLab, LaunchingPlatform }; // Building type
 	public eBuildingType buildingType;
 	
 	public AudioClip sfxLoadMonkey;
