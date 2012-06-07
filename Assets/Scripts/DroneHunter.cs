@@ -68,17 +68,6 @@ public class DroneHunter : MonoBehaviour {
 			}
 			else
 				currentTarget = null;
-
-			if(currentTarget) {
-
-				// DEBUG
-				Debug.Log("Current target is: " + currentTarget.transform);
-			}
-			else {
-
-				// DEBUG
-				Debug.Log("No current target");
-			}
 		}
 
 	}
@@ -179,7 +168,7 @@ public class DroneHunter : MonoBehaviour {
 			float fDistance = (this.transform.position - tempTarget.transform.position).sqrMagnitude;
 
 			// DEBUG
-			Debug.Log("Checking target " + tempTarget.transform + " distance (squared)" + fDistance );
+			//Debug.Log("Checking target " + tempTarget.transform + " distance (squared)" + fDistance );
 
 			if(fDistance < fCloserDistance) {
 
