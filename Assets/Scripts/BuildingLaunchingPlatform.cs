@@ -14,6 +14,9 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	// Hold all the parts already brought
 	List<Transform> ltPartsInThePlatform;
 
+	// PUBLIC
+	public AudioClip sfxPartAdded;
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -41,10 +44,20 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	}
 	
 	/// <summary>
-	/// Check there's a monkey inside the platform and if it brought a new part
+	///
 	/// </summary>
-	void CheckForPart() {
+	void AddRocketPartToTheList(Transform rocketPartToBeAdded) {
 
+		if(sfxPartAdded) {
+
+			AudioSource.PlayClipAtPoint(sfxPartAdded, transform.position);
+		}
+
+		// Add to the list
+		ltPartsInThePlatform.Add(rocketPartToBeAdded);
+
+		// TODO: tell the player this in some way, like in a text on the screen, etc
+		Debug.Log("Rocket part " + rocketPartToBeAdded + "delivered in the platform");
 	}
 
 	/// <summary>
@@ -58,7 +71,12 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 			Debug.Log("Rocket part entered the launching platform: " + hit.gameObject.transform.name);
 
 			// 1 - Detach the rocket part from the monkey
+			Transform rocketPart = hit.gameObject.transform;
+			CRocketPart rocketPartEntity = rocketPart.GetComponent<CRocketPart>();
+			rocketPartEntity.ReleaseMe();
+
 			// 2 - Add it to the parts list
+			AddRocketPartToTheList(rocketPart);
 		}
 	}
 
@@ -72,6 +90,9 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 			// DEBUG
 			Debug.Log("Rocket part left the launching platfform: " + hit.gameObject.transform.name);
+
+			Transform rocketPart = hit.gameObject.transform;
+			ltPartsInThePlatform.Remove(rocketPart);
 		}
 	}
 }
