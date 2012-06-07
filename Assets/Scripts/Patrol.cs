@@ -28,10 +28,12 @@ public class Patrol : MonoBehaviour {
 
   public Vector3[] patrolTarget;
   public GameObject[] patrolMarkers;
-	
+
+  //Patrol Variables
   public bool setNewPatrol;
   public bool patrolSet;
   public int patrolIndex;
+  public bool patrolPointsValid;
   public GameObject markerPatrol;
   
   public GameObject detectAlert; //Prefab to instantiate once enemy has been found, set in Inspector
@@ -41,14 +43,15 @@ public class Patrol : MonoBehaviour {
 
   void Awake () {
 
-    cdroneScript = this.GetComponent<CDrone>();
-    myTransform = this.transform;
-    enemyAround = false;
-	setNewPatrol = false;
-	patrolSet = false;
-    scannedColliders = new Collider[0];
-	patrolTarget = new Vector3[4];
-	patrolMarkers = new GameObject[4];
+  cdroneScript = this.GetComponent<CDrone>();
+  myTransform = this.transform;
+  enemyAround = false;
+  setNewPatrol = false;
+  patrolSet = false;
+  patrolPointsValid = false;
+  scannedColliders = new Collider[0];
+  patrolTarget = new Vector3[4];
+  patrolMarkers = new GameObject[4];
 
   }
 
@@ -125,7 +128,6 @@ public class Patrol : MonoBehaviour {
 
       targetVector = target.position - myTransform.position;
 
-
        if(Vector3.Distance(myTransform.position,target.position) < detectionDistance  && Vector3.Angle(targetVector,myTransform.forward) < detectionRadius){
         if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
           pulseTime = 2.0f;
@@ -178,6 +180,7 @@ void Alerta () {
 		//Debug.Log("Set patrol:" + patrolTarget);
 		patrolSet = false;
 		setNewPatrol = true;
+    patrolPointsValid = true;
 		
 		patrolTarget[0] = new Vector3(20.0f,0.0f,20.0f); patrolTarget[0] += MouseWorldPosition.targetPosition;
 		patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f); patrolTarget[1] += MouseWorldPosition.targetPosition;
@@ -185,7 +188,8 @@ void Alerta () {
 		patrolTarget[3] = new Vector3(-20.0f,0.0f,20.0f); patrolTarget[3] += MouseWorldPosition.targetPosition;
 		
 		for(int x = 0; x < patrolTarget.Length; x++){
-			patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;	
+			patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
+      patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
 		}
 		//cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[0]);
 		//patrolIndex = 0;
