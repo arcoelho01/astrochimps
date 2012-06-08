@@ -12,11 +12,14 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	// The building script
 	CBuilding cBuildingScript;
 
-	// Hold all the parts already brought
-	List<Transform> ltPartsInThePlatform;
+	// A checklist for all the parts already brought by the player
+	bool[] aPartsAlreadyBrought;
 
-	// Hold the transforms for all the parts from the complete rocke
+	// Hold the transforms for all the parts from the complete rocket
 	List<Transform> ltPartsOnTheRocket;
+
+	// Just a helper for the enums of the rockets parts
+	String[] partsEnumNames;
 
 	// PUBLIC
 	public AudioClip sfxPartAdded;
@@ -33,8 +36,11 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 		// Get the building script
 		cBuildingScript = this.GetComponent<CBuilding>();
 
+		// Get all the parts defined in the enum
+		partsEnumNames = Enum.GetNames(typeof(CRocketPart.eRocketPartType));
+
 		// Initializes the parts list
-		ltPartsInThePlatform = new List<Transform>();
+		aPartsAlreadyBrought = new bool[partsEnumNames.Length];
 
 	}
 
@@ -46,18 +52,13 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 		GetRocketObject();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	/// <summary>
 	/// Gets the rocket object from the hierachy.
-	/// This object have several sub-objects, one for each rocket part
+	/// This object have several sub-objects, one for each rocket part. What we do is first find the object with
+	/// the name 'Mesh_'+ the part name. Then, in this object, we search for the first child, which will contain
+	/// the mesh itself, with its materials and renderer
 	/// </summary>
 	void GetRocketObject() {
-
-		String[] partsEnumNames = Enum.GetNames(typeof(CRocketPart.eRocketPartType));
 
 		foreach(String partName in partsEnumNames) {
 
@@ -67,36 +68,46 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 			if(childPart) {
 
 				ltPartsOnTheRocket.Add(childPart);
-
 				// DEBUG
 				Debug.Log("Part added to the rocket: " + childPart.transform);
 			}
-
-			// TODO: now that we have all the parts in the rocket, we have to decide what to do when the player
-			// bring it to the platform:
-			// 1 - start with all deactivated and activate the part brought by the player?
-			// 2 - start all with a translucent material and then apply the correct material?
-			// 3 - same as 1, but activate/deactivate the renderer of the object?
-
 		}
-
 	}
 	
 	/// <summary>
-	///
+	/// What to do when the player sucessfully brought a rocket part to the launching platform
 	/// </summary>
-	void AddRocketPartToTheList(Transform rocketPartToBeAdded) {
+	void PlayerBroughtAPart(Transform rocketPartToBeAdded) {
 
 		if(sfxPartAdded) {
 
 			AudioSource.PlayClipAtPoint(sfxPartAdded, transform.position);
 		}
 
-		// Add to the list
-		ltPartsInThePlatform.Add(rocketPartToBeAdded);
+		// Now, enable the part in the rocket blueprint
+		// Get the rocket part type
+		CRocketPart cRocketPart = rocketPartToBeAdded.GetComponent<CRocketPart>();
+		// Get the part's type index in the enum
+		int nIdxOfRocketPartEnum = (int)cRocketPart.rocketPartType;
 
-		// TODO: tell the player this in some way, like in a text on the screen, etc
-		Debug.Log("Rocket part " + rocketPartToBeAdded + "delivered in the platform");
+		// Get the transform of the corresponding part in the complete rocket
+		Transform meshOfThisRocketPart = ltPartsOnTheRocket[nIdxOfRocketPartEnum];
+		// Get the material changer component
+		MeshMaterialChanger materialChangerOfThisRocketPart = 
+			meshOfThisRocketPart.GetComponent<MeshMaterialChanger>();
+		// Ask it to enable the part in the complete rocket
+		materialChangerOfThisRocketPart.RestoreMaterials();
+
+		// Enable the part in the parts array
+		aPartsAlreadyBrought[nIdxOfRocketPartEnum] = true;
+
+		// Destroy the found part (not the one on the complete rocket!)
+		if(rocketPartToBeAdded)
+			Destroy(rocketPartToBeAdded.gameObject);
+		
+		// TODO: here will be a good place to check if the player have not yet assembled the rocket. To do this,
+		// check aPartsAlreadyBrought for a false. If all elements are true, the rocket is complete
+
 	}
 
 	/// <summary>
@@ -115,23 +126,7 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 			rocketPartEntity.ReleaseMe();
 
 			// 2 - Add it to the parts list
-			AddRocketPartToTheList(rocketPart);
-		}
-	}
-
-	/// <summary>
-	/// Sense when an object with a rigidbody attached to it leaves the collider. Will be used if the rocket part
-	/// leave the platform (stolen, perhaps?)
-	/// </summary>
-	void OnTriggerExit(Collider hit) {
-
-		if(hit.gameObject.tag == "RocketPart") {
-
-			// DEBUG
-			Debug.Log("Rocket part left the launching platfform: " + hit.gameObject.transform.name);
-
-			Transform rocketPart = hit.gameObject.transform;
-			ltPartsInThePlatform.Remove(rocketPart);
+			PlayerBroughtAPart(rocketPart);
 		}
 	}
 }
