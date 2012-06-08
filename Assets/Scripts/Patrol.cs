@@ -132,7 +132,7 @@ public class Patrol : MonoBehaviour {
         if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
           pulseTime = 2.0f;
           status = eAlertLevel.DETECT;
-          existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
+          existingAlert = GameObject.Instantiate(detectAlert,new Vector3(target.position.x,target.position.y + 15, target.position.z), Quaternion.identity) as GameObject;
        }else if(Vector3.Distance(myTransform.position,target.position) < detectionDistance && Vector3.Angle(targetVector,myTransform.forward) < alertRadius){
           status = eAlertLevel.ALERT;
        }
@@ -157,7 +157,7 @@ void Alerta () {
         if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
         pulseTime = 2.0f;
         status = eAlertLevel.DETECT;
-        existingAlert = GameObject.Instantiate(detectAlert,new Vector3(myTransform.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
+        existingAlert = GameObject.Instantiate(detectAlert,new Vector3(target.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
     }
   }else status = eAlertLevel.PATROL;
 
@@ -221,12 +221,11 @@ void Alerta () {
 			setNewPatrol = false;
 		}
 		
-		if(Vector3.Distance(this.transform.position,patrolTarget[patrolIndex]) < 2.0f){
+		if(Vector3.Distance(this.transform.position,patrolTarget[patrolIndex]) < 5.0f){
 			patrolIndex += 1;
 			if(patrolIndex >= patrolTarget.Length) patrolIndex = 0;
 			cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
 		}
-		
 	}
 
 
