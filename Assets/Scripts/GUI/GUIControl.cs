@@ -63,7 +63,13 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D FazendaOxTexture;
 	public Texture2D FabricaOxTexture;
 	
+	private int nextSlotPosition = 0;
 	
+	
+	public void nextSlot(int predio){
+		nextSlotPosition++;
+		setSlot(nextSlotPosition,  predio);	
+	}
 	// DEFINE - tem que fazer
 	// Centro de Comando - 1
 	// Laboratorio - 2
@@ -119,9 +125,7 @@ public class GUIControl : MonoBehaviour {
 		
 		
 		setSlot(1,1);
-		setSlot(2,2);
-		setSlot(3,4);
-		setSlot(3,3);
+		nextSlotPosition++;
 		
 		
 		GUI.Label (new Rect (8,4,BoxMapaTexture.width,BoxMapaTexture.height), BoxMapaTexture);
