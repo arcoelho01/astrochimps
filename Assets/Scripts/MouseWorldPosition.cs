@@ -687,9 +687,14 @@ public class MouseWorldPosition : MonoBehaviour {
 						selectedObject.gameObject.GetComponent<CMonkey>().WalkTo(WhatIsThePositionSelected());
 					}
 					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+
 						CDrone thisSelectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
-						if(thisSelectedDrone.droneType == CDrone.eDroneType.Patrol && thisSelectedDrone.patrolScript.setNewPatrol)
+
+						if(thisSelectedDrone.droneType == CDrone.eDroneType.Patrol)
+            {
+              if( thisSelectedDrone.patrolScript.setNewPatrol && thisSelectedDrone.patrolScript.patrolPointsValid)
 							thisSelectedDrone.patrolScript.patrolSet = true;
+            }
 						else thisSelectedDrone.WalkTo(WhatIsThePositionSelected());
 					}
 
@@ -708,11 +713,6 @@ public class MouseWorldPosition : MonoBehaviour {
 						CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 
 						cMonkeyScript.PerformAction(whatIClicked, MouseState);
-					}
-					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
-						// Get the basic info on the unit
-						CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
-						selectedDrone.Attack(whatIClicked);
 					}
 				}
 				break;
@@ -767,11 +767,16 @@ public class MouseWorldPosition : MonoBehaviour {
 			// Saboteur sabotaging a building
 			case eMouseStates.CanSabotageBuilding:
 				{
+          if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+           CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 
-					CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
-
-					// Change the Monkey FSM
-					cMonkeyScript.PerformAction(whatIClicked, MouseState);
+           cMonkeyScript.PerformAction(whatIClicked, MouseState);
+         }
+         else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+           // Get the basic info on the unit
+           CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+           selectedDrone.Attack(whatIClicked);
+         }
 				}
 				break;
 
