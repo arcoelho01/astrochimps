@@ -47,15 +47,8 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D DronePatrulhaTexture;
 	
 	public float NivelOxigenioFloat = 0.5f;
-	private Texture2D SlotPredio1;
-	private Texture2D SlotPredio2;
-	private Texture2D SlotPredio3;
-	private Texture2D SlotPredio4;
-	private Texture2D SlotPredio5;
-	private Texture2D SlotPredio6;
-	private Texture2D SlotPredio7;
-	private Texture2D SlotPredio8;
-	private Texture2D SlotPredio9;
+	private int[] SlotPredios = {0,0,0,0,0,0,0,0,0,0};
+
 	
 	public Texture2D ComandoOxTexture;
 	public Texture2D LabOxTexture;
@@ -65,10 +58,15 @@ public class GUIControl : MonoBehaviour {
 	
 	private int nextSlotPosition = 0;
 	
+	private bool callUpdate = false;
+	
 	
 	public void nextSlot(int predio){
 		nextSlotPosition++;
 		setSlot(nextSlotPosition,  predio);	
+		
+		Debug.Log("NEXT SLOT CHAMADO");
+
 	}
 	// DEFINE - tem que fazer
 	// Centro de Comando - 1
@@ -78,43 +76,36 @@ public class GUIControl : MonoBehaviour {
 	// Fabricao - 5
 	public void setSlot(int slotNumber, int predio)
 	{
-		Texture2D tempPredio = null;
+		Debug.LogError("Chamou o set slot com slotnumber " + slotNumber + " e predio " + predio);
+		SlotPredios[slotNumber] = predio;
+	
 		
-		if (predio == 1)
-			tempPredio =ComandoOxTexture;
-		else if(predio == 2)
-			tempPredio = LabOxTexture;
-		else if(predio == 3)
-			tempPredio = SegurancaOxTexture;
-		else if(predio == 4)
-			tempPredio = FabricaOxTexture;
-		else if(predio == 5)
-			tempPredio = FabricaOxTexture;
 		
-		if (slotNumber == 1)
-			SlotPredio1 = tempPredio;
-		if (slotNumber == 2)
-			SlotPredio2 = tempPredio;
-		if (slotNumber == 3)
-			SlotPredio3 = tempPredio;
-		if (slotNumber == 4)
-			SlotPredio4 = tempPredio;
-		if (slotNumber == 5)
-			SlotPredio5 = tempPredio;
-		if (slotNumber == 6)
-			SlotPredio6 = tempPredio;
-		if (slotNumber == 7)
-			SlotPredio7 = tempPredio;
-		if (slotNumber == 8)
-			SlotPredio8 = tempPredio;
-		if (slotNumber == 9)
-			SlotPredio9 = tempPredio;
-
+	}
+	
+	private void drawSlots(){
+		int predio = 0;
+		int slot = 0;
+		while(predio != null && slot != 9){
+			slot++;
+			predio = SlotPredios[slot];
+			if (predio != null){
+				if (predio == 1)
+					GUI.Label (new Rect (527 + 33*slot,16,ComandoOxTexture.width,ComandoOxTexture.height), ComandoOxTexture);
+				if (predio == 2)
+					GUI.Label (new Rect (527 + 33*slot,16,LabOxTexture.width,LabOxTexture.height), LabOxTexture);
+				if (predio == 3)
+					GUI.Label (new Rect (527 + 33*slot,16,SegurancaOxTexture.width,SegurancaOxTexture.height), SegurancaOxTexture);
+				if (predio == 4)
+					GUI.Label (new Rect (527+ 33*slot,16,FazendaOxTexture.width,FazendaOxTexture.height), FazendaOxTexture);
+				if (predio == 5)
+					GUI.Label (new Rect (527 + 33*slot,16,FabricaOxTexture.width,FabricaOxTexture.height), FabricaOxTexture);
+			}
+		}
 	}
 	
 	
 	//FALTA FAZER OS SLOTS DOS PREDIOS
-
 	
 	
 	void OnGUI () {
@@ -122,10 +113,6 @@ public class GUIControl : MonoBehaviour {
 		int boxY = 642;
 		int boxYDistance = 172;
 		int box5x = 826;
-		
-		
-		setSlot(1,1);
-		nextSlotPosition++;
 		
 		
 		GUI.Label (new Rect (8,4,BoxMapaTexture.width,BoxMapaTexture.height), BoxMapaTexture);
@@ -145,10 +132,10 @@ public class GUIControl : MonoBehaviour {
 			
 		GUI.Label (new Rect (550,10,ReguaOxigenioTexture.width,ReguaOxigenioTexture.height), ReguaOxigenioTexture);
 		
-		GUI.Label (new Rect (558,10,ComandoOxTexture.width,ComandoOxTexture.height), SlotPredio1);
-		GUI.Label (new Rect (587,16,ComandoOxTexture.width,ComandoOxTexture.height), SlotPredio2);
-		GUI.Label (new Rect (624,23,ComandoOxTexture.width,ComandoOxTexture.height), SlotPredio3);
 		
+		drawSlots();
+			
+			
 		GUI.Label (new Rect (box1x,boxY,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
 		GUI.Label (new Rect (box1x + boxYDistance, boxY,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
 		GUI.Label (new Rect (box1x + boxYDistance * 2 ,boxY,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
@@ -197,20 +184,17 @@ public class GUIControl : MonoBehaviour {
 		//GUI.
 		
 		
+		
 }
 	
 	// Use this for initialization
 	void Start () {
-	
+		setSlot(1,1);
+		nextSlotPosition++;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }
-
-
-
-
-

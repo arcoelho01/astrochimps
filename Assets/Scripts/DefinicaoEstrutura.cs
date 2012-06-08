@@ -87,7 +87,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		else
 			percentualProgresso = (progressoAtual * 100)/tempoTotal;
 		
-		Debug.Log("("+tempoTotal+" * 100)/"+progressoAtual+" = "+percentualProgresso+"||||"+tempoAtualConstrucao);
+		//Debug.Log("("+tempoTotal+" * 100)/"+progressoAtual+" = "+percentualProgresso+"||||"+tempoAtualConstrucao);
 		return percentualProgresso;
 	}
 	
