@@ -189,6 +189,16 @@ public class CBaseEntity : MonoBehaviour {
 		this.transform.parent = captureSpot;
 		this.transform.rotation = capturer.transform.rotation;
 
+		// Check if the object have a rigidbody attached
+		if(this.rigidbody) {
+
+			if(this.rigidbody.useGravity) {
+
+				// Turn off the gravity for this object
+				this.rigidbody.useGravity = false;
+			}
+		}
+
 		if(MainScript.Script.prefabForceField && !captureForceField) {
 
 			// TODO: add some visual aid to help the player to see that stuff floating around is actually something
@@ -223,10 +233,20 @@ public class CBaseEntity : MonoBehaviour {
 		this.transform.parent = capturedFormerParent;
 
 		// FIXME: find a better way to put the captured object back to the ground
-		Vector3 putMeBackInTheGround = new Vector3(transform.position.x, capturedFormerPosition.y, 
-				transform.position.z);
+		//Vector3 putMeBackInTheGround = new Vector3(transform.position.x, capturedFormerPosition.y, 
+		//		transform.position.z);
 		
 		//transform.position = putMeBackInTheGround;
+		
+		// Check if the object have a rigidbody attached
+		if(this.rigidbody) {
+
+			if(!this.rigidbody.useGravity) {
+
+				// Turn off the gravity for this object
+				this.rigidbody.useGravity = true;
+			}
+		}
 
 		isCaptured = false;
 
