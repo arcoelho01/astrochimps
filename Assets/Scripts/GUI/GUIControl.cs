@@ -125,6 +125,10 @@ public class GUIControl : MonoBehaviour {
 		
 		
 		GUI.Label (new Rect (8,4,BoxMapaTexture.width,BoxMapaTexture.height), BoxMapaTexture);
+		GUI.Label (new Rect (150,10,RadarTextureON.width*3,RadarTextureON.height*3), RadarTextureON);
+		
+		GUI.Label (new Rect (950,10,MenuTextureON.width *3,MenuTextureON.height*3), MenuTextureON);
+		
 		
 		GUI.Label (new Rect (210,5,BoxMetalTexture.width,BoxMetalTexture.height), BoxMetalTexture);
 		GUI.Label (new Rect (380,5,BoxOxigenioTexture.width,BoxOxigenioTexture.height), BoxOxigenioTexture);
