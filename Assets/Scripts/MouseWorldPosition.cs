@@ -27,7 +27,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			CanSabotageDrone,
 			TargetingForRecycle,	// Engineer vs disabled drone
 			TargetingForBrawl,	// Astronaut vs functional drone
-			TargetingForReprogram	// Saboteus vs disabled drone
+			TargetingForReprogram	// Saboteur vs disabled drone
 	};
 
 	// Mouse cursor
@@ -401,8 +401,104 @@ public class MouseWorldPosition : MonoBehaviour {
 								}
 							}
 						} // END IF - Monkey selected - Targeting an enemy building
+					} // END IF - Monkey selected
+					else if(selectedObject.gameObject.tag == "Drone") {
 
-					}
+						// GDD:		* hunter vs saboteur: attack (identical to the astronaut's attack)
+						//				* saboteur vs patrol or hunter: sabotage
+						//				* saboteur vs saboteur: reprogram
+						//				saboteur vs building: sabotage
+
+						CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+
+						if(!selectedDrone) {
+
+							// DEBUG
+							Debug.LogError("Could not find CDrone component in " + selectedObject.transform);
+						}
+
+						// Are we targeting another drone (an enemy one, that is)
+						if(whatIAmPointing.gameObject.tag == "Drone") {
+
+							bool isThePointedDroneStunned = false;
+							// Is this drone stunned?
+							CDrone pointedDrone = whatIAmPointing.gameObject.GetComponent<CDrone>();
+							if(!pointedDrone) {
+
+								// DEBUG
+								Debug.LogError("Could not find CDrone component in " + whatIAmPointing);
+							}
+
+							isThePointedDroneStunned = pointedDrone.isStunned();
+
+							switch(pointedDrone.droneType) {
+
+								case CDrone.eDroneType.Patrol:
+									{
+										// Saboteur x Patrol
+										if(selectedDrone.droneType == CDrone.eDroneType.Saboteur && !isThePointedDroneStunned) {
+										
+											cursorCurrent = cursorSabotageEnable;
+											MouseState = eMouseStates.CanSabotageDrone;
+										}
+									}
+									break;
+
+								case CDrone.eDroneType.Saboteur:
+									{
+										if(selectedDrone.droneType == CDrone.eDroneType.Saboteur && isThePointedDroneStunned) {
+										
+											// Saboteur x Saboteur (stunned)
+											cursorCurrent = cursorReprogramEnable;
+											MouseState = eMouseStates.TargetingForReprogram;
+										}
+										else if(selectedDrone.droneType == CDrone.eDroneType.Hunter && !isThePointedDroneStunned) {
+										
+											// Hunter vs Saboteur
+											cursorCurrent = cursorAttack;
+											MouseState = eMouseStates.TargetingForBrawl;
+										}
+									}
+									break;
+
+								case CDrone.eDroneType.Hunter:
+									{
+										// Saboteur x Hunter
+										if(selectedDrone.droneType == CDrone.eDroneType.Saboteur && !isThePointedDroneStunned) {
+										
+											cursorCurrent = cursorSabotageEnable;
+											MouseState = eMouseStates.CanSabotageDrone;
+										}
+									}
+									break;
+									
+								default:
+									break;
+							}
+
+
+						} // END IF - Drone selected - targeting a drone
+						else if(whatIAmPointing.gameObject.tag == "Building") {
+
+							// Saboteur drones x building
+							if(selectedDrone.droneType == CDrone.eDroneType.Saboteur) {
+
+								CBuilding pointedBuilding = whatIAmPointing.gameObject.GetComponent<CBuilding>();
+
+								// FIXME: Slots don't have CBuilding, so the mouseOver crash here
+								if(!pointedBuilding)
+									return;
+
+								// We cannot sabotage a already sabotaged building
+								if(pointedBuilding.sabotado)
+									return;
+
+								cursorCurrent = cursorSabotageEnable;
+								MouseState = eMouseStates.CanSabotageBuilding;
+							}
+						} // END IF - Drone selected - targeting a building
+					} //	END IF - Drone selected
+
 
 					return;
 				}
@@ -714,6 +810,12 @@ public class MouseWorldPosition : MonoBehaviour {
 
 						cMonkeyScript.PerformAction(whatIClicked, MouseState);
 					}
+					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+						// Get the basic info on the unit
+						CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+						// TODO: Fernando will check if this is right
+						selectedDrone.Attack(whatIClicked);
+					}
 				}
 				break;
 
@@ -767,16 +869,31 @@ public class MouseWorldPosition : MonoBehaviour {
 			// Saboteur sabotaging a building
 			case eMouseStates.CanSabotageBuilding:
 				{
-          if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
-           CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
+					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+						CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 
-           cMonkeyScript.PerformAction(whatIClicked, MouseState);
-         }
-         else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
-           // Get the basic info on the unit
-           CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
-           selectedDrone.Attack(whatIClicked);
-         }
+						cMonkeyScript.PerformAction(whatIClicked, MouseState);
+					}
+					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+						// Get the basic info on the unit
+						CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+						selectedDrone.Attack(whatIClicked);
+					}
+				}
+				break;
+
+			// Saboteur vs drone
+			case eMouseStates.CanSabotageDrone:
+				{
+					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
+
+						// TODO: add some code here
+					}
+					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
+						// Get the basic info on the unit
+						CDrone selectedDrone = selectedObject.gameObject.GetComponent<CDrone>();
+						selectedDrone.Attack(whatIClicked);
+					}
 				}
 				break;
 
