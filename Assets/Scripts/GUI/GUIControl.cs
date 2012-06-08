@@ -13,6 +13,11 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D ReguaOxigenioTexture;
 	public Texture2D NivelOxigenioTexture;
 	
+	public Texture2D RadarTextureON;
+	public Texture2D RadarTextureOFF;
+	
+	public Texture2D MenuTextureON;
+	public Texture2D MenuTextureOFF;
 	
 	//Macaco 1 - Astronauta
 	public Texture2D AtaqueTextureON;
