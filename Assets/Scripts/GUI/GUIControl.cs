@@ -76,7 +76,7 @@ public class GUIControl : MonoBehaviour {
 	// Fabricao - 5
 	public void setSlot(int slotNumber, int predio)
 	{
-		Debug.LogError("Chamou o set slot com slotnumber " + slotNumber + " e predio " + predio);
+		//Debug.LogError("Chamou o set slot com slotnumber " + slotNumber + " e predio " + predio);
 		SlotPredios[slotNumber] = predio;
 	
 		
@@ -143,7 +143,7 @@ public class GUIControl : MonoBehaviour {
 		GUI.Label (new Rect (box5x,boxY,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
 		
 		
-		GUI.Label (new Rect (box1x +15,boxY +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
+		GUI.Label (new Rect (box1x +15, boxY +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
 		GUI.Label (new Rect (box1x +15 + boxYDistance ,boxY +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
 		GUI.Label (new Rect (box1x +15 + boxYDistance *2,boxY +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
 		GUI.Label (new Rect (box1x +15 + boxYDistance *3 ,boxY +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
@@ -180,9 +180,6 @@ public class GUIControl : MonoBehaviour {
 		GUI.Label (new Rect (box5x + 18 , boxY + 71, DroneCacadorTexture.width,DroneCacadorTexture.height), DroneCacadorTexture);
 		GUI.Label (new Rect (box5x + 18 +45, boxY + 71, DroneSabotadorTexture.width,DroneSabotadorTexture.height), DroneSabotadorTexture);
 		GUI.Label (new Rect (box5x + 18 +45+45, boxY + 71, DronePatrulhaTexture.width,DronePatrulhaTexture.height), DronePatrulhaTexture);
-		
-		//GUI.
-		
 		
 		
 }
