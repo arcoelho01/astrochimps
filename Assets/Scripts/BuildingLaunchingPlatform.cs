@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -13,6 +14,9 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 	// Hold all the parts already brought
 	List<Transform> ltPartsInThePlatform;
+
+	// Hold the transforms for all the parts from the complete rocke
+	List<Transform> ltPartsOnTheRocket;
 
 	// PUBLIC
 	public AudioClip sfxPartAdded;
@@ -31,16 +35,51 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 		// Initializes the parts list
 		ltPartsInThePlatform = new List<Transform>();
+
 	}
 
 	// Use this for initialization
 	void Start () {
-	
+
+		ltPartsOnTheRocket = new List<Transform>();
+		// Get the rocket object
+		GetRocketObject();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	/// <summary>
+	/// Gets the rocket object from the hierachy.
+	/// This object have several sub-objects, one for each rocket part
+	/// </summary>
+	void GetRocketObject() {
+
+		String[] partsEnumNames = Enum.GetNames(typeof(CRocketPart.eRocketPartType));
+
+		foreach(String partName in partsEnumNames) {
+
+			String childNameToFind = "Rocket/Mesh_" + partName;
+			Transform childPart = this.transform.Find(childNameToFind);
+			
+			if(childPart) {
+
+				ltPartsOnTheRocket.Add(childPart);
+
+				// DEBUG
+				Debug.Log("Part added to the rocket: " + childPart.transform);
+			}
+
+			// TODO: now that we have all the parts in the rocket, we have to decide what to do when the player
+			// bring it to the platform:
+			// 1 - start with all deactivated and activate the part brought by the player?
+			// 2 - start all with a translucent material and then apply the correct material?
+			// 3 - same as 1, but activate/deactivate the renderer of the object?
+
+		}
+
 	}
 	
 	/// <summary>

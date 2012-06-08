@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 
 /// <summary>
@@ -14,13 +15,21 @@ public class CRocketPart : CBaseEntity {
 	public eRocketPartType rocketPartType;
 	// This part was already revealed? If it was, everyone can see it
 	public bool isRevealed; 
+	public int numberOfDefinedRocketParts;
+
+	public static CRocketPart Script;
 
 	//
 	void Awake() {
 
+		Script = this;
+
 		isRevealed = false;
 		GetSweetSpotAndMeshObject();
 
+		// Calculate the number of rocket parts from the size of the enum
+		String[] tempEnum = Enum.GetNames(typeof(eRocketPartType));
+		numberOfDefinedRocketParts = tempEnum.Length;
 	}
 
 	// Use this for initialization
