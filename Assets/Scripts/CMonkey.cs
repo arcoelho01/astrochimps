@@ -71,6 +71,10 @@ public class CMonkey : CBaseEntity {
 
 		// Load the icon for this unit
 		LoadMinimapIcon();
+
+		// Get the capture spot
+		if(monkeyClass == eMonkeyType.Cientist)
+			captureSpot = GetCaptureSpot();
 	}
 
 	/// <summary>
@@ -466,7 +470,7 @@ public class CMonkey : CBaseEntity {
 						Debug.LogError("Cannot find component CBaseEntity for this object: " + transTarget.name);
 					}
 
-					capturedEntity.CapturedBy(this.transform);
+					capturedEntity.CapturedBy(this.transform, this.captureSpot);
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;

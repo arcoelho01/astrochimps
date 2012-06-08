@@ -49,6 +49,8 @@ public class CBaseEntity : MonoBehaviour {
 	
 	protected Transform meshObject = null;
 	protected Vector3 sweetSpot;
+	// The object to whom captured objects will be parented, if applicable
+	protected Transform captureSpot;
 
 	// Visual aid to show that object was captured
 	Transform captureForceField;
@@ -169,7 +171,8 @@ public class CBaseEntity : MonoBehaviour {
 	/// Somebody captured this entity! 
 	/// </summary>
 	/// <param name="capturer"> Transform for who is capturing this object </param>
-	public virtual void CapturedBy(Transform capturer) {
+	/// <param name="captureSpot"> Transform of the capture spot (inside the hierarchy of the capturer) </param>
+	public virtual void CapturedBy(Transform capturer, Transform captureSpot) {
 
 		if(isCaptured)
 			return;
@@ -179,12 +182,12 @@ public class CBaseEntity : MonoBehaviour {
 		capturedFormerParent = this.transform.parent;
 		capturedFormerPosition = transform.position;
 
-		// Move it as child of the capturer. This way, it will move together
-		this.transform.rotation = capturer.transform.rotation;
-		this.transform.parent = capturer.transform;
+		Vector3 newPosition = new Vector3(0, 6, 0);
 
-		Vector3 newPosition = new Vector3(0, 6, -6);
-		transform.position = capturer.transform.position + newPosition;
+		// Move it as child of the capturer. This way they will move together
+		this.transform.position = captureSpot.transform.position;
+		this.transform.parent = captureSpot;
+		this.transform.rotation = capturer.transform.rotation;
 
 		if(MainScript.Script.prefabForceField && !captureForceField) {
 
@@ -300,6 +303,17 @@ public class CBaseEntity : MonoBehaviour {
 		}
 		
 		sweetSpot = GetSweetSpotPosition();
+	}
+
+	/// <summary>
+	/// Get the Capture Spot object from the hierarchy. Useful only for the cientist monkey and the hunter drones
+	/// </summary>
+	/// <returns> The transform of the Capture Spot, or null if not found </returns>
+	protected Transform GetCaptureSpot() {
+
+		Transform captureSpotObj = transform.Find("CaptureSpot");
+
+		return captureSpotObj;
 	}
 }
 
