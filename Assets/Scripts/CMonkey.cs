@@ -72,6 +72,9 @@ public class CMonkey : CBaseEntity {
 		// Load the icon for this unit
 		LoadMinimapIcon();
 
+		// Starts the object variables, like the sweet spot and the main mesh object
+		GetSweetSpotAndMeshObject();
+
 		// Get the capture spot
 		if(monkeyClass == eMonkeyType.Cientist)
 			captureSpot = GetCaptureSpot();
@@ -126,6 +129,9 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_WALKING:
+
+				// DEBUG
+				Debug.Log("Entering STATE_WALKING");
 				if(sfxAck) {
 
 					AudioSource.PlayClipAtPoint(sfxAck, transform.position);
@@ -133,7 +139,13 @@ public class CMonkey : CBaseEntity {
 				AIScript.ClickedTargetPosition(walkTo);
 				// Clear the target
 				transTarget = null;
-			
+
+				// Plays the animation for the walk cycle
+				if(meshObject) {
+
+					meshObject.animation.Play("Walk");
+				}
+
 				break;
 
 			case FSMState.STATE_STUNNED:
@@ -268,7 +280,18 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_WALKING:
-				AIScript.Stop();
+				// DEBUG
+				Debug.Log("Leaving STATE_WALKING");
+				// FIXME: the line below is causing the game to lock. This is because we getting in here for an event
+				// when the AI stops, so it make no sense to call Stop() again.
+				// But when we get here by other ways, like walking and then issuing an attack command?
+				//AIScript.Stop();
+				
+				// Stops the walk cycle
+				if(meshObject) {
+
+					meshObject.animation.Stop("Walk");
+				}
 				break;
 
 			case FSMState.STATE_STUNNED:
@@ -569,6 +592,39 @@ public class CMonkey : CBaseEntity {
 			default:
 				break;
 		}
+	}
+
+	/*
+	 * ===========================================================================================================
+	 * EVENTS STUFF
+	 * ===========================================================================================================
+	 */
+	/// <summary>
+	/// What to do when this object is enabled
+	/// </summary>
+	void OnEnable() {
+
+		AstarAIFollow.onAIMovingChange += onAstarMovingChange;
+	}
+
+	/// <summary>
+	/// What to do when this object is disabled
+	/// </summary>
+	void OnDisable() {
+
+		AstarAIFollow.onAIMovingChange -= onAstarMovingChange;
+	}
+
+	void onAstarMovingChange(bool isMoving) {
+
+		// AI gets to the end of the path and we were walking
+		if(!isMoving && GetCurrentState() == FSMState.STATE_WALKING) {
+
+			// Change the current state to IDLE then
+			EnterNewState(FSMState.STATE_IDLE);
+			Debug.LogWarning("Should be changing FSM state");
+		}
+
 	}
 
 	/*

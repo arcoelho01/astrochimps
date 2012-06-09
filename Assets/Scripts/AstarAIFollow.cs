@@ -10,6 +10,11 @@ using Pathfinding;
 [RequireComponent (typeof(Seeker))]
 [RequireComponent (typeof(CharacterController))]
 public class AstarAIFollow : MonoBehaviour {
+
+	// Ok, trying to implement an event system here. The idea is when the AI starts moving or stop an event is 
+	// fired
+	public delegate void AIMovingHandler(bool isMoving);
+	public static event AIMovingHandler onAIMovingChange;
 	
 	/** Indicates if a new target position was selected */
 	bool newTargetClicked = false;
@@ -121,6 +126,11 @@ public class AstarAIFollow : MonoBehaviour {
 	public void Stop () {
 		canMove = false;
 		canSearch = false;
+
+		// AI moving stoped. Calling an event.
+		if(onAIMovingChange != null)
+			onAIMovingChange(false);
+
 	}
 	
 	/** Resumes walking and path searching the AI.
@@ -131,6 +141,9 @@ public class AstarAIFollow : MonoBehaviour {
 	public void Resume () {
 		canMove = true;
 		canSearch = true;
+		// AI moving resumed. Calling an event.
+		if(onAIMovingChange != null)
+			onAIMovingChange(true);
 	}
 	
 	/** Recalculates the path to #target.
@@ -177,9 +190,10 @@ public class AstarAIFollow : MonoBehaviour {
 	public virtual void ReachedEndOfPath () {
 		//The AI has reached the end of the path
 		// DEBUG
-		//Debug.Log("Fim do caminho");
+		Debug.Log("Fim do caminho");
 
 		Stop();
+		// TODO: the AI must inform everyone that uses it that the walking is over
 	}
 	
 	/** Update is called once per frame */
