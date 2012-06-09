@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GUIControl : MonoBehaviour {
 	
+	CPlayer playerScript;
+	
 	public Texture2D BoxMacacoTexture;
 	public Texture2D BoxMapaTexture;
 	
@@ -113,6 +115,7 @@ public class GUIControl : MonoBehaviour {
 		int boxY = 642;
 		int boxYDistance = 172;
 		int box5x = 826;
+		NivelOxigenioFloat = playerScript.oxygenLevel / 500;
 		
 		
 		GUI.Label (new Rect (8,4,BoxMapaTexture.width,BoxMapaTexture.height), BoxMapaTexture);
@@ -188,6 +191,8 @@ public class GUIControl : MonoBehaviour {
 	void Start () {
 		setSlot(1,1);
 		nextSlotPosition++;
+		
+		playerScript = GameObject.Find("Player").GetComponent<CPlayer>();
 	}
 	
 	// Update is called once per frame
