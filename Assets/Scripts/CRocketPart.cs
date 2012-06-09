@@ -24,7 +24,8 @@ public class CRocketPart : CBaseEntity {
 
 		Script = this;
 
-		isRevealed = false;
+		//isRevealed = false;
+		isRevealed = true;
 		GetSweetSpotAndMeshObject();
 
 		// Calculate the number of rocket parts from the size of the enum
