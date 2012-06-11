@@ -105,7 +105,7 @@ public class CDrone : CBaseEntity {
 	/// Returns the FSM current state
 	/// </summary>
 	/// <returns> The enum corresponding to the current FSM state </returns>
-	FSMState GetCurrentState() {
+	public FSMState GetCurrentState() {
 
 		return eFSMCurrentState;
 	}

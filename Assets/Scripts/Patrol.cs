@@ -50,8 +50,6 @@ public class Patrol : MonoBehaviour {
   patrolSet = false;
   patrolPointsValid = false;
   scannedColliders = new Collider[0];
-  patrolTarget = new Vector3[4];
-  patrolMarkers = new GameObject[4];
 
   }
 
@@ -173,36 +171,94 @@ void Alerta () {
     GameObject.Destroy(existingAlert);
     }
   }
-		
-	
-	public void SquarePatrol () {
-		
-		//Debug.Log("Set patrol:" + patrolTarget);
-		patrolSet = false;
-		setNewPatrol = true;
-    patrolPointsValid = true;
-		
-		patrolTarget[0] = new Vector3(20.0f,0.0f,20.0f); patrolTarget[0] += MouseWorldPosition.targetPosition;
-		patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f); patrolTarget[1] += MouseWorldPosition.targetPosition;
-		patrolTarget[2] = new Vector3(-20.0f,0.0f,-20.0f); patrolTarget[2] += MouseWorldPosition.targetPosition;
-		patrolTarget[3] = new Vector3(-20.0f,0.0f,20.0f); patrolTarget[3] += MouseWorldPosition.targetPosition;
-		
-		for(int x = 0; x < patrolTarget.Length; x++){
-			patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
-      patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
-		}
-		//cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[0]);
-		//patrolIndex = 0;
-		
-	}
-	
-	void PatrolSet () {
-		
 
-		patrolTarget[0] = new Vector3(20.0f,0.0f,20.0f) + MouseWorldPosition.mouseHitPointNow;
-		patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f) + MouseWorldPosition.mouseHitPointNow;
-		patrolTarget[2] = new Vector3(-20.0f,0.0f,-20.0f) + MouseWorldPosition.mouseHitPointNow;
-		patrolTarget[3] = new Vector3(-20.0f,0.0f,20.0f) + MouseWorldPosition.mouseHitPointNow;
+  public void ChoicePatrol(int x){
+
+  patrolTarget = new Vector3[x];
+  patrolMarkers = new GameObject[x];
+
+    if(x == 4)
+      SquarePatrol();
+    else if (x == 3)
+           TrianglePatrol();
+         else LinePatrol();
+
+  }
+
+  private void LinePatrol() {
+
+   //Debug.Log("Set patrol:" + patrolTarget);
+   patrolSet = false;
+   setNewPatrol = true;
+   patrolPointsValid = true;
+
+   patrolTarget[0] = new Vector3(20.0f,0.0f,0.0f); patrolTarget[0] += MouseWorldPosition.targetPosition;
+   patrolTarget[1] = new Vector3(-20.0f,0.0f,0.0f); patrolTarget[1] += MouseWorldPosition.targetPosition;
+
+   for(int x = 0; x < patrolTarget.Length; x++){
+     patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
+      patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
+   }
+   //cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[0]);
+   //patrolIndex = 0;
+
+ }
+
+  private void TrianglePatrol() {
+
+   //Debug.Log("Set patrol:" + patrolTarget);
+   patrolSet = false;
+   setNewPatrol = true;
+   patrolPointsValid = true;
+
+   patrolTarget[0] = new Vector3(0.0f,0.0f,20.0f); patrolTarget[0] += MouseWorldPosition.targetPosition;
+   patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f); patrolTarget[1] += MouseWorldPosition.targetPosition;
+   patrolTarget[2] = new Vector3(-20.0f,0.0f,-20.0f); patrolTarget[2] += MouseWorldPosition.targetPosition;
+
+   for(int x = 0; x < patrolTarget.Length; x++){
+     patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
+      patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
+   }
+   //cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[0]);
+   //patrolIndex = 0;
+
+ }
+
+  private void SquarePatrol () {
+
+  //Debug.Log("Set patrol:" + patrolTarget);
+  patrolSet = false;
+  setNewPatrol = true;
+  patrolPointsValid = true;
+
+  patrolTarget[0] = new Vector3(20.0f,0.0f,20.0f); patrolTarget[0] += MouseWorldPosition.targetPosition;
+  patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f); patrolTarget[1] += MouseWorldPosition.targetPosition;
+  patrolTarget[2] = new Vector3(-20.0f,0.0f,-20.0f); patrolTarget[2] += MouseWorldPosition.targetPosition;
+  patrolTarget[3] = new Vector3(-20.0f,0.0f,20.0f); patrolTarget[3] += MouseWorldPosition.targetPosition;
+
+
+    for(int x = 0; x < patrolTarget.Length; x++){
+      patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
+      patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
+    }
+
+  }
+
+	void PatrolSet () {
+
+    if(patrolTarget.Length == 4){
+      patrolTarget[0] = new Vector3(20.0f,0.0f,20.0f) + MouseWorldPosition.mouseHitPointNow;
+      patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f) + MouseWorldPosition.mouseHitPointNow;
+      patrolTarget[2] = new Vector3(-20.0f,0.0f,-20.0f) + MouseWorldPosition.mouseHitPointNow;
+      patrolTarget[3] = new Vector3(-20.0f,0.0f,20.0f) + MouseWorldPosition.mouseHitPointNow;
+    }else if(patrolTarget.Length == 3){
+      patrolTarget[0] = new Vector3(0.0f,0.0f,20.0f); patrolTarget[0] += MouseWorldPosition.mouseHitPointNow;
+      patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f); patrolTarget[1] += MouseWorldPosition.mouseHitPointNow;
+      patrolTarget[2] = new Vector3(-20.0f,0.0f,-20.0f); patrolTarget[2] += MouseWorldPosition.mouseHitPointNow;
+    }else if(patrolTarget.Length == 2){
+      patrolTarget[0] = new Vector3(20.0f,0.0f,0.0f); patrolTarget[0] += MouseWorldPosition.mouseHitPointNow;
+      patrolTarget[1] = new Vector3(-20.0f,0.0f,0.0f); patrolTarget[1] += MouseWorldPosition.mouseHitPointNow;
+    }
 		
 		for(int x = 0; x < patrolTarget.Length; x++){
 			patrolMarkers[x].transform.position = patrolTarget[x];	
@@ -216,18 +272,43 @@ void Alerta () {
 		}
 		
 		if(setNewPatrol){
-			cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[0]);
-			patrolIndex = 0;
+      float closestPoint = Mathf.Infinity;
+      int startPoint = 0;
+
+      for(int y = 0; y < patrolTarget.Length; y++){
+        float fDistance = (myTransform.position - patrolTarget[y]).sqrMagnitude;
+
+        if(fDistance < closestPoint){
+          closestPoint = fDistance;
+          startPoint = y;
+        }
+
+      }
+
+			cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[startPoint]);
+			patrolIndex = startPoint;
 			setNewPatrol = false;
 		}
 		
 		if(Vector3.Distance(this.transform.position,patrolTarget[patrolIndex]) < 5.0f){
+    //if(!AstarAIFollow.onAIMovingChange) {
 			patrolIndex += 1;
 			if(patrolIndex >= patrolTarget.Length) patrolIndex = 0;
 			cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
-		}
+    }
+		//}
 	}
+  /*/
+  void onAstarMovingChange(bool isMoving) {
 
+   // AI gets to the end of the path and we were walking
+   if(!isMoving && cdroneScript.GetCurrentState() == FSMState.STATE_WALKING) {
+
+
+   }
+
+ }
+ // */
 
 /*/
 	void OnDrawGizmosSelected () {

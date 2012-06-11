@@ -196,11 +196,18 @@ public class GUIBottomMenu : MonoBehaviour {
 	/// <summary>
 	/// Shows the possible patrol route options.
 	/// </summary>
-	void PatrolDroneMenu() {
+  void PatrolDroneMenu() {
 
-		if(GUI.Button(new Rect(5, posY + 5, 120, 25),"Square")) {
-			Debug.Log("Clicked the button");
-			caller.GetComponent<CDrone>().patrolScript.SquarePatrol();			
-		}
-	}
+    if(GUI.Button(new Rect(5, posY + 5, 120, 25),"Square")) {
+      caller.GetComponent<CDrone>().patrolScript.ChoicePatrol(4);
+    }
+
+    if(GUI.Button(new Rect(130, posY + 5, 120, 25),"Triangle")) {
+      caller.GetComponent<CDrone>().patrolScript.ChoicePatrol(3);
+    }
+
+    if(GUI.Button(new Rect(260, posY + 5, 120, 25),"Line")) {
+      caller.GetComponent<CDrone>().patrolScript.ChoicePatrol(2);
+    }
+  }
 }
