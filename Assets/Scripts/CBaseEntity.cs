@@ -191,8 +191,6 @@ public class CBaseEntity : MonoBehaviour {
 		capturedFormerParent = this.transform.parent;
 		capturedFormerPosition = transform.position;
 
-		Vector3 newPosition = new Vector3(0, 6, 0);
-
 		// Move it as child of the capturer. This way they will move together
 		this.transform.position = captureSpot.transform.position;
 		this.transform.parent = captureSpot;

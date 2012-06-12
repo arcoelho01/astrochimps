@@ -28,6 +28,7 @@
 			STATE_ATTACKING,				// Attacking an enemy drone
 			STATE_PURSUIT,					// Walk until the target is in range, then attack it
 			STATE_WORKING,					// Monkey working on something. Action that requires a certain time
+			STATE_CAPTURED,					// Monkey was captured by an enemy
 			STATE_NULL							// null
 		};
 	
@@ -168,6 +169,11 @@
 				workingTimer = 0.0f;
 				break;
 
+			case FSMState.STATE_CAPTURED:
+				// DEBUG
+				Debug.Log(this.transform + " [Entering STATE_CAPTURED]");
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -249,6 +255,11 @@
 				}
 				break;
 
+			case FSMState.STATE_CAPTURED:
+				// DEBUG
+				Debug.Log(this.transform + " [Executing STATE_CAPTURED]");
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -314,6 +325,11 @@
 				Debug.Log("FSM leaving WORKING state");
 				break;
 
+			case FSMState.STATE_CAPTURED:
+				// DEBUG
+				Debug.Log(this.transform + " [Leaving STATE_CAPTURED]");
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -354,7 +370,8 @@
 		if(sfxAttacked)
 			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
 			
-		EnterNewState(FSMState.STATE_STUNNED);
+	//	EnterNewState(FSMState.STATE_STUNNED);
+		EnterNewState(FSMState.STATE_CAPTURED);
 	}
 	
 	public void WalkTo(Vector3 walkTo){

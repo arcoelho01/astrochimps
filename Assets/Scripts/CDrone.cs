@@ -72,6 +72,8 @@ public class CDrone : CBaseEntity {
 				// Set a flag to make easier for us
 				isThisAnEnemyDrone = true;
 
+				captureSpot = GetCaptureSpot();
+
 				if(!hunterAIScript) {
 
 					// DEBUG
@@ -287,7 +289,8 @@ public class CDrone : CBaseEntity {
 
 								// ... and it is a new target
 								transTarget = tempTarget;
-								Attack(transTarget);
+								// Chase it!
+								EnterNewState(FSMState.STATE_PURSUIT);
 							}
 						}
 					}
@@ -347,7 +350,17 @@ public class CDrone : CBaseEntity {
 
 					// Attack!
 					CBaseEntity targetBaseEntity = transTarget.gameObject.GetComponent<CBaseEntity>();
-					targetBaseEntity.Attacked();
+
+					// Hunter drone vs Monkey
+					if(targetBaseEntity.Type == eObjType.Monkey && this.droneType == eDroneType.Hunter) {
+
+						targetBaseEntity.CapturedBy(this.transform, this.captureSpot);
+						// TODO: stop the walking
+						// TODO: cannot be selected anymore
+						targetBaseEntity.Deselect();
+					}
+					else
+						targetBaseEntity.Attacked();
 
 					// Walk away
 					this.WalkTo(Vector3.zero);
