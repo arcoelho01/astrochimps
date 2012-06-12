@@ -1,35 +1,35 @@
-using UnityEngine;
-using System.Collections;
+	using UnityEngine;
+	using System.Collections;
 
-/// <summary>
-/// Class with monkey's definitions
-/// </summary>
-public class CMonkey : CBaseEntity {
+	/// <summary>
+	/// Class with monkey's definitions
+	/// </summary>
+	public class CMonkey : CBaseEntity {
 
-	// PRIVATE
-	
-	// PUBLIC
-	public enum eMonkeyType { Astronaut, Cientist, Engineer, Saboteur, NONE }; // Monkeys types
-	
-	public AudioClip sfxSelected; // Played when the monkey is selected by the player
-	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
-	public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
-	public AudioClip sfxAttack;	// Played when the monkey is attacking a target
-	private Transform transTarget;   // Target Transform
-	private Vector3 walkTo;
-	public float attackRange;      //  Attack Range to disable drones.
-	
-	public enum FSMState {
-		STATE_IDLE,							// Doing nothing...
-		STATE_SELECTED,					// Selected by the player
-		STATE_INSIDE_BUILDING,	// when the monkey is inside a building, cannot move
-		STATE_WALKING,					// Monkey walking around
-		STATE_STUNNED,					// Monkey stunned by an enemy drone, cannot move
-		STATE_ATTACKING,				// Attacking an enemy drone
-		STATE_PURSUIT,					// Walk until the target is in range, then attack it
-		STATE_WORKING,					// Monkey working on something. Action that requires a certain time
-		STATE_NULL							// null
-	};
+		// PRIVATE
+		
+		// PUBLIC
+		public enum eMonkeyType { Astronaut, Cientist, Engineer, Saboteur, NONE }; // Monkeys types
+		
+		public AudioClip sfxSelected; // Played when the monkey is selected by the player
+		public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
+		public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
+		public AudioClip sfxAttack;	// Played when the monkey is attacking a target
+		private Transform transTarget;   // Target Transform
+		private Vector3 walkTo;
+		public float attackRange;      //  Attack Range to disable drones.
+		
+		public enum FSMState {
+			STATE_IDLE,							// Doing nothing...
+			STATE_SELECTED,					// Selected by the player
+			STATE_INSIDE_BUILDING,	// when the monkey is inside a building, cannot move
+			STATE_WALKING,					// Monkey walking around
+			STATE_STUNNED,					// Monkey stunned by an enemy drone, cannot move
+			STATE_ATTACKING,				// Attacking an enemy drone
+			STATE_PURSUIT,					// Walk until the target is in range, then attack it
+			STATE_WORKING,					// Monkey working on something. Action that requires a certain time
+			STATE_NULL							// null
+		};
 	
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
 	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
@@ -149,7 +149,7 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
-				stunnedTimeCounter = 10000; // Stay stunned for 10 seconds.
+				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
 				AIScript.Stop();
 				break;
 
@@ -297,7 +297,8 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_STUNNED:
-				AIScript.Resume();
+				//AIScript.Resume();
+				Debug.Log(this.transform + " Leaving [STATE_STUNNED]");
 				break;
 
 			case FSMState.STATE_ATTACKING:
@@ -341,10 +342,15 @@ public class CMonkey : CBaseEntity {
 		return base.Select();
 	}
 	
-	
-	// BEING ATTACKED
-	public void Attacked(){
+	/// <summary>
+	/// Play a sound and change the FSM state when this monkey is attacked
+	///</summary>
+	public override void Attacked(){
 		
+		// Do not allow to be attacked when still in attacked state
+		if(GetCurrentState() == FSMState.STATE_STUNNED)
+			return;
+
 		if(sfxAttacked)
 			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
 			

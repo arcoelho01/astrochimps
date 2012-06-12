@@ -42,6 +42,9 @@ public class CDrone : CBaseEntity {
   // Sorry I know this is bad but i'm not smart enough right now to make it better
   public Saboteur saboteurScript;
   public Patrol patrolScript;
+	public DroneHunter hunterAIScript;
+
+	bool isThisAnEnemyDrone = false;
 
 	/*
 	 * ===========================================================================================================
@@ -57,9 +60,31 @@ public class CDrone : CBaseEntity {
     if(this.droneType == eDroneType.Patrol) patrolScript = this.gameObject.GetComponent<Patrol>();
     else if(this.droneType == eDroneType.Saboteur) saboteurScript = this.gameObject.GetComponent<Saboteur>();
 
+		// Check if it is a CPU controlled drone (or opponent drones, for that matter)
+		if(this.gameObject.layer == MainScript.enemyLayer) {
+
+			// Check the type and get the component
+			// AI hunter drone
+			if(this.droneType == eDroneType.Hunter) {
+
+				hunterAIScript = this.gameObject.GetComponent<DroneHunter>();
+
+				// Set a flag to make easier for us
+				isThisAnEnemyDrone = true;
+
+				if(!hunterAIScript) {
+
+					// DEBUG
+					Debug.LogError("DroneHunter component not found in " + this.transform);
+				}
+			}
+		}
+
 		sabotageTime = 2.0f;
-		// Set the default settings for all the buildings
-		Selectable = true; // All drones are selectable
+		// Set the default settings for all the drones
+		if(!isThisAnEnemyDrone)
+			Selectable = true; // All drones are selectable
+
 		Movable = true; // All drones are movable
 		Type = eObjType.Drone;
 		
@@ -70,6 +95,7 @@ public class CDrone : CBaseEntity {
 
 		// Starts the object variables, like the sweet spot and the main mesh object
 		GetSweetSpotAndMeshObject();
+
 	}
 	
 	public void WalkTo(Vector3 walkTo){
@@ -161,6 +187,8 @@ public class CDrone : CBaseEntity {
 				{
 					// DEBUG
 				//	Debug.Log("[EnterNewState: " + GetCurrentState() + "]");
+					if(isThisAnEnemyDrone)
+						transTarget = null;
 				}
 				break;
 			case FSMState.STATE_SELECTED:
@@ -202,12 +230,14 @@ public class CDrone : CBaseEntity {
 				AIScript.Stop();
 				break;
 
-    		case FSMState.STATE_PURSUIT:
+			case FSMState.STATE_PURSUIT:
 				AIScript.ClickedTargetPosition(transTarget.position);
-     			break;
+				break;
 
 			case FSMState.STATE_ATTACKING:
 				// Get the target to attack
+				// DEBUG
+				Debug.Log("Entering STATE_ATTACK: " + this.transform);
 				break;
 
 			case FSMState.STATE_BEING_RECYCLED:
@@ -216,6 +246,7 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_DESTROYED:
+				// TODO: update the drones list before!
 				Destroy(this.gameObject);
 				break;
 
@@ -234,55 +265,73 @@ public class CDrone : CBaseEntity {
 	/// </summary>
   void ExecuteCurrentState() {
 
-  switch(GetCurrentState()) {
+		switch(GetCurrentState()) {
 
-      case FSMState.STATE_IDLE:
-        {
-          // Do the floating animation
-          if(meshObject) {
-            //meshObject.animation.PlayQueued("Walk", QueueMode.CompleteOthers);
-          }
-        }
-        break;
+			case FSMState.STATE_IDLE:
+				{
+					// Do the floating animation
+					if(meshObject) {
+						//meshObject.animation.PlayQueued("Walk", QueueMode.CompleteOthers);
+					}
 
-      case FSMState.STATE_SELECTED:
-        break;
+					// CPU controlled enemy drones
+					if(isThisAnEnemyDrone) {
 
-      case FSMState.STATE_WALKING:
-        break;
+						// Search for targets
+						Transform tempTarget = hunterAIScript.CheckRadiusForAgents();
 
-      case FSMState.STATE_STUNNED:
+						if(tempTarget) {
 
-        stunnedTimeCounter = stunnedTimeCounter - Time.deltaTime;
-        if ( stunnedTimeCounter <=0)
-          EnterNewState(FSMState.STATE_IDLE);
-        break;
+							// There's a target...
+							if(tempTarget != transTarget) {
 
-      case FSMState.STATE_PURSUIT:
-        //Go to target position and start attack
-        if (transTarget == null){
-          Debug.Log("TARGET INVALID");
-          EnterNewState(FSMState.STATE_IDLE);
-          break;
-        }
+								// ... and it is a new target
+								transTarget = tempTarget;
+								Attack(transTarget);
+							}
+						}
+					}
+				}
+				break;
 
-        Vector3 diffPursuit = transTarget.transform.position - gameObject.transform.position;
-        float curDistancePursuit = diffPursuit.sqrMagnitude;
+			case FSMState.STATE_SELECTED:
+				break;
 
-        // FIXME: distance must be at least the radius of the monkey collider plus the radius of the target collider
-        if (curDistancePursuit < 50.0f)
-        {
-          EnterNewState(FSMState.STATE_ATTACKING);
-        }
-        else {
-          // FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
-          // keep walking to the new target position
-          // DEBUG
-          Debug.Log("Distance from target: " + curDistancePursuit);
-        }
-      break;
+			case FSMState.STATE_WALKING:
+				break;
 
-      case FSMState.STATE_ATTACKING:
+			case FSMState.STATE_STUNNED:
+
+				stunnedTimeCounter = stunnedTimeCounter - Time.deltaTime;
+				if ( stunnedTimeCounter <=0)
+					EnterNewState(FSMState.STATE_IDLE);
+				break;
+
+			case FSMState.STATE_PURSUIT:
+				//Go to target position and start attack
+				if (transTarget == null){
+					Debug.Log("TARGET INVALID");
+					EnterNewState(FSMState.STATE_IDLE);
+					break;
+				}
+
+				Vector3 diffPursuit = transTarget.transform.position - gameObject.transform.position;
+				float curDistancePursuit = diffPursuit.sqrMagnitude;
+
+				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target collider
+				if (curDistancePursuit < 50.0f)
+				{
+					EnterNewState(FSMState.STATE_ATTACKING);
+				}
+				else {
+					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
+					// keep walking to the new target position
+					// DEBUG
+					Debug.Log("Distance from target: " + curDistancePursuit);
+				}
+				break;
+
+			case FSMState.STATE_ATTACKING:
 
 				if (transTarget == null){
 					EnterNewState(FSMState.STATE_IDLE);
@@ -291,38 +340,53 @@ public class CDrone : CBaseEntity {
 
 				Vector3 diffAttack = transTarget.transform.position - gameObject.transform.position;       
 				float curDistanceAttack = diffAttack.sqrMagnitude; 
+
+				if(isThisAnEnemyDrone) {
+					// DEBUG
+					Debug.Log("Drone " + this.transform + " attacking " + transTarget.transform);
+
+					// Attack!
+					CBaseEntity targetBaseEntity = transTarget.gameObject.GetComponent<CBaseEntity>();
+					targetBaseEntity.Attacked();
+
+					// Walk away
+					this.WalkTo(Vector3.zero);
+
+					return;
+				}
+
 				// FIXME: This is just a temporary attack on drones, sabotaged and stunned should be 2 different states
-        if (curDistanceAttack < 20.0f)
-        {
+				if (curDistanceAttack < 20.0f)
+				{
 					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 					if (droneTarget != null)
-          {
+					{
 						droneTarget.EnterNewState(CDrone.FSMState.STATE_STUNNED);
 						EnterNewState(FSMState.STATE_IDLE);
-          }
-					
-        }
-
-        if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building)
-        {
-          sabotageTime = sabotageTime - Time.deltaTime;
-          if(sabotageTime < 0)
-          {
-            Debug.LogWarning("Sabotage target: " + transTarget);
-            saboteurScript.SabotageBuilding(transTarget.gameObject);
-					  sabotageTime = 2.0f;
-					  EnterNewState(FSMState.STATE_IDLE);
 					}
-        }
-      break;
+
+				}
+
+				if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building)
+				{
+					sabotageTime = sabotageTime - Time.deltaTime;
+					if(sabotageTime < 0)
+					{
+						Debug.LogWarning("Sabotage target: " + transTarget);
+						saboteurScript.SabotageBuilding(transTarget.gameObject);
+						sabotageTime = 2.0f;
+						EnterNewState(FSMState.STATE_IDLE);
+					}
+				}
+				break;
 
 			case FSMState.STATE_BEING_RECYCLED:
 				fRecycleTimer += Time.deltaTime;
 				if(fRecycleTimer > 5.0f) {
-				
+
 					// Give the metal to the player
 					mainScript.player.AddResourceMetal(5.0f);	// FIXME: each drone must have a resource value
-					
+
 					// And vanishes with the drone
 					EnterNewState(FSMState.STATE_DESTROYED);
 				}

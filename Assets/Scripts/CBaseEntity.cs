@@ -139,6 +139,15 @@ public class CBaseEntity : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// What to do when this entity is attacked
+	/// </summary>
+	public virtual void Attacked() {
+
+		// DEBUG
+		Debug.Log("CBaseEntity Attacked");
+	}
+
+	/// <summary>
 	/// Instantiate the selector object, showing the user what object he selected
 	/// </summary>
 	void CreateSelector() {

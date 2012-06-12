@@ -64,7 +64,7 @@ public class DroneHunter : MonoBehaviour {
 
 			if(enemyInRange) {
 
-				CheckForBestCourseOfAction();
+				CheckRadiusForAgents();
 			}
 			else
 				currentTarget = null;
@@ -99,7 +99,13 @@ public class DroneHunter : MonoBehaviour {
 	/// This method is called when there an enemy in our view. So, we must decide what is best: engage with this 
 	/// enemy, proceed with our current target, if any, etc.
 	/// </summary>
-	void CheckForBestCourseOfAction() {
+	/// <returns> The transform of the selected target, or null if none </returns>
+	public Transform CheckRadiusForAgents() {
+
+		// First, check if there are any enemies in the radius
+		CheckForEnemiesInView(myEnemyLayer, viewRadius);
+		if(!enemyInRange)
+			return null;
 
 		// Clear all candidates lists
 		ltMonkeysInSight.Clear();
@@ -126,26 +132,20 @@ public class DroneHunter : MonoBehaviour {
 		}
 
 		// Ok, all enemies sorted. Now let's decide what to do
-		// Let'sÂ check the monkeys
+		// Let's check the monkeys
 		Transform candidateToBeEngaged = PickClosestTargetFromTheList(ltMonkeysInSight);
-		if(candidateToBeEngaged) {
 
-			// Let's not attack the same target if we already attacking it
-			if(candidateToBeEngaged != currentTarget) {
+		if(candidateToBeEngaged) 
+			return candidateToBeEngaged;
 
-				// Well, the candidate monkey is the new target!!!
-				currentTarget = candidateToBeEngaged;
-			}
-			return;
-		}
-
+		// No monkey in sight, so let's check the drones
 		candidateToBeEngaged = PickClosestTargetFromTheList(ltDronesInSight);
-		// Let's not attack the same target if we already attacking it
-		if(candidateToBeEngaged != currentTarget) {
 
-			// Well, the candidate monkey is the new target!!!
-			currentTarget = candidateToBeEngaged;
-		}
+		if(candidateToBeEngaged)
+			return candidateToBeEngaged;
+
+		// No target?
+		return null;
 	}
 
 	/// <summary>
