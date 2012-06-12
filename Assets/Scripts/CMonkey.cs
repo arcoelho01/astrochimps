@@ -143,7 +143,7 @@ public class CMonkey : CBaseEntity {
 				// Plays the animation for the walk cycle
 				if(meshObject) {
 
-					meshObject.animation.Play("Walk");
+					meshObject.animation.Play("NormalWalk");
 				}
 
 				break;
@@ -290,8 +290,10 @@ public class CMonkey : CBaseEntity {
 				// Stops the walk cycle
 				if(meshObject) {
 
-					meshObject.animation.Stop("Walk");
+					//meshObject.animation.Stop("Walk");
+					meshObject.animation.CrossFade("idle");
 				}
+			
 				break;
 
 			case FSMState.STATE_STUNNED:

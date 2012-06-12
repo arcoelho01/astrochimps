@@ -6,6 +6,8 @@ ModelImporter:
     4300002: Glass
     7400000: Take 001 //// Monkey(ANIM4)
     7400002: Walk //// Monkey(ANIM4)
+    7400004: NormalWalk //// Monkey(ANIM4)
+    7400006: idle //// Monkey(ANIM4)
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -25,6 +27,16 @@ ModelImporter:
       firstFrame: 80
       lastFrame: 160
       wrapMode: 2
+      loop: 0
+    - name: NormalWalk
+      firstFrame: 0
+      lastFrame: 80
+      wrapMode: 2
+      loop: 0
+    - name: idle
+      firstFrame: 80
+      lastFrame: 81
+      wrapMode: 8
       loop: 0
   meshes:
     lODScreenPercentages: []
