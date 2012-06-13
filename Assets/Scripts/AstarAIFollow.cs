@@ -13,8 +13,8 @@ public class AstarAIFollow : MonoBehaviour {
 
 	// Ok, trying to implement an event system here. The idea is when the AI starts moving or stop an event is 
 	// fired
-	public delegate void AIMovingHandler(bool isMoving);
-	public static event AIMovingHandler onAIMovingChange;
+	public delegate void AstarMovingHandler(Transform eventRaiser, bool isMoving);
+	public static event AstarMovingHandler OnMovingChange;
 	
 	/** Indicates if a new target position was selected */
 	bool newTargetClicked = false;
@@ -132,8 +132,8 @@ public class AstarAIFollow : MonoBehaviour {
 		bnIsMoving = false;
 
 		// AI moving stoped. Calling an event.
-		if(onAIMovingChange != null)
-			onAIMovingChange(false);
+		if(OnMovingChange != null)
+			OnMovingChange(this.transform, false);
 
 	}
 	
@@ -148,8 +148,8 @@ public class AstarAIFollow : MonoBehaviour {
 		bnIsMoving = true;
 
 		// AI moving resumed. Calling an event.
-		if(onAIMovingChange != null)
-			onAIMovingChange(true);
+		if(OnMovingChange != null)
+			OnMovingChange(this.transform, true);
 	}
 	
 	/** Recalculates the path to #target.

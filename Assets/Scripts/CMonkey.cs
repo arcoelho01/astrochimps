@@ -663,7 +663,7 @@
 	/// </summary>
 	void OnEnable() {
 
-		AstarAIFollow.onAIMovingChange += onAstarMovingChange;
+		AstarAIFollow.OnMovingChange += OnAStarMovingChange;
 	}
 
 	/// <summary>
@@ -671,10 +671,17 @@
 	/// </summary>
 	void OnDisable() {
 
-		AstarAIFollow.onAIMovingChange -= onAstarMovingChange;
+		AstarAIFollow.OnMovingChange -= OnAStarMovingChange;
 	}
 
-	void onAstarMovingChange(bool isMoving) {
+	/// <summary>
+	///
+	/// </summary>
+	void OnAStarMovingChange(Transform eventRaiser, bool isMoving) {
+
+		// Ignores if the stop event wasn't generate by the monkey itself
+		if(eventRaiser != this.transform)
+			return;
 
 		// AI gets to the end of the path and we were walking
 		if(!isMoving && GetCurrentState() == FSMState.STATE_WALKING) {
