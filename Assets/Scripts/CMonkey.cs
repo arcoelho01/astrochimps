@@ -132,7 +132,7 @@
 			case FSMState.STATE_WALKING:
 
 				// DEBUG
-				Debug.Log("Entering STATE_WALKING");
+				Debug.Log(this.transform + " Entering STATE_WALKING");
 				if(sfxAck) {
 
 					AudioSource.PlayClipAtPoint(sfxAck, transform.position);
@@ -164,7 +164,7 @@
 
 			case FSMState.STATE_WORKING:
 				// DEBUG
-				Debug.Log("FSM entered WORKING state");
+				Debug.Log(this.transform + " FSM entered WORKING state");
 				// Resets the working timer
 				workingTimer = 0.0f;
 				break;
@@ -221,7 +221,7 @@
 			case FSMState.STATE_ATTACKING:
 			
 				// DEBUG
-				Debug.Log("Executing attack");
+				Debug.Log(this.transform + " Executing attack");
 				MonkeyAttack();
 				break;
 
@@ -232,7 +232,7 @@
 					// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
 					if (transTarget == null){
 						// DEBUG
-						Debug.Log("TARGET INVALID");
+						Debug.Log(this.transform + " TARGET INVALID");
 
 						EnterNewState(FSMState.STATE_IDLE);
 						break;
@@ -282,7 +282,7 @@
 			case FSMState.STATE_IDLE:
 				{
 					// DEBUG
-					Debug.Log("[LeaveCurrentState: " + GetCurrentState() + "]");
+					Debug.Log(this.transform + " [LeaveCurrentState: " + GetCurrentState() + "]");
 				}
 				break;
 
@@ -294,7 +294,7 @@
 
 			case FSMState.STATE_WALKING:
 				// DEBUG
-				Debug.Log("Leaving STATE_WALKING");
+				Debug.Log(this.transform + " Leaving STATE_WALKING");
 				// FIXME: the line below is causing the game to lock. This is because we getting in here for an event
 				// when the AI stops, so it make no sense to call Stop() again.
 				// But when we get here by other ways, like walking and then issuing an attack command?
@@ -325,7 +325,7 @@
 
 			case FSMState.STATE_WORKING:
 				// DEBUG
-				Debug.Log("FSM leaving WORKING state");
+				Debug.Log(this.transform + " FSM leaving WORKING state");
 				break;
 
 			case FSMState.STATE_CAPTURED:
@@ -577,7 +577,7 @@
 	void WorkIsDone() {
 
 		// DEBUG
-		Debug.Log("Entering WorkIsDone with mouseState " + mouseState);
+		Debug.Log(this.transform + " Entering WorkIsDone with mouseState " + mouseState);
 		if(!transTarget)
 			Debug.LogError("Target is null! Check");
 
@@ -679,9 +679,12 @@
 		// AI gets to the end of the path and we were walking
 		if(!isMoving && GetCurrentState() == FSMState.STATE_WALKING) {
 
+			// FIXME: once one monkey stopped, all will stop with this call. Must be a way to filter the event
+			// caller
+
 			// Change the current state to IDLE then
 			EnterNewState(FSMState.STATE_IDLE);
-			Debug.LogWarning("Should be changing FSM state");
+			Debug.LogWarning(this.transform + " Stopped moving, changing to idle");
 		}
 
 	}
