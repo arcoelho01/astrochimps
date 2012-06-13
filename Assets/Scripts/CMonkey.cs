@@ -641,7 +641,7 @@
 	}
 
 	/// <summary>
-	///
+	/// When the monkey is released we need to setup a few things before call the ReleaseMe() from CBaseEntity
 	/// </summary>
 	public override void ReleaseMe() {
 
