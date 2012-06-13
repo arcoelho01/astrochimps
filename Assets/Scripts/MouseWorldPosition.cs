@@ -995,6 +995,20 @@ public class MouseWorldPosition : MonoBehaviour {
 					componentRocketPart.PartIsUnrevealed();
 			}
 		}
+
+		if(Input.GetKeyDown(KeyCode.Comma)) {
+
+
+			CDrone HunterDrone = GameObject.Find("/DroneEnemyHunter").GetComponent<CDrone>();
+
+			if(!HunterDrone) {
+
+				// DEBUG
+				Debug.LogError("Drone Hunter not found");
+			}
+			
+			HunterDrone.Attacked();
+		}
 		
 	}
 }

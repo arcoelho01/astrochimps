@@ -42,6 +42,8 @@ public class CBaseEntity : MonoBehaviour {
 
 	Transform capturedFormerParent;
 	Vector3 capturedFormerPosition;
+	protected Transform capturer;
+	protected CBaseEntity capturedEntity;
 
 	// Only a shortcut. When the object has multiple renderes in the hierarchy, we only verify on to know if 
 	// whether is being rendered or not
@@ -188,6 +190,8 @@ public class CBaseEntity : MonoBehaviour {
 
 		isCaptured = true;
 
+		// Keep track of the capturer
+		this.capturer = capturer;
 		capturedFormerParent = this.transform.parent;
 		capturedFormerPosition = transform.position;
 
@@ -238,6 +242,10 @@ public class CBaseEntity : MonoBehaviour {
 	public virtual void ReleaseMe() {
 
 		this.transform.parent = capturedFormerParent;
+
+		// The capturer has lost us
+		this.capturer.gameObject.GetComponent<CBaseEntity>().capturedEntity = null;
+		this.capturer = null;
 
 		// FIXME: find a better way to put the captured object back to the ground
 		//Vector3 putMeBackInTheGround = new Vector3(transform.position.x, capturedFormerPosition.y, 

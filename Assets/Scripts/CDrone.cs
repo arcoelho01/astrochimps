@@ -147,7 +147,7 @@ public class CDrone : CBaseEntity {
 	/// <summary>
 	/// What to do when this drone is attacked?
 	/// </summary>
-	public void Attacked(){
+	public override void Attacked(){
 		
 		Debug.Log("XXXX BEING ATTACKED");
 		
@@ -167,7 +167,6 @@ public class CDrone : CBaseEntity {
 
     this.transTarget = transTarget;
     this.typeTarget = transTarget.gameObject.GetComponent<CBaseEntity>().Type;
-    //EnterNewState(FSMState.STATE_PURSUIT);
     EnterNewState(FSMState.STATE_PURSUIT);
  	}
 
@@ -230,6 +229,18 @@ public class CDrone : CBaseEntity {
 				stunnedTimeCounter = 10; // Stay stunned for 10 seconds.
 
 				AIScript.Stop();
+
+				// If have somebody captured, release it
+				if(capturedEntity != null) {
+
+					if(capturedEntity.Type == eObjType.Monkey) {
+
+						// Cast CBaseEntity to CMonkey (it is actually a CMonkey instance, anyway)
+						CMonkey monkeyEntity = capturedEntity as CMonkey;
+						monkeyEntity.ReleaseMe();
+					}
+				}
+
 				break;
 
 			case FSMState.STATE_PURSUIT:
@@ -238,8 +249,6 @@ public class CDrone : CBaseEntity {
 
 			case FSMState.STATE_ATTACKING:
 				// Get the target to attack
-				// DEBUG
-				Debug.Log("Entering STATE_ATTACK: " + this.transform);
 				break;
 
 			case FSMState.STATE_BEING_RECYCLED:
@@ -329,8 +338,6 @@ public class CDrone : CBaseEntity {
 				else {
 					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
 					// keep walking to the new target position
-					// DEBUG
-					Debug.Log("Distance from target: " + curDistancePursuit);
 				}
 				break;
 
@@ -355,12 +362,8 @@ public class CDrone : CBaseEntity {
 					if(targetBaseEntity.Type == eObjType.Monkey && this.droneType == eDroneType.Hunter) {
 
 						targetBaseEntity.CapturedBy(this.transform, this.captureSpot);
-						// TODO: stop the walking
-						// TODO: cannot be selected anymore
-						targetBaseEntity.Deselect();
+						this.capturedEntity = targetBaseEntity;
 					}
-					else
-						targetBaseEntity.Attacked();
 
 					// Walk away
 					this.WalkTo(Vector3.zero);

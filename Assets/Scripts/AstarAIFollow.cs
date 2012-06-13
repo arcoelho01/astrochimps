@@ -64,6 +64,9 @@ public class AstarAIFollow : MonoBehaviour {
 	
 	/** This is the path the AI is currently following */
 	protected Vector3[] path;
+
+	/** True if the AI is moving, false if not */
+	public bool bnIsMoving = false;
 	
 	/** Use this for initialization */
 	public void Start () {
@@ -126,6 +129,7 @@ public class AstarAIFollow : MonoBehaviour {
 	public void Stop () {
 		canMove = false;
 		canSearch = false;
+		bnIsMoving = false;
 
 		// AI moving stoped. Calling an event.
 		if(onAIMovingChange != null)
@@ -141,6 +145,8 @@ public class AstarAIFollow : MonoBehaviour {
 	public void Resume () {
 		canMove = true;
 		canSearch = true;
+		bnIsMoving = true;
+
 		// AI moving resumed. Calling an event.
 		if(onAIMovingChange != null)
 			onAIMovingChange(true);
@@ -189,9 +195,6 @@ public class AstarAIFollow : MonoBehaviour {
 	 */
 	public virtual void ReachedEndOfPath () {
 		//The AI has reached the end of the path
-		// DEBUG
-		Debug.Log("Fim do caminho");
-
 		Stop();
 		// TODO: the AI must inform everyone that uses it that the walking is over
 	}

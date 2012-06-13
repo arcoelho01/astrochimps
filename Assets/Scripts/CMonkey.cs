@@ -170,8 +170,12 @@
 				break;
 
 			case FSMState.STATE_CAPTURED:
-				// DEBUG
-				Debug.Log(this.transform + " [Entering STATE_CAPTURED]");
+				{
+					// DEBUG
+					Debug.Log(this.transform + " [Entering STATE_CAPTURED]");
+					this.Deselect();
+					this.Selectable = false;
+				}
 				break;
 
 			case FSMState.STATE_NULL:
@@ -256,8 +260,6 @@
 				break;
 
 			case FSMState.STATE_CAPTURED:
-				// DEBUG
-				Debug.Log(this.transform + " [Executing STATE_CAPTURED]");
 				break;
 
 			case FSMState.STATE_NULL:
@@ -296,7 +298,8 @@
 				// FIXME: the line below is causing the game to lock. This is because we getting in here for an event
 				// when the AI stops, so it make no sense to call Stop() again.
 				// But when we get here by other ways, like walking and then issuing an attack command?
-				//AIScript.Stop();
+				if(AIScript.bnIsMoving)
+					AIScript.Stop();
 				
 				// Stops the walk cycle
 				if(meshObject) {
@@ -326,8 +329,13 @@
 				break;
 
 			case FSMState.STATE_CAPTURED:
-				// DEBUG
-				Debug.Log(this.transform + " [Leaving STATE_CAPTURED]");
+				{
+					// DEBUG
+					Debug.Log(this.transform + " [Leaving STATE_CAPTURED]");
+
+					// The monkey can be selected again
+					this.Selectable = true;
+				}
 				break;
 
 			case FSMState.STATE_NULL:
@@ -363,15 +371,6 @@
 	///</summary>
 	public override void Attacked(){
 		
-		// Do not allow to be attacked when still in attacked state
-		if(GetCurrentState() == FSMState.STATE_STUNNED)
-			return;
-
-		if(sfxAttacked)
-			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
-			
-	//	EnterNewState(FSMState.STATE_STUNNED);
-		EnterNewState(FSMState.STATE_CAPTURED);
 	}
 	
 	public void WalkTo(Vector3 walkTo){
@@ -617,6 +616,41 @@
 			default:
 				break;
 		}
+	}
+
+	/// <summary>
+	/// Tells to this monkey that it is being captured by an enemy hunter drone, setting it up (stop walking, 
+	/// deselect the monkey and doesn't allow it to walk anymore until it's released
+	/// </summary>
+	public override void CapturedBy(Transform capturer, Transform captureSpot) {
+
+		if(isCaptured)
+			return;
+
+		// Play a sound, if any
+		if(sfxAttacked)
+			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
+			
+		// Change the FSM State
+		EnterNewState(FSMState.STATE_CAPTURED);
+
+		// Deactivate the Character Controller, so the monkey will move together with the drone
+		myController.enabled = false;
+		
+		base.CapturedBy(capturer, captureSpot);
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public override void ReleaseMe() {
+
+		// Reactivates the Character Controller
+		myController.enabled = true;
+		// Enable selection of this monkey again
+		Selectable = true;
+
+		base.ReleaseMe();
 	}
 
 	/*
