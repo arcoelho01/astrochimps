@@ -1,5 +1,6 @@
 Shader "Projector/Additive" { 
    Properties { 
+		  _Color ("Main Color", Color) = (1, 0.5, 0.5, 1)
       _ShadowTex ("Cookie", 2D) = "" { TexGen ObjectLinear } 
       _FalloffTex ("FallOff", 2D) = "" { TexGen ObjectLinear } 
    } 
@@ -10,7 +11,8 @@ Shader "Projector/Additive" {
          ColorMask RGB 
          Blend One One 
          SetTexture [_ShadowTex] { 
-            combine texture, ONE - texture 
+					  constantColor [_Color]
+            combine texture * constant, ONE - texture 
             Matrix [_Projector] 
          } 
          SetTexture [_FalloffTex] { 
