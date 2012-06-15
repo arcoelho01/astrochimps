@@ -9,9 +9,15 @@ public class Saboteur : MonoBehaviour {
 
   private CDrone cdroneScript;
 
+  public bool amIVisible;
+
+  public float invisibleTimeCounter;
+
   void Awake () {
 
     cdroneScript = this.GetComponent<CDrone>();
+    amIVisible = false;
+    invisibleTimeCounter = 5.0f;
     myTransform = this.transform;
 
 
@@ -30,6 +36,12 @@ public class Saboteur : MonoBehaviour {
 
 	
 	}
+
+  public void PatrolSawMe () {
+
+    amIVisible = true;
+
+  }
 
 
   public void SabotageBuilding (GameObject goTarget) {
