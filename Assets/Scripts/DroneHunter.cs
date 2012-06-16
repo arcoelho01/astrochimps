@@ -180,6 +180,45 @@ public class DroneHunter : MonoBehaviour {
 		return tCloserTarget;
 	}
 
+	/// <summamy>
+	/// Find the nearest prison for the hunter drop the captured monkey
+	/// </summary>
+	/// <returns> The transform of the nearest prison, or null if ain't find any </returns>
+	public Transform GetNearestPrison() {
+
+		Transform tNearestPrison = null;
+
+		// TODO: implement an actual code here :P
+		// HACK!
+		{
+		
+			GameObject tempObject = GameObject.Find("CommandCenterOponent");	
+			if(tempObject)
+				tNearestPrison = tempObject.transform;
+		}
+
+		return tNearestPrison;
+
+	}
+
+	/// <summary>
+	/// Executes the delivery of the captured monkey to the prison building
+	/// </summary>
+	public void DeliverPrisoner(Transform tPrisonBuilding, CBaseEntity entityPrisoner) {
+
+		if(entityPrisoner.Type == CBaseEntity.eObjType.Monkey) {
+
+			// Cast CBaseEntity to CMonkey (it is actually a CMonkey instance, anyway)
+			CMonkey monkeyEntity = entityPrisoner as CMonkey;
+			monkeyEntity.ReleaseMe();
+
+			// ... and immediately the building captures it
+			CBuilding tBuildingClass = tPrisonBuilding.GetComponent<CBuilding>();
+			tBuildingClass.ReceivePrisoner(monkeyEntity);
+		}
+		
+	}
+
 	/*
 	 * ===========================================================================================================
 	 * GIZMOS AND HELPERS

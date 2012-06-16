@@ -28,8 +28,8 @@ public class CBuilding : CBaseEntity {
 
 	public Transform sabotagedParticleSystem;
 	Transform sabotagedPSObj = null;
-	Vector3 v3ControlSpot;
-	Vector3 v3ExitSpot;
+	Transform controlSpot = null;
+	Transform exitSpot = null;
 
 	// ================== MERGE
 
@@ -199,7 +199,7 @@ public class CBuilding : CBaseEntity {
 		//this.Select();//gameObject.GetComponent<CBaseEntity>().Select();
 		
 		// TODO: for now we put the monkey model on top of the building :P
-		monkeyInside.transform.position =	v3ControlSpot;
+		monkeyInside.transform.position =	controlSpot.transform.position;
 		monkeyInside.transform.rotation = Quaternion.identity;
 	}
 
@@ -217,7 +217,7 @@ public class CBuilding : CBaseEntity {
 		if(sfxLoadMonkey)
 			AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
-		monkeyInside.transform.position = v3ExitSpot;
+		monkeyInside.transform.position = exitSpot.transform.position;
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
 		monkeyInside = null;
 	}
@@ -325,6 +325,18 @@ public class CBuilding : CBaseEntity {
 		if(sabotado)
 			return;
 
+		// If this building have a prisoner, release it
+		if(capturedEntity != null) {
+
+			if(capturedEntity.Type == eObjType.Monkey) {
+
+				// Cast CBaseEntity to CMonkey (it is actually a CMonkey instance, anyway)
+				CMonkey monkeyEntity = capturedEntity as CMonkey;
+				monkeyEntity.ReleaseMe();
+			}
+		}
+
+
 		StartCoroutine(TimedSabotageCoroutine(fTimer));
 	}
 
@@ -362,6 +374,18 @@ public class CBuilding : CBaseEntity {
 			// Put it as child
 			sabotagedPSObj.transform.parent = this.transform;
 		}
+
+		// If this building have a prisoner, release it
+		if(capturedEntity != null) {
+
+			if(capturedEntity.Type == eObjType.Monkey) {
+
+				// Cast CBaseEntity to CMonkey (it is actually a CMonkey instance, anyway)
+				CMonkey monkeyEntity = capturedEntity as CMonkey;
+				monkeyEntity.ReleaseMe();
+			}
+		}
+
 	}
 
 	/// <summary>
@@ -390,7 +414,7 @@ public class CBuilding : CBaseEntity {
 			}
 			else {
 			
-				v3ControlSpot = controlRoomSpotObj.transform.position;
+				controlSpot = controlRoomSpotObj;
 			}
 	}
 	
@@ -400,16 +424,16 @@ public class CBuilding : CBaseEntity {
 	/// </summary>
 	void GetExitSpot() {
 
-			GameObject exitSpotObj = GameObject.Find("ExitSpot");
+			Transform exitSpotObj = this.transform.Find("ExitSpot");
 
 			if(!exitSpotObj) {
 
 				// DEBUG
-				Debug.LogError("Object 'ControlSpot' not found for this Command Center");
+				Debug.LogError("Object 'ExitSpot' not found for this Command Center");
 			}
 			else {
 			
-				v3ExitSpot = exitSpotObj.transform.position;
+				exitSpot = exitSpotObj;
 			}
 	}
 
@@ -419,7 +443,24 @@ public class CBuilding : CBaseEntity {
 	/// <returns> A Vector3 with the position of the Exit Spot object </returns>
 	public Vector3 GetExitSpotPosition() {
 
-		return v3ExitSpot;
+		return exitSpot.transform.position;
 	}
+
+	/// <summary>
+	/// Receive a delivered prisoner
+	/// </summary>
+	public void ReceivePrisoner(CMonkey monkeyPrisoner) {
+
+		// FIXME: we're assuming that a command center will be the prison...
+		if(!this.controlSpot) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " can't find the ControlSpot for this building, so I can't transfer the	prisoner");
+		}
+
+		monkeyPrisoner.CapturedBy(this.transform, this.controlSpot);
+		this.capturedEntity = monkeyPrisoner;
+	}
+
 }
 

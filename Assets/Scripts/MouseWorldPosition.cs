@@ -390,7 +390,7 @@ public class MouseWorldPosition : MonoBehaviour {
 								if(!targetBuilding) {
 
 									// DEBUG
-									Debug.Log("Could not find CBuiding component in " + whatIAmPointing);
+									Debug.Log("Could not find CBuilding component in " + whatIAmPointing);
 								}
 
 								if(!targetBuilding.sabotado) {

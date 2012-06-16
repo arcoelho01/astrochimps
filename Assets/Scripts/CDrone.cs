@@ -267,6 +267,23 @@ public class CDrone : CBaseEntity {
 
 					// DEBUG
 					//Debug.Log(this.transform + " entering STATE_PRISONER_MONKEY");
+
+					// Find the nearest prison for the captured monkey
+					transTarget = hunterAIScript.GetNearestPrison();
+			
+					if(transTarget) {
+
+						CBuilding targetBuildingScript = transTarget.GetComponent<CBuilding>();
+
+						if(!targetBuildingScript) {
+
+							// DEBUG
+							Debug.LogError(this.transform + " Could not find CBuilding component.");
+						}
+
+						// Move to the building
+						AIScript.ClickedTargetPosition(targetBuildingScript.GetExitSpotPosition());
+					}
 				}
 				break;
 
@@ -439,6 +456,9 @@ public class CDrone : CBaseEntity {
 
 					// DEBUG
 					//Debug.Log(this.transform + " executing STATE_PRISONER_MONKEY");
+
+					// Check if we have reached the prison already
+					
 				}
 				break;
 
@@ -562,5 +582,43 @@ public class CDrone : CBaseEntity {
 
 		// Change the state of the drone
 		EnterNewState(FSMState.STATE_IDLE);
+	}
+
+	/*
+	 * ===========================================================================================================
+	 * EVENTS STUFF
+	 * ===========================================================================================================
+	 */
+	/// <summary>
+	/// What to do when this object is enabled
+	/// </summary>
+	void OnEnable() {
+
+		AstarAIFollow.OnMovingChange += OnAStarMovingChange;
+	}
+
+	/// <summary>
+	/// What to do when this object is disabled
+	/// </summary>
+	void OnDisable() {
+
+		AstarAIFollow.OnMovingChange -= OnAStarMovingChange;
+	}
+
+	/// <summary>
+	/// This method is called when the Astar reaches the end of the path
+	/// </summary>
+	void OnAStarMovingChange(Transform eventRaiser, bool isMoving) {
+
+		// Ignores if the stop event wasn't generate by the monkey itself
+		if(eventRaiser != this.transform)
+			return;
+
+		// HUNTER DRONE BEHAVIOUR - Prisoner being delivered
+		if(!isMoving && GetCurrentState() == FSMState.STATE_PRISONER_MONKEY) {
+
+			Debug.LogWarning(this.transform + " reached prisoner delivery position " + eventRaiser);
+			hunterAIScript.DeliverPrisoner(transTarget, this.capturedEntity);
+		}
 	}
 }
