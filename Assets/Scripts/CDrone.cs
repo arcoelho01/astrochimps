@@ -19,7 +19,7 @@ public class CDrone : CBaseEntity {
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
 	public Transform transTarget;   // Target Transform
 	public CBaseEntity.eObjType typeTarget; // Target type
-	public float attackRange;      //  Attack Range to disable drones.
+	public float attackRange;      //  Attack Range to disable drones. Suggested values: hunter/2.2
 	private Vector3 walkTo;
 	
 	public enum FSMState {
@@ -31,6 +31,7 @@ public class CDrone : CBaseEntity {
 		STATE_BEING_RECYCLED,			// Being recycled by an enemy
 		STATE_DESTROYED,					// Destroyed (recycled) by an enemy
     STATE_PURSUIT,            // Walk until the target is in range, then attack it // NOT USE FOR NOW
+		STATE_PRISONER_MONKEY,		// Drone have a monkey as prisoner. Must head to the nearest center to leave it
 		STATE_NULL								// null
 	};
 	
@@ -261,6 +262,14 @@ public class CDrone : CBaseEntity {
 				Destroy(this.gameObject);
 				break;
 
+			case FSMState.STATE_PRISONER_MONKEY:
+				{
+
+					// DEBUG
+					//Debug.Log(this.transform + " entering STATE_PRISONER_MONKEY");
+				}
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -320,24 +329,39 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_PURSUIT:
-				//Go to target position and start attack
-				if (transTarget == null){
-					Debug.Log("TARGET INVALID");
-					EnterNewState(FSMState.STATE_IDLE);
-					break;
-				}
-
-				Vector3 diffPursuit = transTarget.transform.position - gameObject.transform.position;
-				float curDistancePursuit = diffPursuit.sqrMagnitude;
-
-				// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target collider
-				if (curDistancePursuit < 50.0f)
 				{
-					EnterNewState(FSMState.STATE_ATTACKING);
-				}
-				else {
-					// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
-					// keep walking to the new target position
+					//Go to target position and start attack
+					if (transTarget == null){
+						Debug.Log("TARGET INVALID");
+						EnterNewState(FSMState.STATE_IDLE);
+						break;
+					}
+					
+					// Is an AI Hunter Drone attacking?
+					if(isThisAnEnemyDrone && this.droneType == eDroneType.Hunter) {
+
+						// Check if the target is in range
+						if(mainScript.CheckIfTargetIsInRange(this.transform, transTarget, this.attackRange)) {
+
+							// Target in range, switching to attack
+							EnterNewState(FSMState.STATE_ATTACKING);
+						}
+
+						return;
+					}
+					
+					Vector3 diffPursuit = transTarget.transform.position - gameObject.transform.position;
+					float curDistancePursuit = diffPursuit.sqrMagnitude;
+
+					// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target collider
+					if (curDistancePursuit < 50.0f)
+					{
+						EnterNewState(FSMState.STATE_ATTACKING);
+					}
+					else {
+						// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
+						// keep walking to the new target position
+					}
 				}
 				break;
 
@@ -348,28 +372,30 @@ public class CDrone : CBaseEntity {
 					break;
 				}
 
-				Vector3 diffAttack = transTarget.transform.position - gameObject.transform.position;       
-				float curDistanceAttack = diffAttack.sqrMagnitude; 
+				// Enemy AI Hunter Drone behaviour
+				if(isThisAnEnemyDrone && this.droneType == eDroneType.Hunter) {
 
-				if(isThisAnEnemyDrone) {
 					// DEBUG
 					Debug.Log("Drone " + this.transform + " attacking " + transTarget.transform);
 
-					// Attack!
 					CBaseEntity targetBaseEntity = transTarget.gameObject.GetComponent<CBaseEntity>();
 
 					// Hunter drone vs Monkey
-					if(targetBaseEntity.Type == eObjType.Monkey && this.droneType == eDroneType.Hunter) {
+					if(targetBaseEntity.Type == CBaseEntity.eObjType.Monkey) {
 
+						// Captures the monkey
 						targetBaseEntity.CapturedBy(this.transform, this.captureSpot);
 						this.capturedEntity = targetBaseEntity;
-					}
 
-					// Walk away
-					this.WalkTo(Vector3.zero);
+						// Change state
+						EnterNewState(FSMState.STATE_PRISONER_MONKEY);
+					}
 
 					return;
 				}
+
+				Vector3 diffAttack = transTarget.transform.position - gameObject.transform.position;       
+				float curDistanceAttack = diffAttack.sqrMagnitude; 
 
 				// FIXME: This is just a temporary attack on drones, sabotaged and stunned should be 2 different states
 				if (curDistanceAttack < 20.0f)
@@ -408,6 +434,14 @@ public class CDrone : CBaseEntity {
 				}
 				break;
 
+			case FSMState.STATE_PRISONER_MONKEY:
+				{
+
+					// DEBUG
+					//Debug.Log(this.transform + " executing STATE_PRISONER_MONKEY");
+				}
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -437,9 +471,6 @@ public class CDrone : CBaseEntity {
 			
 			case FSMState.STATE_WALKING:
 				break;
-			case FSMState.STATE_PURSUIT:
-     			//Go to target position and start attack
-     			break;
 
 			case FSMState.STATE_STUNNED:
 				{
@@ -461,6 +492,21 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_BEING_RECYCLED:
+				break;
+
+			case FSMState.STATE_DESTROYED:
+				break;
+
+			case FSMState.STATE_PURSUIT:
+				//Go to target position and start attack
+				break;
+
+			case FSMState.STATE_PRISONER_MONKEY:
+				{
+
+					// DEBUG
+					//Debug.Log(this.transform + " leaving STATE_PRISONER_MONKEY");
+				}
 				break;
 
 			case FSMState.STATE_NULL:

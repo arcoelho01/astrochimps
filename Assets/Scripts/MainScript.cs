@@ -348,4 +348,35 @@ public class MainScript : MonoBehaviour {
 
 		return rv;
 	}
+
+	/// <summary>
+	/// Check if a target is in the range of this unit, projecting it's position in the 2D floor plane (only uses
+	/// x and z coordinates)
+	/// </summary>
+	/// <param name="tAttacker"> Transform of the attacker </param>
+	/// <param name="tTarget"> Transform of the target </param>
+	/// <param name="fAttackRange"> A float with the range of the attack </param>
+	/// <returns> True if the target is in the specified range, false otherwise </returns>
+	public bool CheckIfTargetIsInRange(Transform tAttacker, Transform tTarget, float fAttackRange) {
+
+		bool rv = false;
+
+		// No target? Get out
+		if(!tTarget)
+			return false;
+
+		// Projects the position in 2D, using only the x and z axis
+		Vector2 v2TargetPosition = new Vector2(tTarget.transform.position.x, tTarget.transform.position.z);
+		Vector2 v2AttackerPosition = new Vector2(tAttacker.transform.position.x, tAttacker.transform.position.z);
+
+		Vector2 v2Diff = v2TargetPosition - v2AttackerPosition;
+
+		if(v2Diff.magnitude <= (fAttackRange * fAttackRange)) {
+
+			rv = true;
+		}
+
+		return rv;
+	}
+
 }
