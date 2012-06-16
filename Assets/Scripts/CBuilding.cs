@@ -11,7 +11,7 @@ public class CBuilding : CBaseEntity {
 	
 	// PUBLIC
 	public enum eBuildingType { CommandCenter, ResourceExtractor, Farm, SecurityCenter, 
-		DroneFactory, ResearchLab, LaunchingPlatform }; // Building type
+		DroneFactory, ResearchLab, LaunchingPlatform, Slot }; // Building type
 	public eBuildingType buildingType;
 	
 	public AudioClip sfxLoadMonkey;
@@ -381,12 +381,12 @@ public class CBuilding : CBaseEntity {
 	/// </summary>
 	void GetControlRoomSpot() {
 
-			GameObject controlRoomSpotObj = GameObject.Find("ControlSpot");
+			Transform controlRoomSpotObj = this.transform.Find("ControlSpot");
 
 			if(!controlRoomSpotObj) {
 
 				// DEBUG
-				Debug.LogError("Object 'ControlSpot' not found for this Command Center");
+				Debug.LogError(this.transform + "Object 'ControlSpot' not found for this Command Center");
 			}
 			else {
 			

@@ -555,7 +555,7 @@
 					attackedBuilding.PutAMonkeyInside(this.transform);
 
 					// DEBUG
-					Debug.Log("MouseState for this action " + mouseState);
+					Debug.Log("MouseState for this action " + mouseState + " in " + attackedBuilding.transform);
 					EnterNewState(FSMState.STATE_IDLE);
 
 					// Deselect this object
