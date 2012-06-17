@@ -41,11 +41,13 @@
 	public Transform iconPrefab;
 
 	Vector3 v3Direction;
-	float fAttackRange;
+	float fAttackRange;// FIXME
 	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
 	float workingTimer = 0.0f;	//< Timer for the working state
 	float workingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
 																	// the task is done
+
+	Transform attackSpot;
 	
 	/*
 	 * ===========================================================================================================
@@ -79,6 +81,16 @@
 		// Get the capture spot
 		if(monkeyClass == eMonkeyType.Cientist)
 			captureSpot = GetCaptureSpot();
+
+		// Get the capture spot
+		if(monkeyClass == eMonkeyType.Astronaut) {
+			
+			// initial setup
+			fAttackRange = 2.2f;
+
+			// Get's the spot where we will test for collisions used in the attack
+			attackSpot = GetAttackSpot();
+		}
 	}
 
 	/// <summary>
@@ -122,6 +134,8 @@
 			case FSMState.STATE_IDLE:
 				// Clear any previous targets
 				transTarget = null;
+				// DEBUG
+				Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
 				break;
 			case FSMState.STATE_SELECTED:
 				break;
@@ -138,6 +152,10 @@
 					AudioSource.PlayClipAtPoint(sfxAck, transform.position);
 				}
 				AIScript.ClickedTargetPosition(walkTo);
+
+				// DEBUG
+				Debug.LogWarning(this.transform + " clearing target on STATE_WALKING");
+
 				// Clear the target
 				transTarget = null;
 
@@ -159,7 +177,17 @@
 				break;
 
 			case FSMState.STATE_PURSUIT:
-				AIScript.ClickedTargetPosition(transTarget.position);
+				{
+					if(!transTarget) {
+
+						// DEBUG
+						Debug.LogWarning(this.transform + " STATE_PURSUIT received a null target!");
+					}
+					else {
+
+						AIScript.ClickedTargetPosition(transTarget.position);
+					}
+				}
 				break;
 
 			case FSMState.STATE_WORKING:
@@ -238,8 +266,8 @@
 						break;
 					}
 
-					// Check if the enemy is range for be attacked
-					if(CheckIfTargetIsInRange())	{
+					if(mainScript.CheckIfTargetColliderIsInRange(attackSpot.transform.position, 
+								transTarget, MainScript.enemyLayer, fAttackRange)) {
 
 						EnterNewState(FSMState.STATE_ATTACKING);
 					}
@@ -414,7 +442,6 @@
 			return rv;
 	
 		RaycastHit hit;
-		fAttackRange = 3.0f; // FIXME: change this arbitrary value for something more meaningful
 
 		// Direction from here to the target
 		v3Direction = transTarget.transform.position - transform.position;
@@ -422,6 +449,12 @@
 		if(Physics.Raycast(transform.position, v3Direction, out hit, fAttackRange)) {
 
 			Debug.Log("Monkey hit in " + hit.transform.name);
+
+			if(!transTarget) {
+
+				// DEBUG
+				Debug.LogError(this.transform + " trying to attack without a target.");
+			}
 
 			if(hit.transform == transTarget)
 				rv = true;
@@ -441,12 +474,15 @@
 	/// </summary>
 	public void PerformAction(Transform transTarget, MouseWorldPosition.eMouseStates currentMouseState){
 
-		 this.transTarget = transTarget;
+		this.transTarget = transTarget;
 
-		 mouseState = currentMouseState;
-		 
-		 // Go into pursuit mode -> walk to the target. When it is in range, perform the action
-		 EnterNewState(FSMState.STATE_PURSUIT);
+		mouseState = currentMouseState;
+
+		// DEBUG
+		Debug.LogWarning(this.transform + " performing " + mouseState);
+
+		// Go into pursuit mode -> walk to the target. When it is in range, perform the action
+		EnterNewState(FSMState.STATE_PURSUIT);
 	}
 	
 	void MonkeyAttack() {
@@ -693,7 +729,29 @@
 			EnterNewState(FSMState.STATE_IDLE);
 			Debug.LogWarning(this.transform + " Stopped moving, changing to idle");
 		}
+	}
 
+	/// <summary>
+	/// Check if the CharacterController of the monkey hit something
+	/// </summary>
+	void OnControllerColliderHit(ControllerColliderHit hit) {
+
+		//if(GetCurrentState() == FSMState.STATE_PURSUIT && transTarget != null) {
+
+		//	if(hit.transform == transTarget) {
+
+		//		// DEBUG
+		//		Debug.LogError(this.transform + " hit in the target!");
+		//	}
+		//}
+	}
+
+	/// <summary>
+	/// Find the attack spot object for the Astronaut monkey
+	/// </summary>
+	Transform GetAttackSpot() {
+
+		return transform.Find("AttackSpot");
 	}
 
 	/*
@@ -707,11 +765,14 @@
 	/// </summary>
 	void OnDrawGizmos() {
 
+		if(attackSpot)
+			Gizmos.DrawWireSphere(attackSpot.transform.position, fAttackRange);
+
 		if(!transTarget)
 			return;
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay(transform.position, v3Direction);
-		Gizmos.DrawWireSphere(transform.position, fAttackRange);
+		//Gizmos.DrawWireSphere(transform.position, fAttackRange);
 	}
 }
