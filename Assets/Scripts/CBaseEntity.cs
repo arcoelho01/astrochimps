@@ -108,7 +108,7 @@ public class CBaseEntity : MonoBehaviour {
 	/// </summary>
 	public virtual void Deselect() {
 
-		if(Selectable) {
+		if(Selectable && isSelected) {
 
 			isSelected = false;
 
