@@ -379,4 +379,39 @@ public class MainScript : MonoBehaviour {
 		return rv;
 	}
 
+	/// <summary>
+	/// Check for enemies (collider, actually) inside a radius
+	/// </summary>
+	/// <param name="callerPosition"> The position to be the sphere center. Usually is the center of the caller's
+	/// collider </param>
+	/// <param name="tTarget"> Target's transform, so we can filter the colliders inside the radius and know for
+	/// sure if we touched the target </param>
+	/// <param name="targetLayer"> Target's layer, used for filtering colliders </param>
+	/// <param name="fRadius"> Radius of the sphere where we will check for other objects presence. Usually the 
+	/// caller's attack radius </param>
+	/// <returns> True if the target is inside the radius, false otherwise </returns>
+	public bool CheckIfTargetColliderIsInRange(Vector3 callerPosition, Transform tTarget, int targetLayer, float fRadius) {
+
+		bool rv = false;
+
+		// Get all enemies in the radius
+		Collider[] scannedColliders = Physics.OverlapSphere(callerPosition, fRadius, 1<<targetLayer);
+
+		if(scannedColliders.Length > 0) {
+
+			foreach(Collider tempCollider in scannedColliders) {
+
+				if(tempCollider.transform == tTarget) {
+
+					rv = true;
+					break;
+				}
+			}
+		}
+
+		return rv;
+	}
+
+
+
 }
