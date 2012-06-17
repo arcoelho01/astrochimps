@@ -147,8 +147,8 @@ public class AstarAIFollow : MonoBehaviour {
 		bnIsMoving = true;
 
 		// AI moving resumed. Calling an event.
-		if(OnMovingChange != null)
-			OnMovingChange(this.transform, true);
+	//	if(OnMovingChange != null)
+	//		OnMovingChange(this.transform, true);
 	}
 	
 	/** Recalculates the path to #target.

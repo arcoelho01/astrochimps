@@ -128,7 +128,7 @@
 				// Clear any previous targets
 				transTarget = null;
 				// DEBUG
-				Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
+				//Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
 				break;
 			case FSMState.STATE_SELECTED:
 				break;
@@ -147,7 +147,7 @@
 				AIScript.ClickedTargetPosition(walkTo);
 
 				// DEBUG
-				Debug.LogWarning(this.transform + " clearing target on STATE_WALKING");
+				//Debug.LogWarning(this.transform + " clearing target on STATE_WALKING");
 
 				// Clear the target
 				transTarget = null;
@@ -193,7 +193,7 @@
 			case FSMState.STATE_CAPTURED:
 				{
 					// DEBUG
-					Debug.Log(this.transform + " [Entering STATE_CAPTURED]");
+					//Debug.Log(this.transform + " [Entering STATE_CAPTURED]");
 					this.Deselect();
 					this.Selectable = false;
 				}
@@ -352,7 +352,7 @@
 			case FSMState.STATE_CAPTURED:
 				{
 					// DEBUG
-					Debug.Log(this.transform + " [Leaving STATE_CAPTURED]");
+					//Debug.Log(this.transform + " [Leaving STATE_CAPTURED]");
 
 					// The monkey can be selected again
 					this.Selectable = true;
