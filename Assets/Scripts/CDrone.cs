@@ -614,11 +614,24 @@ public class CDrone : CBaseEntity {
 		if(eventRaiser != this.transform)
 			return;
 
-		// HUNTER DRONE BEHAVIOUR - Prisoner being delivered
-		if(!isMoving && GetCurrentState() == FSMState.STATE_PRISONER_MONKEY) {
+		// FIXME: remove this filtering, it's here so it doesn't affects other drones
+		if(this.droneType == eDroneType.Hunter && isThisAnEnemyDrone ) {
 
-			Debug.LogWarning(this.transform + " reached prisoner delivery position " + eventRaiser);
-			hunterAIScript.DeliverPrisoner(transTarget, this.capturedEntity);
+			if(!isMoving && GetCurrentState() == FSMState.STATE_WALKING) {
+
+				// Reached the target position
+				EnterNewState(FSMState.STATE_IDLE);
+			}
+
+			// HUNTER DRONE BEHAVIOUR - Prisoner being delivered
+			if(!isMoving && GetCurrentState() == FSMState.STATE_PRISONER_MONKEY) {
+
+				Debug.LogWarning(this.transform + " reached prisoner delivery position " + eventRaiser);
+				// Incarcerated the prisoner in the building
+				hunterAIScript.DeliverPrisoner(transTarget, this.capturedEntity);
+				// And go back to try to find another
+				WalkTo(hunterAIScript.GetLastTargetSightedPosition());
+			}
 		}
 	}
 }

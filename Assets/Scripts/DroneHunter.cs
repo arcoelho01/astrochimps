@@ -19,6 +19,7 @@ public class DroneHunter : MonoBehaviour {
 	float fTimer = 0.0f;
 	Transform currentTarget = null;
 	bool enemyInRange = false;
+	Vector3 v3LastSightedTarget;
 
 	// List of monkeys in sight
 	List<Transform> ltMonkeysInSight = new List<Transform>();
@@ -113,7 +114,7 @@ public class DroneHunter : MonoBehaviour {
 
 		foreach(Collider candidateCollider in scannedColliders) {
 
-			// Ok,Â let's check all the enemies in range
+			// Ok, let's check all the enemies in range
 			Transform candidateTarget = candidateCollider.transform;
 
 			if(candidateTarget.gameObject.tag == "Monkey") {
@@ -135,14 +136,20 @@ public class DroneHunter : MonoBehaviour {
 		// Let's check the monkeys
 		Transform candidateToBeEngaged = PickClosestTargetFromTheList(ltMonkeysInSight);
 
-		if(candidateToBeEngaged) 
+		if(candidateToBeEngaged) {
+
+			v3LastSightedTarget = candidateToBeEngaged.transform.position;
 			return candidateToBeEngaged;
+		}
 
 		// No monkey in sight, so let's check the drones
 		candidateToBeEngaged = PickClosestTargetFromTheList(ltDronesInSight);
 
-		if(candidateToBeEngaged)
+		if(candidateToBeEngaged) {
+		
+			v3LastSightedTarget = candidateToBeEngaged.transform.position;
 			return candidateToBeEngaged;
+		}
 
 		// No target?
 		return null;
@@ -188,10 +195,10 @@ public class DroneHunter : MonoBehaviour {
 
 		Transform tNearestPrison = null;
 
-		// TODO: implement an actual code here :P
-		// HACK!
 		{
 		
+			// FIXME: this is temporary. Must find all buildings, filter which doesn't have a prisoner yet and then
+			// select the nearest
 			GameObject tempObject = GameObject.Find("CommandCenterOponent");	
 			if(tempObject)
 				tNearestPrison = tempObject.transform;
@@ -216,7 +223,14 @@ public class DroneHunter : MonoBehaviour {
 			CBuilding tBuildingClass = tPrisonBuilding.GetComponent<CBuilding>();
 			tBuildingClass.ReceivePrisoner(monkeyEntity);
 		}
-		
+	}
+
+	/// <summary>
+	/// Returns the position where the drone last saw an enemy
+	/// </summary>
+	public Vector3 GetLastTargetSightedPosition() {
+
+		return v3LastSightedTarget;
 	}
 
 	/*
