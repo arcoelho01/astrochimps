@@ -8,8 +8,8 @@ public class Patrol : MonoBehaviour {
 
   private Transform myTransform;
 
-  private Transform target;
   private CBaseEntity targetEntity;
+  private Transform target;
   private Vector3 targetVector;
   
   private float pulseTime;
@@ -27,6 +27,7 @@ public class Patrol : MonoBehaviour {
   private float alertRadius = 60.0f;
 
   public Vector3[] patrolTarget;
+  public Vector3[] previousPatrolTarget;
   public GameObject[] patrolMarkers;
 
   //Patrol Variables
@@ -155,7 +156,8 @@ void Alerta () {
         if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
         pulseTime = 2.0f;
         status = eAlertLevel.DETECT;
-        existingAlert = GameObject.Instantiate(detectAlert,new Vector3(target.position.x,myTransform.position.y + 15,myTransform.position.z), Quaternion.identity) as GameObject;
+        existingAlert = GameObject.Instantiate(detectAlert,new Vector3(target.position.x,myTransform.position.y + 15,myTransform.position.z),
+                                              Quaternion.identity) as GameObject;
     }
   }else status = eAlertLevel.PATROL;
 
@@ -174,6 +176,8 @@ void Alerta () {
 
   public void ChoicePatrol(int x){
 
+  previousPatrolTarget = patrolTarget;
+
   patrolTarget = new Vector3[x];
   patrolMarkers = new GameObject[x];
 
@@ -182,6 +186,18 @@ void Alerta () {
     else if (x == 3)
            TrianglePatrol();
          else LinePatrol();
+
+  }
+
+  public void RevertPatrol(){
+
+    for(int x = 0; x < patrolTarget.Length; x++){
+      GameObject.Destroy(patrolMarkers[x]);
+    }
+
+    patrolTarget = previousPatrolTarget;
+
+    patrolSet = true;
 
   }
 
@@ -197,7 +213,7 @@ void Alerta () {
 
    for(int x = 0; x < patrolTarget.Length; x++){
      patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
-      patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
+     patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
    }
    //cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[0]);
    //patrolIndex = 0;
@@ -265,11 +281,11 @@ void Alerta () {
 		}
 	}
 	
-	public void StartPatrol () {
-		
-		for(int x = 0; x < patrolTarget.Length; x++){
-			GameObject.Destroy(patrolMarkers[x]);
-		}
+  public void StartPatrol () {
+
+    for(int x = 0; x < patrolTarget.Length; x++){
+      GameObject.Destroy(patrolMarkers[x]);
+    }
 		
 		if(setNewPatrol){
       float closestPoint = Mathf.Infinity;

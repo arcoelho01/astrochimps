@@ -111,7 +111,7 @@ public class RTSCam : MonoBehaviour {
 
 		cameraDistance = zoomDefault;
 
-		commandCenter = GameObject.Find("CentroDeComando").transform;
+		//commandCenter = GameObject.Find("CentroDeComando").transform;
 
 		PositionCamera();
 
