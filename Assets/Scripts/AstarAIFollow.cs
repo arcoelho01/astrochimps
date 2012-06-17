@@ -132,9 +132,8 @@ public class AstarAIFollow : MonoBehaviour {
 		bnIsMoving = false;
 
 		// AI moving stoped. Calling an event.
-		if(OnMovingChange != null)
-			OnMovingChange(this.transform, false);
-
+		//if(OnMovingChange != null)
+		//	OnMovingChange(this.transform, false);
 	}
 	
 	/** Resumes walking and path searching the AI.
@@ -194,6 +193,11 @@ public class AstarAIFollow : MonoBehaviour {
 	 * This will be called once for every path it completes, so if you have a really fast repath rate it will call this function often if when it stands on the end point.
 	 */
 	public virtual void ReachedEndOfPath () {
+
+		// AI moving stoped. Calling an event.
+		if(OnMovingChange != null)
+			OnMovingChange(this.transform, false);
+
 		//The AI has reached the end of the path
 		Stop();
 		// TODO: the AI must inform everyone that uses it that the walking is over

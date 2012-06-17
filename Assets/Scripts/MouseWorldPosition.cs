@@ -964,7 +964,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.Backslash)){
 
-			if(selectedObject.tag == "Building") {
+			if(selectedObject && selectedObject.tag == "Building") {
 
 				CBuilding selectedBuilding = selectedObject.gameObject.GetComponent<CBuilding>();
 				if(!selectedBuilding)
