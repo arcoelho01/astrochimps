@@ -260,7 +260,7 @@
 					}
 
 					if(mainScript.CheckIfTargetColliderIsInRange(attackSpot.transform.position, 
-								transTarget, MainScript.enemyLayer, fAttackRange)) {
+								transTarget, transTarget.gameObject.layer, fAttackRange)) {
 
 						EnterNewState(FSMState.STATE_ATTACKING);
 					}
