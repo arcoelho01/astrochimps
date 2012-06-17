@@ -41,7 +41,7 @@
 	public Transform iconPrefab;
 
 	Vector3 v3Direction;
-	float fAttackRange;// FIXME
+	float fAttackRange = 2.2f;// FIXME
 	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
 	float workingTimer = 0.0f;	//< Timer for the working state
 	float workingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
@@ -82,15 +82,8 @@
 		if(monkeyClass == eMonkeyType.Cientist)
 			captureSpot = GetCaptureSpot();
 
-		// Get the capture spot
-		if(monkeyClass == eMonkeyType.Astronaut) {
-			
-			// initial setup
-			fAttackRange = 2.2f;
-
-			// Get's the spot where we will test for collisions used in the attack
-			attackSpot = GetAttackSpot();
-		}
+		// Get's the spot where we will test for collisions used in the attack
+		attackSpot = GetAttackSpot();
 	}
 
 	/// <summary>
