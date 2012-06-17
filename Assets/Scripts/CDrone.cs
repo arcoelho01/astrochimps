@@ -44,6 +44,7 @@ public class CDrone : CBaseEntity {
   public Saboteur saboteurScript;
   public Patrol patrolScript;
 	public DroneHunter hunterAIScript;
+  public EnemyPatrol enemyPatrolScript;
 
 	bool isThisAnEnemyDrone = false;
 
@@ -81,6 +82,21 @@ public class CDrone : CBaseEntity {
 					Debug.LogError("DroneHunter component not found in " + this.transform);
 				}
 			}
+
+      if(this.droneType == eDroneType.Patrol) {
+
+        enemyPatrolScript = this.gameObject.GetComponent<EnemyPatrol>();
+
+        // Set a flag to make easier for us
+       isThisAnEnemyDrone = true;
+
+       if(!enemyPatrolScript) {
+         // DEBUG
+         Debug.LogError("EnemyPatrol component not found in " + this.transform);
+       }
+
+      }
+
 		}
 
 		sabotageTime = 2.0f;
@@ -312,7 +328,7 @@ public class CDrone : CBaseEntity {
 					}
 
 					// CPU controlled enemy drones
-					if(isThisAnEnemyDrone) {
+					if(isThisAnEnemyDrone && this.droneType == eDroneType.Hunter) {
 
 						// Search for targets
 						Transform tempTarget = hunterAIScript.CheckRadiusForAgents();
@@ -321,7 +337,6 @@ public class CDrone : CBaseEntity {
 
 							// There's a target...
 							if(tempTarget != transTarget) {
-
 								// ... and it is a new target
 								transTarget = tempTarget;
 								// Chase it!
