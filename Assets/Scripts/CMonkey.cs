@@ -183,6 +183,12 @@
 
 						AIScript.ClickedTargetPosition(transTarget.position);
 					}
+
+					// Plays the animation for the walk cycle
+					if(meshObject) {
+
+						meshObject.animation.Play("NormalWalk");
+					}
 				}
 				break;
 
@@ -361,6 +367,14 @@
 			case FSMState.STATE_PURSUIT:
 				// Stop the 'walk to the target'
 				AIScript.Stop();
+
+				// Stops the walk cycle
+				if(meshObject) {
+
+					//meshObject.animation.Stop("Walk");
+					meshObject.animation.CrossFade("idle");
+				}
+			
 				break;
 
 			case FSMState.STATE_WORKING:
