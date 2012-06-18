@@ -543,7 +543,7 @@
 				{
 
 					// Sets the time need to fix this building
-					workingTargetTime = 3.0f; // FIXME: arbitrary value! Fix!
+					workingTargetTime = 5.0f; // FIXME: arbitrary value! Fix!
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;

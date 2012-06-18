@@ -15,11 +15,18 @@ public class ProgressBar : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	
+		FaceCamera();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	/// <summary>
+	/// Rotates the bar so it will always face the camera
+	/// </summary>
+	void Update() {
+
+		if(!bnFaceCamera)
+			return;
+
+		FaceCamera();
 	}
 
 	/// <summary>
@@ -59,16 +66,14 @@ public class ProgressBar : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Rotates the bar so it will always face the camera
+	/// Rotates the bar so it face the camera
 	/// </summary>
-	void FixedUpdate() {
-
-		if(!bnFaceCamera)
-			return;
+	void FaceCamera() {
 
 		// The mesh is inverted. If we use LookAt() direct with the camera position, we cannot see the bar (it's
 		// textures are mapped to the other side of the mesh). So, to correct this, we actually look "away" from
 		// the camera
 		transform.LookAt(2 * transform.position - Camera.main.transform.position);
 	}
+
 }
