@@ -48,6 +48,9 @@
 																	// the task is done
 
 	Transform attackSpot;
+
+	//< Progress bar showed in the Monkey Panel.
+	Transform tProgressBar;
 	
 	/*
 	 * ===========================================================================================================
@@ -184,10 +187,17 @@
 				break;
 
 			case FSMState.STATE_WORKING:
-				// DEBUG
-				Debug.Log(this.transform + " FSM entered WORKING state");
-				// Resets the working timer
-				workingTimer = 0.0f;
+				{
+					// DEBUG
+					Debug.Log(this.transform + " FSM entered WORKING state");
+					// Resets the working timer
+					workingTimer = 0.0f;
+					// Instiate a new progress bar
+					if(!tProgressBar) {
+
+						tProgressBar = Instantiate(progressBarPrefab, this.transform.position, Quaternion.identity) as Transform;
+					}
+				}
 				break;
 
 			case FSMState.STATE_CAPTURED:
@@ -268,15 +278,23 @@
 				break;
 
 			case FSMState.STATE_WORKING:
-				// Updates the working timer
-				workingTimer += Time.deltaTime;
+				{
+					// Updates the working timer
+					workingTimer += Time.deltaTime;
 
-				if(workingTimer >= workingTargetTime) {
+					// Updates the progress bar
+					if(tProgressBar) {
 
-					workingTimer = 0.0f;
+						tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateBar(workingTimer, workingTargetTime);
+					}
 
-					// TODO: call the function to perform the desired task here
-					WorkIsDone();
+					if(workingTimer >= workingTargetTime) {
+
+						workingTimer = 0.0f;
+
+						// TODO: call the function to perform the desired task here
+						WorkIsDone();
+					}
 				}
 				break;
 
@@ -345,8 +363,21 @@
 				break;
 
 			case FSMState.STATE_WORKING:
-				// DEBUG
-				Debug.Log(this.transform + " FSM leaving WORKING state");
+				{
+					// DEBUG
+					Debug.Log(this.transform + " FSM leaving WORKING state");
+
+					// If we're used a progress bar, now we get rid of it
+					if(tProgressBar) {
+
+						Destroy(tProgressBar.gameObject);
+					}
+					
+					if(!tProgressBar) {
+
+						Debug.Log(this.transform + " cleared as null");
+					}
+				}
 				break;
 
 			case FSMState.STATE_CAPTURED:

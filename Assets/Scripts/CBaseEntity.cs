@@ -58,6 +58,8 @@ public class CBaseEntity : MonoBehaviour {
 	Transform captureForceField;
 	Transform captureRay;
 
+	//< Prefab to the progress bar
+	public Transform progressBarPrefab;
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
