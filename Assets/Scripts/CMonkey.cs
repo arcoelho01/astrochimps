@@ -195,7 +195,8 @@
 					// Instiate a new progress bar
 					if(!tProgressBar) {
 
-						tProgressBar = Instantiate(progressBarPrefab, this.transform.position, Quaternion.identity) as Transform;
+						tProgressBar = Instantiate(progressBarPrefab, sweetSpotObj.transform.position, 
+								Quaternion.identity) as Transform;
 					}
 				}
 				break;
@@ -285,7 +286,7 @@
 					// Updates the progress bar
 					if(tProgressBar) {
 
-						tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateBar(workingTimer, workingTargetTime);
+						tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateIncreaseBar(workingTimer, workingTargetTime);
 					}
 
 					if(workingTimer >= workingTargetTime) {
@@ -371,11 +372,7 @@
 					if(tProgressBar) {
 
 						Destroy(tProgressBar.gameObject);
-					}
-					
-					if(!tProgressBar) {
-
-						Debug.Log(this.transform + " cleared as null");
+						tProgressBar = null;
 					}
 				}
 				break;

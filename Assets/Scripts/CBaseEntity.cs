@@ -50,6 +50,7 @@ public class CBaseEntity : MonoBehaviour {
 	public Transform mainRendererObject = null;	
 	
 	protected Transform meshObject = null;
+	protected Transform sweetSpotObj;
 	protected Vector3 sweetSpot;
 	// The object to whom captured objects will be parented, if applicable
 	protected Transform captureSpot;
@@ -279,7 +280,7 @@ public class CBaseEntity : MonoBehaviour {
 	/// </summar>
 	protected Vector3 GetSweetSpotPosition() {
 
-		Transform sweetSpotObj = transform.Find("SweetSpot");
+		sweetSpotObj = transform.Find("SweetSpot");
 
 		if(sweetSpotObj) {
 			return sweetSpotObj.transform.position;
