@@ -237,7 +237,7 @@ public class RTSCam : MonoBehaviour {
 		transform.position = position;
 
 		//
-		RepositionMicListener();
+		//RepositionMicListener();
 	}
 
 	/// <summary>
