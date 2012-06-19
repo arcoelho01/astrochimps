@@ -132,9 +132,6 @@ public class AstarAIFollow : MonoBehaviour {
 		canSearch = false;
 		bnIsMoving = false;
 
-		// AI moving stoped. Calling an event.
-		//if(OnMovingChange != null)
-		//	OnMovingChange(this.transform, false);
 	}
 	
 	/** Resumes walking and path searching the AI.
@@ -147,9 +144,6 @@ public class AstarAIFollow : MonoBehaviour {
 		canSearch = true;
 		bnIsMoving = true;
 
-		// AI moving resumed. Calling an event.
-	//	if(OnMovingChange != null)
-	//		OnMovingChange(this.transform, true);
 	}
 	
 	/** Recalculates the path to #target.
@@ -201,7 +195,6 @@ public class AstarAIFollow : MonoBehaviour {
 
 		//The AI has reached the end of the path
 		Stop();
-		// TODO: the AI must inform everyone that uses it that the walking is over
 	}
 	
 	/** Update is called once per frame */
