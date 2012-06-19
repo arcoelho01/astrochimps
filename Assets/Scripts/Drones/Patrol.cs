@@ -103,8 +103,12 @@ public class Patrol : MonoBehaviour {
 
       // Fase de teste
       if(scannedColliders.Length > 1){
-        float tempdistance = Vector3.Distance(myTransform.position,scannedColliders[0].transform.position);
+        float tempdistance = Mathf.Infinity;
         for(int i = 0; i < scannedColliders.Length; i ++ ){
+          if(!scannedColliders[i]){
+            Debug.LogWarning("Scanned colliders are empty somehow");
+            return;
+          }
           target = scannedColliders[i].transform;
           targetEntity = target.GetComponent<CBaseEntity>();
           Debug.Log("targetEntity: " + targetEntity);
@@ -127,12 +131,15 @@ public class Patrol : MonoBehaviour {
 
       targetVector = target.position - myTransform.position;
 
-       if(Vector3.Distance(myTransform.position,target.position) < detectionDistance  && Vector3.Angle(targetVector,myTransform.forward) < detectionRadius){
+       if(Vector3.Distance(myTransform.position,target.position) < detectionDistance
+          && Vector3.Angle(targetVector,myTransform.forward) < detectionRadius){
         if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
           pulseTime = 2.0f;
           status = eAlertLevel.DETECT;
+          Debug.LogWarning("Angle enemy is found: " + Vector3.Angle(targetVector,myTransform.forward));
           existingAlert = GameObject.Instantiate(detectAlert,new Vector3(target.position.x,target.position.y + 15, target.position.z), Quaternion.identity) as GameObject;
-       }else if(Vector3.Distance(myTransform.position,target.position) < detectionDistance && Vector3.Angle(targetVector,myTransform.forward) < alertRadius){
+       }else if(Vector3.Distance(myTransform.position,target.position) < detectionDistance
+                && Vector3.Angle(targetVector,myTransform.forward) < alertRadius){
           status = eAlertLevel.ALERT;
        }
 
@@ -156,6 +163,7 @@ void Alerta () {
         if(targetEntity.Type == CBaseEntity.eObjType.Building) return;
         pulseTime = 2.0f;
         status = eAlertLevel.DETECT;
+        Debug.LogWarning("Angle enemy is found in alert status: " + Vector3.Angle(targetVector,myTransform.forward));
         existingAlert = GameObject.Instantiate(detectAlert,new Vector3(target.position.x,myTransform.position.y + 15,myTransform.position.z),
                                               Quaternion.identity) as GameObject;
     }
@@ -187,17 +195,24 @@ void Alerta () {
            TrianglePatrol();
          else LinePatrol();
 
+
   }
 
   public void RevertPatrol(){
 
-    for(int x = 0; x < patrolTarget.Length; x++){
-      GameObject.Destroy(patrolMarkers[x]);
-    }
-
+  if(previousPatrolTarget.Length > 0){
     patrolTarget = previousPatrolTarget;
-
+    //Debug.LogWarning("previousPatrolTarget: " +previousPatrolTarget[0]);
     patrolSet = true;
+    setNewPatrol = false;
+  }else{
+    patrolSet = false;
+    setNewPatrol = false;
+    patrolPointsValid = false;
+    for(int x = 0; x < patrolTarget.Length; x++){
+       GameObject.Destroy(patrolMarkers[x]);
+    }
+  }
 
   }
 
@@ -252,16 +267,14 @@ void Alerta () {
   patrolTarget[2] = new Vector3(-20.0f,0.0f,-20.0f); patrolTarget[2] += MouseWorldPosition.targetPosition;
   patrolTarget[3] = new Vector3(-20.0f,0.0f,20.0f); patrolTarget[3] += MouseWorldPosition.targetPosition;
 
-
-    for(int x = 0; x < patrolTarget.Length; x++){
-      patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
-      patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
-    }
+  for(int x = 0; x < patrolTarget.Length; x++){
+    patrolMarkers[x] = GameObject.Instantiate(markerPatrol,patrolTarget[x],Quaternion.identity) as GameObject;
+    patrolMarkers[x].GetComponent<PatrolMarkerTrigger>().droneScript = this.cdroneScript;
+  }
 
   }
 
-	void PatrolSet () {
-
+  void PatrolSet () {
     if(patrolTarget.Length == 4){
       patrolTarget[0] = new Vector3(20.0f,0.0f,20.0f) + MouseWorldPosition.mouseHitPointNow;
       patrolTarget[1] = new Vector3(20.0f,0.0f,-20.0f) + MouseWorldPosition.mouseHitPointNow;
@@ -275,19 +288,16 @@ void Alerta () {
       patrolTarget[0] = new Vector3(20.0f,0.0f,0.0f); patrolTarget[0] += MouseWorldPosition.mouseHitPointNow;
       patrolTarget[1] = new Vector3(-20.0f,0.0f,0.0f); patrolTarget[1] += MouseWorldPosition.mouseHitPointNow;
     }
-		
 		for(int x = 0; x < patrolTarget.Length; x++){
-			patrolMarkers[x].transform.position = patrolTarget[x];	
+			patrolMarkers[x].transform.position = patrolTarget[x];
 		}
-	}
+  }
 	
   public void StartPatrol () {
-
-    for(int x = 0; x < patrolTarget.Length; x++){
+    for(int x = 0; x < patrolMarkers.Length; x++){
       GameObject.Destroy(patrolMarkers[x]);
     }
-		
-		if(setNewPatrol){
+    if(setNewPatrol){
       float closestPoint = Mathf.Infinity;
       int startPoint = 0;
 
@@ -300,39 +310,18 @@ void Alerta () {
         }
 
       }
-
-			cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[startPoint]);
-			patrolIndex = startPoint;
-			setNewPatrol = false;
-		}
-		
-		if(Vector3.Distance(this.transform.position,patrolTarget[patrolIndex]) < 5.0f){
-    //if(!AstarAIFollow.onAIMovingChange) {
-			patrolIndex += 1;
-			if(patrolIndex >= patrolTarget.Length) patrolIndex = 0;
-			cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
+      cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[startPoint]);
+      patrolIndex = startPoint;
+      setNewPatrol = false;
     }
-		//}
-	}
-  /*/
-  void onAstarMovingChange(bool isMoving) {
 
-   // AI gets to the end of the path and we were walking
-   if(!isMoving && cdroneScript.GetCurrentState() == FSMState.STATE_WALKING) {
+    if(Vector3.Distance(this.transform.position,patrolTarget[patrolIndex]) < 5.0f){
+      //if(!AstarAIFollow.onAIMovingChange) {
+      patrolIndex += 1;
+      if(patrolIndex >= patrolTarget.Length) patrolIndex = 0;
+        cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
+    }
+    //}
+  }
 
-
-   }
-
- }
- // */
-
-/*/
-	void OnDrawGizmosSelected () {
-		
-		Vector3 pos = transform.position;
-		
-		Gizmos.DrawWireSphere(pos,16);	
-	
-	}
-//*/
 }

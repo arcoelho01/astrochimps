@@ -657,4 +657,13 @@ public class CDrone : CBaseEntity {
 			}
 		}
 	}
+
+  public override void Deselect() {
+
+   if((this.droneType == eDroneType.Patrol) && patrolScript.setNewPatrol)
+      patrolScript.RevertPatrol();
+
+   base.Deselect();
+
+ }
 }

@@ -250,7 +250,7 @@ public class CBuilding : CBaseEntity {
 	void ExtractResource() {
 
 		CResource.ExtractedResource extractedResource;
-		float extractionAmount = level * 1.5f;
+		float extractionAmount = level * 2.5f;
 		string resourceString = "";
 
 		// Try to extract resources
