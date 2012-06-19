@@ -4,6 +4,7 @@ ModelImporter:
   fileIDToRecycleName:
     4300000: Pipe 000
     7400000: Take 001 //// (TO TEX) Tube -- Low (MAP) (ANI F)
+    7400002: Tube_Acordeon //// (TO TEX) Tube -- Low (MAP) (ANI F)
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -18,7 +19,12 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations: []
+    clipAnimations:
+    - name: Tube_Acordeon
+      firstFrame: 0
+      lastFrame: 60
+      wrapMode: 1
+      loop: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 1
