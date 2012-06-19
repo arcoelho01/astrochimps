@@ -567,7 +567,7 @@ public class CDrone : CBaseEntity {
 	/// </summary>
 	public bool isStunned(){
 
-		return (eFSMCurrentState == FSMState.STATE_STUNNED);
+		return (GetCurrentState() == FSMState.STATE_STUNNED);
 	}
 	
 
