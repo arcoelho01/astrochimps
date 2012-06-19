@@ -205,7 +205,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		mouseNow = Input.mousePosition;
 
 		// Moved the cursor?
-		if(mouseNow != mouseBefore) {
+		//if(mouseNow != mouseBefore) {
 
 			RaycastHit hit;
 			Transform whatIAmPointing = null;
@@ -273,7 +273,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			// 2.1 - if it's movable (a monkey or a drone, for instance), them we use mostly the 'walk' cursor
 			if(selectedObjectEntity.Movable) {
 
-				// AreÂ we pointing at the ground? Walk!
+				// Are we pointing at the ground? Walk!
 				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer) {
 					
 					cursorCurrent = cursorWalk;
@@ -323,6 +323,10 @@ public class MouseWorldPosition : MonoBehaviour {
 
 							isThisDroneStunned = pointedDrone.isStunned();
 
+							// Default behaviour
+							cursorCurrent = cursorWalkNotOk;
+							MouseState = eMouseStates.CannotWalk;
+
 							switch(selectedMonkey.monkeyClass) {
 							 
 								case CMonkey.eMonkeyType.Astronaut:
@@ -351,6 +355,11 @@ public class MouseWorldPosition : MonoBehaviour {
 
 											cursorCurrent = cursorRecycleEnable;
 											MouseState = eMouseStates.TargetingForRecycle;
+										}
+										else {
+											// Drone is not stunned anymore
+											//cursorCurrent = cursorNormal;
+											//MouseState = eMouseStates.Hover;
 										}
 									}
 									break;
@@ -586,7 +595,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				cursorCurrent = cursorNormal;
 				MouseState = eMouseStates.Hover;
 			}
-		}
+		//}
 	}
 
 	/// <summary>
