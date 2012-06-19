@@ -37,6 +37,9 @@ public class MainScript : MonoBehaviour {
 	List<Transform> neutralResources = new List<Transform>();
 	List<Transform> neutralRocketParts = new List<Transform>();
 
+	//< Keeps a list of all the rocket parts CRocketPart components
+	public static List<CRocketPart> lcRocketParts = new List<CRocketPart>();
+
 	// Shortcut for some scripts
 	public static MouseWorldPosition mouseInputScript = null;
 
@@ -193,6 +196,9 @@ public class MainScript : MonoBehaviour {
 		foreach(GameObject oneRocketPart in goRocketParts) {
 
 			neutralRocketParts.Add(oneRocketPart.transform);
+
+			CRocketPart cOneRocketPart = oneRocketPart.GetComponent<CRocketPart>();
+			lcRocketParts.Add(cOneRocketPart);
 		}
 
 		// DEBUG
@@ -412,6 +418,21 @@ public class MainScript : MonoBehaviour {
 		return rv;
 	}
 
+	/// <summary>
+	/// Returns the list of all rocket parts transforms found in the scene
+	/// </summary>
+	public List<Transform> GetListOfAllRocketParts() {
+
+		return neutralRocketParts;
+	}
+
+	/// <summary>
+	/// Returns the list of all rocket parts CRocketPart components for the parts found in the scene
+	/// </summary>
+	public List<CRocketPart> GetListOfAllRocketPartsComponents() {
+
+		return lcRocketParts;
+	}
 
 
 }

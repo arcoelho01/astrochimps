@@ -1,26 +1,27 @@
-	using UnityEngine;
-	using System.Collections;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
-	/// <summary>
-	/// Class with monkey's definitions
-	/// </summary>
-	public class CMonkey : CBaseEntity {
+/// <summary>
+/// Class with monkey's definitions
+/// </summary>
+public class CMonkey : CBaseEntity {
 
-		// PRIVATE
-		
-		// PUBLIC
-		public enum eMonkeyType { Astronaut, Cientist, Engineer, Saboteur, NONE }; // Monkeys types
-		
-		public AudioClip sfxSelected; // Played when the monkey is selected by the player
-		public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
-		public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
-		public AudioClip sfxAttack;	// Played when the monkey is attacking a target
-		private Transform transTarget;   // Target Transform
-		private Vector3 walkTo;
-		public float attackRange;      //  Attack Range to disable drones.
-		
-		public enum FSMState {
-			STATE_IDLE,							// Doing nothing...
+	// PRIVATE
+
+	// PUBLIC
+	public enum eMonkeyType { Astronaut, Cientist, Engineer, Saboteur, NONE }; // Monkeys types
+
+	public AudioClip sfxSelected; // Played when the monkey is selected by the player
+	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
+	public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAttack;	// Played when the monkey is attacking a target
+	private Transform transTarget;   // Target Transform
+	private Vector3 walkTo;
+	public float attackRange;      //  Attack Range to disable drones.
+
+	public enum FSMState {
+		STATE_IDLE,							// Doing nothing...
 			STATE_SELECTED,					// Selected by the player
 			STATE_INSIDE_BUILDING,	// when the monkey is inside a building, cannot move
 			STATE_WALKING,					// Monkey walking around
@@ -30,8 +31,8 @@
 			STATE_WORKING,					// Monkey working on something. Action that requires a certain time
 			STATE_CAPTURED,					// Monkey was captured by an enemy
 			STATE_NULL							// null
-		};
-	
+	};
+
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
 	private AstarAIFollow AIScript = null; // Cache a pointer to the AI script
 	private float stunnedTimeCounter;
@@ -45,7 +46,7 @@
 	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
 	float fWorkingTimer = 0.0f;	//< Timer for the working state
 	float fWorkingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
-																	// the task is done
+	// the task is done
 
 	float fResearchTimer;	//< Timer to research something, like the cientist trying to find the rocket parts
 	float fResearchTargetTime; //< Time needed to complete the research above
@@ -56,7 +57,7 @@
 
 	//< Progress bar showed in the Monkey Panel.
 	Transform tProgressBar;
-	
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -73,7 +74,7 @@
 		Movable = true; // All monkeys are movable
 		Type = eObjType.Monkey;
 		AIScript = gameObject.GetComponent<AstarAIFollow>();
-		
+
 		// FSM setup
 		eFSMCurrentState = FSMState.STATE_IDLE;
 
@@ -98,10 +99,10 @@
 	/// Update
 	/// </summary>
 	void Update(){
-		
+
 		ExecuteCurrentState();
 	}
-	
+
 
 	/*
 	 * ===========================================================================================================
@@ -149,7 +150,6 @@
 						// Resets the timer
 						fResearchTimer = 0.0f;
 						fResearchTargetTime = 10.0f;
-
 					}
 				}
 				break;
@@ -280,12 +280,20 @@
 									fResearchTimer, fResearchTargetTime);
 						}
 
+						// Is the research done?
 						if(fResearchTimer >= fResearchTargetTime) {
 
-							// DEBUG
-							Debug.Log(this.transform + " timer inside the Command center over");
-
 							bnResearchIsComplete = true;
+
+							//
+							CientistRevealedRocketParts();
+
+							// If we're used a progress bar, now we get rid of it
+							if(tProgressBar) {
+
+								Destroy(tProgressBar.gameObject);
+								tProgressBar = null;
+							}
 						}
 					}
 				}
@@ -301,9 +309,9 @@
 				if ( stunnedTimeCounter <=0)
 					EnterNewState(FSMState.STATE_IDLE);
 				break;
-			
+
 			case FSMState.STATE_ATTACKING:
-			
+
 				// DEBUG
 				Debug.Log(this.transform + " Executing attack");
 				MonkeyAttack();
@@ -383,12 +391,6 @@
 
 			case FSMState.STATE_INSIDE_BUILDING:
 				{
-					// If we're used a progress bar, now we get rid of it
-					if(tProgressBar) {
-
-						Destroy(tProgressBar.gameObject);
-						tProgressBar = null;
-					}
 				}
 				break;
 
@@ -400,14 +402,14 @@
 				// But when we get here by other ways, like walking and then issuing an attack command?
 				if(AIScript.bnIsMoving)
 					AIScript.Stop();
-				
+
 				// Stops the walk cycle
 				if(meshObject) {
 
 					//meshObject.animation.Stop("Walk");
 					meshObject.animation.CrossFade("idle");
 				}
-			
+
 				break;
 
 			case FSMState.STATE_STUNNED:
@@ -428,7 +430,7 @@
 					//meshObject.animation.Stop("Walk");
 					meshObject.animation.CrossFade("idle");
 				}
-			
+
 				break;
 
 			case FSMState.STATE_WORKING:
@@ -477,24 +479,24 @@
 	public override Transform Select() {
 
 		if(sfxSelected) {
-		
+
 			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
 		}
 		return base.Select();
 	}
-	
+
 	/// <summary>
 	/// Play a sound and change the FSM state when this monkey is attacked
 	///</summary>
 	public override void Attacked(){
-		
+
 	}
-	
+
 	public void WalkTo(Vector3 walkTo){
 		this.walkTo = walkTo;
 		EnterNewState(FSMState.STATE_WALKING);
 	}
-	
+
 	/// <summary>
 	/// Get info about the collider in this object. This is needed so we know what are the boundaries of the
 	/// object. With this, we can calculate the distance of the object from others, knowing if we can attack 
@@ -529,7 +531,7 @@
 		// No target? Get out!
 		if(!transTarget)
 			return rv;
-	
+
 		RaycastHit hit;
 
 		// Direction from here to the target
@@ -573,7 +575,7 @@
 		// Go into pursuit mode -> walk to the target. When it is in range, perform the action
 		EnterNewState(FSMState.STATE_PURSUIT);
 	}
-	
+
 	void MonkeyAttack() {
 
 		// TODO here applies the following rules:
@@ -589,7 +591,7 @@
 		// NEW CODE
 		// Perform the action according to the mouse state
 		switch(mouseState) {
-			
+
 			// Astronaut monkey
 			case MouseWorldPosition.eMouseStates.TargetingForBrawl:
 				{
@@ -605,8 +607,8 @@
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
-			
-			// Engineer monkey
+
+				// Engineer monkey
 			case MouseWorldPosition.eMouseStates.EngineerFix:
 				{
 
@@ -632,7 +634,7 @@
 				}
 				break;
 
-			// Cientist monkey
+				// Cientist monkey
 			case MouseWorldPosition.eMouseStates.CanCapture:
 				{
 					// Cientist monkey capturing a RocketPart
@@ -649,7 +651,7 @@
 				}
 				break;
 
-			// Saboteur monkey
+				// Saboteur monkey
 			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
 				{
 					// Sets the time needed to reprogram this drone
@@ -671,7 +673,7 @@
 				}
 				break;
 
-			// All monkeys
+				// All monkeys
 			case MouseWorldPosition.eMouseStates.MonkeyCanEnterBuilding:
 				{
 					CBuilding attackedBuilding = transTarget.gameObject.GetComponent<CBuilding>();
@@ -782,13 +784,13 @@
 		// Play a sound, if any
 		if(sfxAttacked)
 			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
-			
+
 		// Change the FSM State
 		EnterNewState(FSMState.STATE_CAPTURED);
 
 		// Deactivate the Character Controller, so the monkey will move together with the drone
 		myController.enabled = false;
-		
+
 		base.CapturedBy(capturer, captureSpot);
 	}
 
@@ -804,6 +806,26 @@
 
 		base.ReleaseMe();
 	}
+
+	/// <summary>
+	/// Find the attack spot object for the Astronaut monkey
+	/// </summary>
+	Transform GetAttackSpot() {
+
+		return transform.Find("AttackSpot");
+	}
+
+	/// <summary>
+	/// The Cientist have finished the researched and found all rocket parts
+	/// </summary>
+	void CientistRevealedRocketParts() {
+
+		foreach(CRocketPart cRocketPart in MainScript.lcRocketParts) {
+
+			cRocketPart.PartIsRevealed();
+		}
+	}
+
 
 	/*
 	 * ===========================================================================================================
@@ -869,14 +891,6 @@
 				bnCanResearchForRocketParts = !bnSabotageStatus;
 			}
 		}
-	}
-
-	/// <summary>
-	/// Find the attack spot object for the Astronaut monkey
-	/// </summary>
-	Transform GetAttackSpot() {
-
-		return transform.Find("AttackSpot");
 	}
 
 	/*
