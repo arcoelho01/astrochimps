@@ -43,9 +43,14 @@
 	Vector3 v3Direction;
 	float fAttackRange = 2.2f;// FIXME
 	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
-	float workingTimer = 0.0f;	//< Timer for the working state
-	float workingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
+	float fWorkingTimer = 0.0f;	//< Timer for the working state
+	float fWorkingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
 																	// the task is done
+
+	float fResearchTimer;	//< Timer to research something, like the cientist trying to find the rocket parts
+	float fResearchTargetTime; //< Time needed to complete the research above
+	bool bnResearchIsComplete; //< Is the research complete already?
+	bool bnCanResearchForRocketParts; //< The cientist can research only when the Command Center and the Research Lab are fully functional
 
 	Transform attackSpot;
 
@@ -137,6 +142,16 @@
 				break;
 
 			case FSMState.STATE_INSIDE_BUILDING:
+				{
+					// Cientist monkey only
+					if(monkeyClass == eMonkeyType.Cientist) {
+
+						// Resets the timer
+						fResearchTimer = 0.0f;
+						fResearchTargetTime = 10.0f;
+
+					}
+				}
 				break;
 
 			case FSMState.STATE_WALKING:
@@ -197,8 +212,8 @@
 					// DEBUG
 					Debug.Log(this.transform + " FSM entered WORKING state");
 					// Resets the working timer
-					workingTimer = 0.0f;
-					// Instiate a new progress bar
+					fWorkingTimer = 0.0f;
+					// Instantiate a new progress bar
 					if(!tProgressBar) {
 
 						tProgressBar = Instantiate(progressBarPrefab, sweetSpotObj.transform.position, 
@@ -243,6 +258,37 @@
 				break;
 
 			case FSMState.STATE_INSIDE_BUILDING:
+				{
+
+					// Cientist monkey only: researching to reveal the rocket parts
+					if(monkeyClass == eMonkeyType.Cientist && !bnResearchIsComplete && bnCanResearchForRocketParts) {
+
+						// Instantiate a new progress bar
+						if(!tProgressBar) {
+
+							tProgressBar = Instantiate(progressBarPrefab, sweetSpotObj.transform.position, 
+									Quaternion.identity) as Transform;
+						}
+
+						// Updates the timer
+						fResearchTimer += Time.deltaTime;
+
+						// Updates the progress bar
+						if(tProgressBar) {
+
+							tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateIncreaseBar(
+									fResearchTimer, fResearchTargetTime);
+						}
+
+						if(fResearchTimer >= fResearchTargetTime) {
+
+							// DEBUG
+							Debug.Log(this.transform + " timer inside the Command center over");
+
+							bnResearchIsComplete = true;
+						}
+					}
+				}
 				break;
 
 			case FSMState.STATE_WALKING:
@@ -287,17 +333,17 @@
 			case FSMState.STATE_WORKING:
 				{
 					// Updates the working timer
-					workingTimer += Time.deltaTime;
+					fWorkingTimer += Time.deltaTime;
 
 					// Updates the progress bar
 					if(tProgressBar) {
 
-						tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateIncreaseBar(workingTimer, workingTargetTime);
+						tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateIncreaseBar(fWorkingTimer, fWorkingTargetTime);
 					}
 
-					if(workingTimer >= workingTargetTime) {
+					if(fWorkingTimer >= fWorkingTargetTime) {
 
-						workingTimer = 0.0f;
+						fWorkingTimer = 0.0f;
 
 						// TODO: call the function to perform the desired task here
 						WorkIsDone();
@@ -336,6 +382,14 @@
 				break;
 
 			case FSMState.STATE_INSIDE_BUILDING:
+				{
+					// If we're used a progress bar, now we get rid of it
+					if(tProgressBar) {
+
+						Destroy(tProgressBar.gameObject);
+						tProgressBar = null;
+					}
+				}
 				break;
 
 			case FSMState.STATE_WALKING:
@@ -557,7 +611,7 @@
 				{
 
 					// Sets the time need to fix this building
-					workingTargetTime = 5.0f; // FIXME: arbitrary value! Fix!
+					fWorkingTargetTime = 5.0f; // FIXME: arbitrary value! Fix!
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -573,7 +627,7 @@
 
 					//droneTarget.Recycled();
 					//EnterNewState(FSMState.STATE_IDLE);
-					workingTargetTime = 5.0f; // FIXME
+					fWorkingTargetTime = 5.0f; // FIXME
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -599,7 +653,7 @@
 			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
 				{
 					// Sets the time needed to reprogram this drone
-					workingTargetTime = 4.0f;	// FIXME
+					fWorkingTargetTime = 4.0f;	// FIXME
 					EnterNewState(FSMState.STATE_WORKING);
 
 					//CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
@@ -612,7 +666,7 @@
 				{
 
 					// Sets the time needed to sabotage a building
-					workingTargetTime = 3.0f; // FIXME: arbitratry value!
+					fWorkingTargetTime = 3.0f; // FIXME: arbitratry value!
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -633,7 +687,7 @@
 
 					// DEBUG
 					Debug.Log("MouseState for this action " + mouseState + " in " + attackedBuilding.transform);
-					EnterNewState(FSMState.STATE_IDLE);
+					EnterNewState(FSMState.STATE_INSIDE_BUILDING);
 
 					// Deselect this object
 					this.Deselect();
@@ -761,7 +815,10 @@
 	/// </summary>
 	void OnEnable() {
 
+		// Check if the IA reached the end of a path
 		AstarAIFollow.OnReachedEndOfPath += OnAStarReachedEndOfPath;
+		// Check if a building have been sabotaged or fixed
+		CBuilding.OnSabotageStatusChange += OnSabotageStatusChange;
 	}
 
 	/// <summary>
@@ -769,11 +826,14 @@
 	/// </summary>
 	void OnDisable() {
 
+		// Check if the IA reached the end of a path
 		AstarAIFollow.OnReachedEndOfPath -= OnAStarReachedEndOfPath;
+		// Check if a building have been sabotaged or fixed
+		CBuilding.OnSabotageStatusChange -= OnSabotageStatusChange;
 	}
 
 	/// <summary>
-	///
+	/// What to do when the event is raised.
 	/// </summary>
 	void OnAStarReachedEndOfPath(Transform eventRaiser, bool isMoving) {
 
@@ -794,18 +854,21 @@
 	}
 
 	/// <summary>
-	/// Check if the CharacterController of the monkey hit something
+	/// Called by an event when a building is sabotaged or fixed. Useful for the Cientist, for instance, to know
+	/// if it can keep researching
 	/// </summary>
-	void OnControllerColliderHit(ControllerColliderHit hit) {
+	/// <param name="buildingEventRaiser"> CBuilding component of whoever sended the event message </param>
+	/// <param name="bnSabotageStatus"> True if the building was sabotaged, false if it is fixed </param>
+	void OnSabotageStatusChange(CBuilding buildingEventRaiser, bool bnSabotageStatus) {
 
-		//if(GetCurrentState() == FSMState.STATE_PURSUIT && transTarget != null) {
+		if(monkeyClass == eMonkeyType.Cientist) {
 
-		//	if(hit.transform == transTarget) {
+			if(buildingEventRaiser.buildingType == CBuilding.eBuildingType.ResearchLab) {
 
-		//		// DEBUG
-		//		Debug.LogError(this.transform + " hit in the target!");
-		//	}
-		//}
+				// FIXME: actually, it depends also from the Command Center status
+				bnCanResearchForRocketParts = !bnSabotageStatus;
+			}
+		}
 	}
 
 	/// <summary>

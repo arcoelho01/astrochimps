@@ -52,6 +52,10 @@ public class CBuilding : CBaseEntity {
 	public int vida;
 	public TipoEstrutura tipo;
 	// ================== MERGE
+	
+	// Events stuff
+	public delegate void BuildingSabotageHandler(CBuilding buildingEventRaiser, bool isSabotaged);
+	public static event BuildingSabotageHandler OnSabotageStatusChange;
 
 
 	/*
@@ -98,6 +102,10 @@ public class CBuilding : CBaseEntity {
 			GetControlRoomSpot();
 			GetExitSpot();
 		}
+
+		// A recently created building obviously is not sabotaged
+		if(OnSabotageStatusChange != null)
+			OnSabotageStatusChange(this, false);
 	}
 
 	/// <summary>
@@ -391,6 +399,9 @@ public class CBuilding : CBaseEntity {
 			}
 		}
 
+		// Send an event
+		if(OnSabotageStatusChange != null)
+			OnSabotageStatusChange(this, true);
 	}
 
 	/// <summary>
@@ -399,10 +410,13 @@ public class CBuilding : CBaseEntity {
 	public void Desabotage() {
 	
 		sabotado = false;
-		//renderer.material = myMaterial;
 
 		if(sabotagedPSObj)
 			Destroy(sabotagedPSObj.gameObject);
+
+		// Send an event
+		if(OnSabotageStatusChange != null)
+			OnSabotageStatusChange(this, false);
 	}
 
 	/// <summary>
@@ -465,6 +479,13 @@ public class CBuilding : CBaseEntity {
 
 		monkeyPrisoner.CapturedBy(this.transform, this.controlSpot);
 		this.capturedEntity = monkeyPrisoner;
+	}
+
+	/// <summary>
+	/// Research Lab Behaviour: show and marks all the rocket parts in the map
+	/// </summary>
+	public void RevealRocketParts() {
+
 	}
 
 }
