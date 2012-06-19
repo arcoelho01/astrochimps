@@ -270,7 +270,7 @@ public class CDrone : CBaseEntity {
 
 			case FSMState.STATE_BEING_RECYCLED:
 				// Clears the timer
-				fRecycleTimer = 0.0f;
+				//fRecycleTimer = 0.0f;
 				break;
 
 			case FSMState.STATE_DESTROYED:
@@ -455,9 +455,17 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_BEING_RECYCLED:
-				fRecycleTimer += Time.deltaTime;
-				if(fRecycleTimer > 5.0f) {
+				{
+					//fRecycleTimer += Time.deltaTime;
+					//if(fRecycleTimer > 5.0f) {
 
+					//	// Give the metal to the player
+					//	mainScript.player.AddResourceMetal(5.0f);	// FIXME: each drone must have a resource value
+
+					//	// And vanishes with the drone
+					//	EnterNewState(FSMState.STATE_DESTROYED);
+					//}
+					
 					// Give the metal to the player
 					mainScript.player.AddResourceMetal(5.0f);	// FIXME: each drone must have a resource value
 
@@ -510,8 +518,8 @@ public class CDrone : CBaseEntity {
 			case FSMState.STATE_STUNNED:
 				{
 
-					// Do the stunned animation
-					if(meshObject) {
+					// Do the reactivate animation, in case the drone is not being recycled already
+					if(meshObject && GetCurrentState() != FSMState.STATE_BEING_RECYCLED) {
 
 						meshObject.animation.Play("Reactivate");
 					}
@@ -569,7 +577,7 @@ public class CDrone : CBaseEntity {
 	public void Recycled() {
 
 		// DEBUG
-		Debug.Log("Drone being recycled");
+		//Debug.Log("Drone being recycled");
 
 		EnterNewState(FSMState.STATE_BEING_RECYCLED);
 	}

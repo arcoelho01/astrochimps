@@ -565,14 +565,16 @@
 			case MouseWorldPosition.eMouseStates.TargetingForRecycle:
 				{
 
-					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-					if(sfxAttack) {
+					//CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+					//if(sfxAttack) {
 
-						AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
-					}
+					//	AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+					//}
 
-					droneTarget.Recycled();
-					EnterNewState(FSMState.STATE_IDLE);
+					//droneTarget.Recycled();
+					//EnterNewState(FSMState.STATE_IDLE);
+					workingTargetTime = 5.0f; // FIXME
+					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
 
@@ -679,6 +681,17 @@
 
 					// TODO: the sabotage time could be taken from the building itself
 					buildingTarget.TemporarySabotage(8.0f);
+
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			case MouseWorldPosition.eMouseStates.TargetingForRecycle:
+				{
+					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+
+					// Drone recycled
+					droneTarget.Recycled();
 
 					EnterNewState(FSMState.STATE_IDLE);
 				}
