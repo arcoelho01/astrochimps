@@ -617,7 +617,7 @@ public class CDrone : CBaseEntity {
 	/// </summary>
 	void OnEnable() {
 
-		AstarAIFollow.OnMovingChange += OnAStarMovingChange;
+		AstarAIFollow.OnReachedEndOfPath += OnAStarReachedEndOfPath;
 	}
 
 	/// <summary>
@@ -625,13 +625,13 @@ public class CDrone : CBaseEntity {
 	/// </summary>
 	void OnDisable() {
 
-		AstarAIFollow.OnMovingChange -= OnAStarMovingChange;
+		AstarAIFollow.OnReachedEndOfPath -= OnAStarReachedEndOfPath;
 	}
 
 	/// <summary>
 	/// This method is called when the Astar reaches the end of the path
 	/// </summary>
-	void OnAStarMovingChange(Transform eventRaiser, bool isMoving) {
+	void OnAStarReachedEndOfPath(Transform eventRaiser, bool isMoving) {
 
 		// Ignores if the stop event wasn't generate by the monkey itself
 		if(eventRaiser != this.transform)

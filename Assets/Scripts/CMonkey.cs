@@ -761,7 +761,7 @@
 	/// </summary>
 	void OnEnable() {
 
-		AstarAIFollow.OnMovingChange += OnAStarMovingChange;
+		AstarAIFollow.OnReachedEndOfPath += OnAStarReachedEndOfPath;
 	}
 
 	/// <summary>
@@ -769,13 +769,13 @@
 	/// </summary>
 	void OnDisable() {
 
-		AstarAIFollow.OnMovingChange -= OnAStarMovingChange;
+		AstarAIFollow.OnReachedEndOfPath -= OnAStarReachedEndOfPath;
 	}
 
 	/// <summary>
 	///
 	/// </summary>
-	void OnAStarMovingChange(Transform eventRaiser, bool isMoving) {
+	void OnAStarReachedEndOfPath(Transform eventRaiser, bool isMoving) {
 
 		// Ignores if the stop event wasn't generate by the monkey itself
 		if(eventRaiser != this.transform)
