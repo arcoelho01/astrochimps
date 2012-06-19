@@ -111,7 +111,7 @@ public class RTSCam : MonoBehaviour {
 
 		cameraDistance = zoomDefault;
 
-		//commandCenter = GameObject.Find("CentroDeComando").transform;
+		commandCenter = GameObject.Find("CentroDeComando").transform;
 
 		PositionCamera();
 
@@ -209,7 +209,7 @@ public class RTSCam : MonoBehaviour {
 
 			LookAtTarget(objectInFocus);
 		}
-http://answers.unity3d.com/questions/29586/what-is-the-config-dialog-banner-splash-image-size.html
+
 		// Any changes to the camera? Redraw it!
 		if(bnCamModified) {
 

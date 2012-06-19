@@ -872,6 +872,9 @@ public class MouseWorldPosition : MonoBehaviour {
 					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
 						CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
 
+						// DEBUG
+						Debug.Log(this.transform + " calling CanSabotageBuilding with " + whatIClicked.transform);
+
 						cMonkeyScript.PerformAction(whatIClicked, MouseState);
 					}
 					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
@@ -961,7 +964,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.Backslash)){
 
-			if(selectedObject.tag == "Building") {
+			if(selectedObject && selectedObject.tag == "Building") {
 
 				CBuilding selectedBuilding = selectedObject.gameObject.GetComponent<CBuilding>();
 				if(!selectedBuilding)

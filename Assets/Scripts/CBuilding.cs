@@ -199,8 +199,10 @@ public class CBuilding : CBaseEntity {
 		//this.Select();//gameObject.GetComponent<CBaseEntity>().Select();
 		
 		// TODO: for now we put the monkey model on top of the building :P
-		monkeyInside.transform.position =	controlSpot.transform.position;
+		monkeyInside.transform.position = controlSpot.transform.position;
 		monkeyInside.transform.rotation = Quaternion.identity;
+		monkeyInside.Translate(new Vector3(0.0f,-2.5f,0.0f));
+		monkeyInside.transform.Rotate(new Vector3(0.0f,180.0f,0.0f));
 	}
 
 	/// <summary>
@@ -218,6 +220,9 @@ public class CBuilding : CBaseEntity {
 			AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
 		monkeyInside.transform.position = exitSpot.transform.position;
+		monkeyInside.transform.rotation = Quaternion.identity;
+		monkeyInside.transform.Rotate(new Vector3(0.0f,90.0f,0.0f));
+		
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
 		monkeyInside = null;
 	}
@@ -237,7 +242,7 @@ public class CBuilding : CBaseEntity {
 	void ExtractResource() {
 
 		CResource.ExtractedResource extractedResource;
-		float extractionAmount = level * 1.5f;
+		float extractionAmount = level * 2.5f;
 		string resourceString = "";
 
 		// Try to extract resources

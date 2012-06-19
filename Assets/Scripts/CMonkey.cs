@@ -41,13 +41,16 @@
 	public Transform iconPrefab;
 
 	Vector3 v3Direction;
-	float fAttackRange;// FIXME
+	float fAttackRange = 2.2f;// FIXME
 	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
 	float workingTimer = 0.0f;	//< Timer for the working state
 	float workingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
 																	// the task is done
 
 	Transform attackSpot;
+
+	//< Progress bar showed in the Monkey Panel.
+	Transform tProgressBar;
 	
 	/*
 	 * ===========================================================================================================
@@ -82,15 +85,8 @@
 		if(monkeyClass == eMonkeyType.Cientist)
 			captureSpot = GetCaptureSpot();
 
-		// Get the capture spot
-		if(monkeyClass == eMonkeyType.Astronaut) {
-			
-			// initial setup
-			fAttackRange = 2.2f;
-
-			// Get's the spot where we will test for collisions used in the attack
-			attackSpot = GetAttackSpot();
-		}
+		// Get's the spot where we will test for collisions used in the attack
+		attackSpot = GetAttackSpot();
 	}
 
 	/// <summary>
@@ -135,7 +131,7 @@
 				// Clear any previous targets
 				transTarget = null;
 				// DEBUG
-				Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
+				//Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
 				break;
 			case FSMState.STATE_SELECTED:
 				break;
@@ -154,7 +150,7 @@
 				AIScript.ClickedTargetPosition(walkTo);
 
 				// DEBUG
-				Debug.LogWarning(this.transform + " clearing target on STATE_WALKING");
+				//Debug.LogWarning(this.transform + " clearing target on STATE_WALKING");
 
 				// Clear the target
 				transTarget = null;
@@ -187,20 +183,34 @@
 
 						AIScript.ClickedTargetPosition(transTarget.position);
 					}
+
+					// Plays the animation for the walk cycle
+					if(meshObject) {
+
+						meshObject.animation.Play("NormalWalk");
+					}
 				}
 				break;
 
 			case FSMState.STATE_WORKING:
-				// DEBUG
-				Debug.Log(this.transform + " FSM entered WORKING state");
-				// Resets the working timer
-				workingTimer = 0.0f;
+				{
+					// DEBUG
+					Debug.Log(this.transform + " FSM entered WORKING state");
+					// Resets the working timer
+					workingTimer = 0.0f;
+					// Instiate a new progress bar
+					if(!tProgressBar) {
+
+						tProgressBar = Instantiate(progressBarPrefab, sweetSpotObj.transform.position, 
+								Quaternion.identity) as Transform;
+					}
+				}
 				break;
 
 			case FSMState.STATE_CAPTURED:
 				{
 					// DEBUG
-					Debug.Log(this.transform + " [Entering STATE_CAPTURED]");
+					//Debug.Log(this.transform + " [Entering STATE_CAPTURED]");
 					this.Deselect();
 					this.Selectable = false;
 				}
@@ -267,7 +277,7 @@
 					}
 
 					if(mainScript.CheckIfTargetColliderIsInRange(attackSpot.transform.position, 
-								transTarget, MainScript.enemyLayer, fAttackRange)) {
+								transTarget, transTarget.gameObject.layer, fAttackRange)) {
 
 						EnterNewState(FSMState.STATE_ATTACKING);
 					}
@@ -275,15 +285,23 @@
 				break;
 
 			case FSMState.STATE_WORKING:
-				// Updates the working timer
-				workingTimer += Time.deltaTime;
+				{
+					// Updates the working timer
+					workingTimer += Time.deltaTime;
 
-				if(workingTimer >= workingTargetTime) {
+					// Updates the progress bar
+					if(tProgressBar) {
 
-					workingTimer = 0.0f;
+						tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateIncreaseBar(workingTimer, workingTargetTime);
+					}
 
-					// TODO: call the function to perform the desired task here
-					WorkIsDone();
+					if(workingTimer >= workingTargetTime) {
+
+						workingTimer = 0.0f;
+
+						// TODO: call the function to perform the desired task here
+						WorkIsDone();
+					}
 				}
 				break;
 
@@ -349,17 +367,34 @@
 			case FSMState.STATE_PURSUIT:
 				// Stop the 'walk to the target'
 				AIScript.Stop();
+
+				// Stops the walk cycle
+				if(meshObject) {
+
+					//meshObject.animation.Stop("Walk");
+					meshObject.animation.CrossFade("idle");
+				}
+			
 				break;
 
 			case FSMState.STATE_WORKING:
-				// DEBUG
-				Debug.Log(this.transform + " FSM leaving WORKING state");
+				{
+					// DEBUG
+					Debug.Log(this.transform + " FSM leaving WORKING state");
+
+					// If we're used a progress bar, now we get rid of it
+					if(tProgressBar) {
+
+						Destroy(tProgressBar.gameObject);
+						tProgressBar = null;
+					}
+				}
 				break;
 
 			case FSMState.STATE_CAPTURED:
 				{
 					// DEBUG
-					Debug.Log(this.transform + " [Leaving STATE_CAPTURED]");
+					//Debug.Log(this.transform + " [Leaving STATE_CAPTURED]");
 
 					// The monkey can be selected again
 					this.Selectable = true;
@@ -522,7 +557,7 @@
 				{
 
 					// Sets the time need to fix this building
-					workingTargetTime = 3.0f; // FIXME: arbitrary value! Fix!
+					workingTargetTime = 5.0f; // FIXME: arbitrary value! Fix!
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
