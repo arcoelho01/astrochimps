@@ -644,9 +644,18 @@ public class CDrone : CBaseEntity {
 				Debug.LogWarning(this.transform + " reached prisoner delivery position " + eventRaiser);
 				// Incarcerated the prisoner in the building
 				hunterAIScript.DeliverPrisoner(transTarget, this.capturedEntity);
-				// And go back to try to find another
-				WalkTo(hunterAIScript.GetLastTargetSightedPosition());
+				// Back to idle
+				EnterNewState(FSMState.STATE_IDLE);
 			}
 		}
 	}
+
+  public override void Deselect() {
+
+   if((this.droneType == eDroneType.Patrol) && patrolScript.setNewPatrol)
+      patrolScript.RevertPatrol();
+
+   base.Deselect();
+
+ }
 }
