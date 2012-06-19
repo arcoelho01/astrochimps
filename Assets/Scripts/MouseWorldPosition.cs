@@ -337,7 +337,7 @@ public class MouseWorldPosition : MonoBehaviour {
 										// Astronaut vs hunter drones: get caught
 										// Astronaut vs patrol drones: not ok
 										// TODO: put this rules here!
-										if(!isThisDroneStunned) {
+										if(!isThisDroneStunned && pointedDrone.droneType == CDrone.eDroneType.Saboteur) {
 
 											cursorCurrent = cursorAttack;
 											MouseState = eMouseStates.TargetingForBrawl;
