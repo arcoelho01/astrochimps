@@ -598,9 +598,13 @@
 			// Saboteur monkey
 			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
 				{
-					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-					droneTarget.Reprogrammed();
-					EnterNewState(FSMState.STATE_IDLE);
+					// Sets the time needed to reprogram this drone
+					workingTargetTime = 4.0f;	// FIXME
+					EnterNewState(FSMState.STATE_WORKING);
+
+					//CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+					//droneTarget.Reprogrammed();
+					//EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
 
@@ -693,6 +697,16 @@
 					// Drone recycled
 					droneTarget.Recycled();
 
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
+				{
+					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+
+					// Drone reprogrammed
+					droneTarget.Reprogrammed();
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
