@@ -136,6 +136,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 			construcaoNova.name = nomeProvisorio + this.name.Substring(4,1);
 			GameObject.Find("Regiao"+this.name.Substring(4,1)).GetComponent<Regiao>().setor[1] = construcaoNova;
 			GameObject.Find("CommandCenter").GetComponent<GerenciadorSlots>().slots[int.Parse(this.name.Substring(4,1))-1] = construcaoNova;
+			GameObject.Find("CanoCentral"+this.name.Substring(4,1)+"/Mesh/(TO TEX) Tube -- Low (MAP) (ANI F)").renderer.enabled = true;
 		}
 		else
 			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+4,transform.position.y+1,transform.position.z+3),Quaternion.Euler(0,0,0));

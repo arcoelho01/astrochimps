@@ -15,6 +15,7 @@ public class GerenciadorSlots : MonoBehaviour {
 		for(int i = 0; i < 9; i++)
 		{
 			canos[i] = GameObject.Find("CanoCentral"+(i+1));
+			GameObject.Find("CanoCentral"+(i+1)+"/Mesh/(TO TEX) Tube -- Low (MAP) (ANI F)").GetComponent<MeshRenderer>().renderer.enabled = false;
 			slots[i] = GameObject.Find("Slot"+(i+1));
 			regioes[i] = GameObject.Find("Regiao"+(i+1));
 	      if(i >= 3){
@@ -23,7 +24,6 @@ public class GerenciadorSlots : MonoBehaviour {
 	  			regioes[i].active = false;
 	      }
 		}
-		
 	}
 	
 	// Update is called once per frame
