@@ -17,6 +17,7 @@ public class EnemyPatrol : MonoBehaviour {
     cdroneScript = this.GetComponent<CDrone>();
     patrolIndex = 0;
     ChoicePatrol(4);
+    cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
 
 	}
 	
@@ -82,8 +83,8 @@ public class EnemyPatrol : MonoBehaviour {
 
   public void StartPatrol () {
 
-    if(cdroneScript.GetCurrentState() == CDrone.FSMState.STATE_IDLE)
-      cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
+    //if(cdroneScript.GetCurrentState() == CDrone.FSMState.STATE_IDLE)
+    //  cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
 
     if(Vector3.Distance(this.transform.position,patrolTarget[patrolIndex]) < 5.0f){
       //if(!AstarAIFollow.onAIMovingChange) {
