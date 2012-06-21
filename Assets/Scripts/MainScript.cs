@@ -49,6 +49,11 @@ public class MainScript : MonoBehaviour {
 	public static Transform MonkeyEngineer;
 	public static Transform MonkeySaboteur;
 
+	//< Shortcut for the Command Center
+	public static CBuilding cbCommandCenter;
+	//< Shortcut for the Research Lab
+	public static CBuilding cbResearchLab;
+
 	// Shortcut to this script
 	public static MainScript Script;
 
@@ -79,7 +84,6 @@ public class MainScript : MonoBehaviour {
 			Debug.LogError("Player object not found!");
 		}
 
-		// FIXME: added only for now
 		GetCurrentUnitsInScene();
 
 		mouseInputScript = gameObject.GetComponent<MouseWorldPosition>();

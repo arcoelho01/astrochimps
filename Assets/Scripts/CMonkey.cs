@@ -353,7 +353,6 @@ public class CMonkey : CBaseEntity {
 
 						fWorkingTimer = 0.0f;
 
-						// TODO: call the function to perform the desired task here
 						WorkIsDone();
 					}
 				}
@@ -391,6 +390,12 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_INSIDE_BUILDING:
 				{
+					// If we're used a progress bar, now we get rid of it
+					if(tProgressBar) {
+
+						Destroy(tProgressBar.gameObject);
+						tProgressBar = null;
+					}
 				}
 				break;
 
@@ -885,10 +890,15 @@ public class CMonkey : CBaseEntity {
 
 		if(monkeyClass == eMonkeyType.Cientist) {
 
-			if(buildingEventRaiser.buildingType == CBuilding.eBuildingType.ResearchLab) {
+			// The research only will proceed when both Command Center and the Research Lab are operational
+			if(buildingEventRaiser.buildingType == CBuilding.eBuildingType.ResearchLab ||
+					buildingEventRaiser.buildingType == CBuilding.eBuildingType.CommandCenter) {
 
-				// FIXME: actually, it depends also from the Command Center status
-				bnCanResearchForRocketParts = !bnSabotageStatus;
+				if(MainScript.cbCommandCenter && MainScript.cbResearchLab) {
+
+					bnCanResearchForRocketParts = 
+						!MainScript.cbCommandCenter.sabotado & !MainScript.cbResearchLab.sabotado;
+				}
 			}
 		}
 	}

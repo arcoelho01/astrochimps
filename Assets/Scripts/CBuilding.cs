@@ -103,9 +103,21 @@ public class CBuilding : CBaseEntity {
 			GetExitSpot();
 		}
 
+		// Maintains the shortcuts in the MainScript update
+		if(buildingType == eBuildingType.CommandCenter && this.gameObject.layer == MainScript.alliedLayer) {
+
+			MainScript.cbCommandCenter = this;
+		}
+
+		if(buildingType == eBuildingType.ResearchLab && this.gameObject.layer == MainScript.alliedLayer) {
+
+			MainScript.cbResearchLab = this;
+		}
+
 		// A recently created building obviously is not sabotaged
 		if(OnSabotageStatusChange != null)
 			OnSabotageStatusChange(this, false);
+
 	}
 
 	/// <summary>
@@ -231,7 +243,10 @@ public class CBuilding : CBaseEntity {
 		monkeyInside.transform.rotation = Quaternion.identity;
 		monkeyInside.transform.Rotate(new Vector3(0.0f,90.0f,0.0f));
 		
-		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = true;	
+		CMonkey cmMonkeyInside =	monkeyInside.gameObject.GetComponent<CMonkey>();
+		cmMonkeyInside.Selectable = true;
+		cmMonkeyInside.WalkTo(exitSpot.transform.position);
+
 		monkeyInside = null;
 	}
 
@@ -408,7 +423,6 @@ public class CBuilding : CBaseEntity {
 	/// "Desabotage" (is this a real word?) this building, removing the visual aid to the player
 	/// </summary>
 	public void Desabotage() {
-	
 		sabotado = false;
 
 		if(sabotagedPSObj)
