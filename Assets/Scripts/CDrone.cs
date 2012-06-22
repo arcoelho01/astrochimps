@@ -75,6 +75,7 @@ public class CDrone : CBaseEntity {
 				isThisAnEnemyDrone = true;
 
 				captureSpot = GetCaptureSpot();
+				captureRaySpot = GetCaptureRaySpot();
 
 				if(!hunterAIScript) {
 
@@ -416,7 +417,7 @@ public class CDrone : CBaseEntity {
 					if(targetBaseEntity.Type == CBaseEntity.eObjType.Monkey) {
 
 						// Captures the monkey
-						targetBaseEntity.CapturedBy(this.transform, this.captureSpot);
+						targetBaseEntity.CapturedBy(this.transform, this.captureSpot, this.captureRaySpot);
 						this.capturedEntity = targetBaseEntity;
 
 						// Change state

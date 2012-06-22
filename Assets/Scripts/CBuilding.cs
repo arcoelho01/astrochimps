@@ -491,7 +491,7 @@ public class CBuilding : CBaseEntity {
 			Debug.LogError(this.transform + " can't find the ControlSpot for this building, so I can't transfer the	prisoner");
 		}
 
-		monkeyPrisoner.CapturedBy(this.transform, this.controlSpot);
+		monkeyPrisoner.CapturedBy(this.transform, this.controlSpot, null);
 		this.capturedEntity = monkeyPrisoner;
 	}
 

@@ -54,6 +54,8 @@ public class CBaseEntity : MonoBehaviour {
 	protected Vector3 sweetSpot;
 	// The object to whom captured objects will be parented, if applicable
 	protected Transform captureSpot;
+	// Where the capture ray should start
+	protected Transform captureRaySpot;
 
 	// Visual aid to show that object was captured
 	Transform captureForceField;
@@ -186,7 +188,8 @@ public class CBaseEntity : MonoBehaviour {
 	/// </summary>
 	/// <param name="capturer"> Transform for who is capturing this object </param>
 	/// <param name="captureSpot"> Transform of the capture spot (inside the hierarchy of the capturer) </param>
-	public virtual void CapturedBy(Transform capturer, Transform captureSpot) {
+	/// <param name="captureRaySpot"> Transform of the spot from where the capture ray is shoot </param>
+	public virtual void CapturedBy(Transform capturer, Transform captureSpot, Transform captureRaySpot) {
 
 		if(isCaptured)
 			return;
@@ -222,18 +225,26 @@ public class CBaseEntity : MonoBehaviour {
 			captureForceField.transform.parent = this.transform;
 		}
 
+		// Create an instance of the capture ray
 		if(MainScript.Script.prefabCaptureRay && !captureRay) {
+
+			Transform tRayOriginObject;
+
+			if(captureRaySpot)
+				tRayOriginObject = captureRaySpot;
+			else
+				tRayOriginObject = capturer;
 
 			captureRay = Instantiate(MainScript.Script.prefabCaptureRay, this.transform.position, 
 					Quaternion.identity) as Transform;
 			captureRay.transform.parent = this.transform;
 
-			Vector3 direction = capturer.transform.position - this.transform.position;
+			Vector3 direction = tRayOriginObject.transform.position - this.transform.position;
 			Vector3 newSize = new Vector3(captureRay.transform.localScale.x,captureRay.transform.localScale.y, 
 					direction.magnitude);
 			captureRay.transform.localScale = newSize;
 
-			captureRay.transform.LookAt(capturer);
+			captureRay.transform.LookAt(tRayOriginObject);
 
 		}
 
@@ -352,6 +363,18 @@ public class CBaseEntity : MonoBehaviour {
 		Transform captureSpotObj = transform.Find("CaptureSpot");
 
 		return captureSpotObj;
+	}
+
+	/// <summary>
+	/// Get the Capture Ray Spot object from the hierarchy, which is the spot from where the capture ray is shoot.
+	/// Useful only for the cientist monkey and the hunter drones
+	/// </summary>
+	/// <returns> The transform of the Capture Ray Spot, or null if not found </returns>
+	protected Transform GetCaptureRaySpot() {
+
+		Transform captureRaySpotObj = transform.Find("CaptureRaySpot");
+
+		return captureRaySpotObj;
 	}
 }
 

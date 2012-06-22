@@ -88,8 +88,12 @@ public class CMonkey : CBaseEntity {
 		GetSweetSpotAndMeshObject();
 
 		// Get the capture spot
-		if(monkeyClass == eMonkeyType.Cientist)
+		if(monkeyClass == eMonkeyType.Cientist) {
+		
 			captureSpot = GetCaptureSpot();
+			captureRaySpot = GetCaptureRaySpot();
+
+		}
 
 		// Get's the spot where we will test for collisions used in the attack
 		attackSpot = GetAttackSpot();
@@ -651,7 +655,7 @@ public class CMonkey : CBaseEntity {
 						Debug.LogError("Cannot find component CBaseEntity for this object: " + transTarget.name);
 					}
 
-					capturedEntity.CapturedBy(this.transform, this.captureSpot);
+					capturedEntity.CapturedBy(this.transform, this.captureSpot, this.captureRaySpot);
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
@@ -781,7 +785,7 @@ public class CMonkey : CBaseEntity {
 	/// Tells to this monkey that it is being captured by an enemy hunter drone, setting it up (stop walking, 
 	/// deselect the monkey and doesn't allow it to walk anymore until it's released
 	/// </summary>
-	public override void CapturedBy(Transform capturer, Transform captureSpot) {
+	public override void CapturedBy(Transform capturer, Transform captureSpot, Transform captureRaySpot) {
 
 		if(isCaptured)
 			return;
@@ -796,7 +800,7 @@ public class CMonkey : CBaseEntity {
 		// Deactivate the Character Controller, so the monkey will move together with the drone
 		myController.enabled = false;
 
-		base.CapturedBy(capturer, captureSpot);
+		base.CapturedBy(capturer, captureSpot, captureRaySpot);
 	}
 
 	/// <summary>
