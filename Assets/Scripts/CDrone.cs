@@ -48,6 +48,13 @@ public class CDrone : CBaseEntity {
 
 	bool isThisAnEnemyDrone = false;
 
+	//< This drone was reprogrammed?
+	bool bnWasReprogrammed;
+	//< If so, this will keep it's life time
+	float fWasReprogrammedTimer = 0.0f;
+	//< Time that the drone will last after being reprogrammed
+	float fWasReprogrammedTargetTime = 5.0f;
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -158,6 +165,10 @@ public class CDrone : CBaseEntity {
 	
 	
 	public void Update(){
+		
+		// FIXME: Updates the Reprogrammed Timer here. Is this the best place?
+		if(bnWasReprogrammed)
+			fWasReprogrammedTimer += Time.deltaTime;
 		
 		ExecuteCurrentState();
 	}
@@ -319,6 +330,12 @@ public class CDrone : CBaseEntity {
 	/// </summary>
   void ExecuteCurrentState() {
 
+		// Reprogrammed and timer is over?
+		if(bnWasReprogrammed && fWasReprogrammedTimer >= fWasReprogrammedTargetTime) {
+
+			EnterNewState(FSMState.STATE_DESTROYED);
+		}
+
 		switch(GetCurrentState()) {
 
 			case FSMState.STATE_IDLE:
@@ -475,6 +492,9 @@ public class CDrone : CBaseEntity {
 				}
 				break;
 
+			case FSMState.STATE_DESTROYED:
+				break;
+
 			case FSMState.STATE_PRISONER_MONKEY:
 				{
 
@@ -606,6 +626,11 @@ public class CDrone : CBaseEntity {
 
 		// Change the state of the drone
 		EnterNewState(FSMState.STATE_IDLE);
+
+		// Starts the 'time bomb' for this drone. Reprogrammed drones only lasts a few seconds in player's control,
+		// then self destruct
+		bnWasReprogrammed = true;
+		fWasReprogrammedTimer = 0.0f;
 	}
 
 	/*
