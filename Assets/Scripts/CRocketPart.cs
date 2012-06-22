@@ -24,12 +24,13 @@ public class CRocketPart : CBaseEntity {
 
 		Script = this;
 
-		isRevealed = false;
 		GetSweetSpotAndMeshObject();
 
 		// Calculate the number of rocket parts from the size of the enum
 		String[] tempEnum = Enum.GetNames(typeof(eRocketPartType));
 		numberOfDefinedRocketParts = tempEnum.Length;
+
+		PartIsUnrevealed();
 	}
 
 	// Use this for initialization
@@ -52,6 +53,10 @@ public class CRocketPart : CBaseEntity {
 
 		isRevealed = true;
 		meshObject.gameObject.renderer.enabled = true;
+		collider.enabled = true;
+
+		// Turn off the gravity for this object
+		rigidbody.useGravity = true;
 	}
 
 	/// <summary>
@@ -61,5 +66,9 @@ public class CRocketPart : CBaseEntity {
 
 		isRevealed = false;
 		meshObject.gameObject.renderer.enabled = false;
+		collider.enabled = false;
+
+		// Turn off the gravity for this object
+		rigidbody.useGravity = false;
 	}
 }

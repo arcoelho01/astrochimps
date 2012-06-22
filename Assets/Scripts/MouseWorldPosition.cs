@@ -564,8 +564,10 @@ public class MouseWorldPosition : MonoBehaviour {
 					if(whatIAmPointing.tag == "RocketPart" && 
 							selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Cientist) {
 
+						CRocketPart cRocketPart = whatIAmPointing.GetComponent<CRocketPart>();
+
 						// Ok, but it's this part already being carried by someone in my team?
-						if(whatIAmPointing.GetComponent<CRocketPart>().isCaptured) {
+						if(cRocketPart.isCaptured) {
 
 							// Set the cursor
 							cursorCurrent = cursorCaptureRay;
@@ -574,7 +576,7 @@ public class MouseWorldPosition : MonoBehaviour {
 							// Keeps the pointed object
 							//pointedObject = whatIAmPointing;
 						}
-						else {
+						else if(cRocketPart.isRevealed){
 
 							// Set the cursor
 							cursorCurrent = cursorCaptureRay;
