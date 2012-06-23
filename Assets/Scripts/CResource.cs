@@ -66,7 +66,7 @@ public class CResource : CBaseEntity {
 		rv.amount = 0.0f;
 		rv.isDrained = resourceDrained;
 
-		if(!associatedExtractor ||  resourceLevel == 0.0f) {
+		if(!associatedExtractor ||  resourceLevel <= 0.0f) {
 
 			return rv; 
 		}
@@ -75,7 +75,7 @@ public class CResource : CBaseEntity {
 		resourceLevel -= amount;
 
 		// Check if we actually have enough resources
-		if(resourceLevel < 0.0f) {
+		if(resourceLevel <= 0.0f) {
 
 			// We tried to extract more than available
 			amount += resourceLevel; // Adjust the amount extracted
