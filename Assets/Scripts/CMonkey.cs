@@ -58,6 +58,17 @@ public class CMonkey : CBaseEntity {
 	//< Progress bar showed in the Monkey Panel.
 	Transform tProgressBar;
 
+	//< Time needed to sabotage a drone
+	float fDroneSabotageTime = 1.5f;
+	//< Time needed to sabotage a building
+	float fBuildingSabotageTime = 3.5f;
+	//< Time needed to fix a sabotaged building
+	float fBuildingFixTime = 5.0f;
+	//< Time needed to recycle a stunned drone
+	float fDroneRecycleTime = 4.0f;
+	//< Time needed to reprogram a stunned drone
+	float fDroneReprogramTime = 4.0f;
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -633,23 +644,14 @@ public class CMonkey : CBaseEntity {
 				{
 
 					// Sets the time need to fix this building
-					fWorkingTargetTime = 5.0f; // FIXME: arbitrary value! Fix!
+					fWorkingTargetTime = fBuildingFixTime;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
 
 			case MouseWorldPosition.eMouseStates.TargetingForRecycle:
 				{
-
-					//CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-					//if(sfxAttack) {
-
-					//	AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
-					//}
-
-					//droneTarget.Recycled();
-					//EnterNewState(FSMState.STATE_IDLE);
-					fWorkingTargetTime = 5.0f; // FIXME
+					fWorkingTargetTime = fDroneRecycleTime;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -675,12 +677,8 @@ public class CMonkey : CBaseEntity {
 			case MouseWorldPosition.eMouseStates.TargetingForReprogram:
 				{
 					// Sets the time needed to reprogram this drone
-					fWorkingTargetTime = 4.0f;	// FIXME
+					fWorkingTargetTime = fDroneReprogramTime;
 					EnterNewState(FSMState.STATE_WORKING);
-
-					//CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-					//droneTarget.Reprogrammed();
-					//EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
 
@@ -688,7 +686,15 @@ public class CMonkey : CBaseEntity {
 				{
 
 					// Sets the time needed to sabotage a building
-					fWorkingTargetTime = 3.0f; // FIXME: arbitratry value!
+					fWorkingTargetTime = fBuildingSabotageTime;
+					EnterNewState(FSMState.STATE_WORKING);
+				}
+				break;
+
+			case MouseWorldPosition.eMouseStates.CanSabotageDrone:
+				{
+					// Sets the time needed to sabotage a building
+					fWorkingTargetTime = fDroneSabotageTime;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -761,6 +767,17 @@ public class CMonkey : CBaseEntity {
 
 					// TODO: the sabotage time could be taken from the building itself
 					buildingTarget.TemporarySabotage(8.0f);
+
+					EnterNewState(FSMState.STATE_IDLE);
+				}
+				break;
+
+			case MouseWorldPosition.eMouseStates.CanSabotageDrone:
+				{
+					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+
+					// FIXME: for now, we leave the sabotage having the same effect as if the drone was attacked
+					droneTarget.Attacked();
 
 					EnterNewState(FSMState.STATE_IDLE);
 				}

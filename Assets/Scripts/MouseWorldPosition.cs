@@ -366,6 +366,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 								case CMonkey.eMonkeyType.Saboteur:
 									{
+										// Saboteur:
+										// Can sabotage patrol drones and hunter drones, if not visible
 										// The sabouter only attack (reprogram) stunned drones
 										if(isThisDroneStunned) {
 
@@ -374,10 +376,9 @@ public class MouseWorldPosition : MonoBehaviour {
 										}
 										else {
 
-											// Drone not stunned. Well, we still can sabotage it
-											cursorCurrent = cursorAttack;
-											// FIXME: for now using the same attack as the astronaut...
-											MouseState = eMouseStates.TargetingForBrawl;
+											// Drone not stunned. Well, we still can sabotage it 
+											cursorCurrent = cursorSabotageEnable;
+											MouseState = eMouseStates.CanSabotageDrone;
 										}
 									}
 									break;
@@ -901,7 +902,8 @@ public class MouseWorldPosition : MonoBehaviour {
 				{
 					if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Monkey) {
 
-						// TODO: add some code here
+						CMonkey cMonkeyScript = selectedObject.gameObject.GetComponent<CMonkey>();
+						cMonkeyScript.PerformAction(whatIClicked, MouseState);
 					}
 					else if(selectedObject.gameObject.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Drone) {
 						// Get the basic info on the unit
