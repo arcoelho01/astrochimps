@@ -945,7 +945,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Instantiate a cursor
 		if(projectorSelectTargetPosition == null) {
 			projectorSelectTargetPosition = Instantiate(cursorObject, position, 
-					Quaternion.Euler(90.0f, 0.0f, 0.0f)) as Transform;
+					Quaternion.identity) as Transform;
 		}
 		else {
 
