@@ -52,7 +52,7 @@ public class CMonkey : CBaseEntity {
 	float fResearchTargetTime; //< Time needed to complete the research above
 	bool bnResearchIsComplete; //< Is the research complete already?
 	bool bnCanResearchForRocketParts; //< The cientist can research only when the Command Center and the Research Lab are fully functional
-
+	private GUIControl GUIScript;
 	Transform attackSpot;
 
 	//< Progress bar showed in the Monkey Panel.
@@ -97,6 +97,9 @@ public class CMonkey : CBaseEntity {
 
 		// Get's the spot where we will test for collisions used in the attack
 		attackSpot = GetAttackSpot();
+		
+		GUIScript = GameObject.Find("HUD-Objects").GetComponent<GUIControl>();
+		
 	}
 
 	/// <summary>
@@ -140,6 +143,7 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_IDLE:
 				// Clear any previous targets
 				transTarget = null;
+				GUIScript.setMover(false,this.monkeyClass);
 				// DEBUG
 				//Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
 				break;
@@ -154,12 +158,14 @@ public class CMonkey : CBaseEntity {
 						// Resets the timer
 						fResearchTimer = 0.0f;
 						fResearchTargetTime = 10.0f;
-					}
+						GUIScript.setProcurar(true);
+					}else
+					GUIScript.setMover(false,this.monkeyClass);
 				}
 				break;
 
 			case FSMState.STATE_WALKING:
-
+	            GUIScript.setMover(true,this.monkeyClass);
 				// DEBUG
 				Debug.Log(this.transform + " Entering STATE_WALKING");
 				if(sfxAck) {
@@ -189,17 +195,19 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_ATTACKING:
 				// SET AISCRIPT TO MOVE TO TARGET
+				GUIScript.setAtacar(true, monkeyClass);
 				break;
 
 			case FSMState.STATE_PURSUIT:
 				{
+					
 					if(!transTarget) {
 
 						// DEBUG
 						Debug.LogWarning(this.transform + " STATE_PURSUIT received a null target!");
 					}
 					else {
-
+						
 						AIScript.ClickedTargetPosition(transTarget.position);
 					}
 
@@ -294,9 +302,12 @@ public class CMonkey : CBaseEntity {
 
 							// If we're used a progress bar, now we get rid of it
 							if(tProgressBar) {
-
+						
+						
+								GUIScript.setProcurar(false);
 								Destroy(tProgressBar.gameObject);
 								tProgressBar = null;
+								
 							}
 						}
 					}
