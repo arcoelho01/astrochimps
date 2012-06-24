@@ -18,6 +18,7 @@ public class CRocketPart : CBaseEntity {
 	public int numberOfDefinedRocketParts;
 
 	public static CRocketPart Script;
+	VisibilityControl visibilityScript;
 
 	//
 	void Awake() {
@@ -30,14 +31,13 @@ public class CRocketPart : CBaseEntity {
 		String[] tempEnum = Enum.GetNames(typeof(eRocketPartType));
 		numberOfDefinedRocketParts = tempEnum.Length;
 
-		//PartIsUnrevealed();
+		// Get the visibility control script
+		visibilityScript = gameObject.GetComponent<VisibilityControl>();
 	}
 
 	// Use this for initialization
 	void Start () {
 
-		//if(meshObject)
-		//	meshObject.gameObject.renderer.enabled = isRevealed;
 	}
 	
 	// Update is called once per frame
@@ -52,11 +52,17 @@ public class CRocketPart : CBaseEntity {
 	public void PartIsRevealed() {
 
 		isRevealed = true;
-		meshObject.gameObject.renderer.enabled = true;
 		collider.enabled = true;
 
 		// Turn off the gravity for this object
 		rigidbody.useGravity = true;
+
+		// Extra: get the visibility control component and tells it to make this visible!
+		if(visibilityScript) {
+
+			visibilityScript.SetObjectVisible();
+		}
+
 	}
 
 	/// <summary>
@@ -65,10 +71,15 @@ public class CRocketPart : CBaseEntity {
 	public void PartIsUnrevealed() {
 
 		isRevealed = false;
-		meshObject.gameObject.renderer.enabled = false;
 		collider.enabled = false;
 
 		// Turn off the gravity for this object
 		rigidbody.useGravity = false;
+
+		// Extra: get the visibility control component and tells it to make this visible!
+		if(visibilityScript) {
+
+			visibilityScript.SetObjectNotVisible();
+		}
 	}
 }

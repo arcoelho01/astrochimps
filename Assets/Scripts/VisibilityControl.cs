@@ -214,7 +214,7 @@ public class VisibilityControl : MonoBehaviour {
 	/// <summary>
 	/// Set the object to visible 
 	/// </summary>
-	void SetObjectVisible() {
+	public void SetObjectVisible() {
 
 		Transform mesh = this.transform.FindChild("Mesh");
 		if(mesh)
@@ -231,7 +231,7 @@ public class VisibilityControl : MonoBehaviour {
 	/// <summary>
 	/// Set object to not visible
 	/// </summary>
-	void SetObjectNotVisible() {
+	public void SetObjectNotVisible() {
 
 		Transform mesh = this.transform.FindChild("Mesh");
 		if(mesh)
