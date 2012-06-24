@@ -242,5 +242,6 @@ public class VisibilityControl : MonoBehaviour {
 		if(icon != null)
 			icon.gameObject.renderer.enabled = false;
 
+		visible = false;
 	}
 }
