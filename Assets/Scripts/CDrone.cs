@@ -13,6 +13,11 @@ public class CDrone : CBaseEntity {
 	public eDroneType droneType;
 	public Transform stunnedParticleSystem;
 	Transform stunnedObj = null;
+	//< Prefab to a sparks particle system. Will be used when the drone is reprogrammed
+	public Transform prefabSparks;
+	//< Object to keep the sparks
+	Transform sparksObj;
+
 	float fRecycleTimer;
 	
 	public AudioClip sfxSelected; // Played when the monkey is selected by the player
@@ -286,8 +291,11 @@ public class CDrone : CBaseEntity {
 				break;
 
 			case FSMState.STATE_DESTROYED:
-				// TODO: update the drones list before!
-				Destroy(this.gameObject);
+				{
+
+					// Play the deactivation animation and then fade out the drone
+					StartCoroutine(DestroyDrone());
+				}
 				break;
 
 			case FSMState.STATE_PRISONER_MONKEY:
@@ -331,7 +339,8 @@ public class CDrone : CBaseEntity {
   void ExecuteCurrentState() {
 
 		// Reprogrammed and timer is over?
-		if(bnWasReprogrammed && fWasReprogrammedTimer >= fWasReprogrammedTargetTime) {
+		if(bnWasReprogrammed && fWasReprogrammedTimer >= fWasReprogrammedTargetTime 
+				&& GetCurrentState() != FSMState.STATE_DESTROYED) {
 
 			EnterNewState(FSMState.STATE_DESTROYED);
 		}
@@ -474,16 +483,6 @@ public class CDrone : CBaseEntity {
 
 			case FSMState.STATE_BEING_RECYCLED:
 				{
-					//fRecycleTimer += Time.deltaTime;
-					//if(fRecycleTimer > 5.0f) {
-
-					//	// Give the metal to the player
-					//	mainScript.player.AddResourceMetal(5.0f);	// FIXME: each drone must have a resource value
-
-					//	// And vanishes with the drone
-					//	EnterNewState(FSMState.STATE_DESTROYED);
-					//}
-					
 					// Give the metal to the player
 					mainScript.player.AddResourceMetal(5.0f);	// FIXME: each drone must have a resource value
 
@@ -631,7 +630,63 @@ public class CDrone : CBaseEntity {
 		// then self destruct
 		bnWasReprogrammed = true;
 		fWasReprogrammedTimer = 0.0f;
+
+		// Add a visual aid
+		if(prefabSparks) {
+
+			// Instantiate the particle system
+			sparksObj = Instantiate(prefabSparks, this.transform.position + Vector3.up, 
+					Quaternion.Euler(-90,0,00)) as Transform;
+
+			// Put it as child
+			sparksObj.transform.parent = this.transform;
+		}
 	}
+
+	/// <summary>
+	/// Plays a final animation and, when it's over, destroy the drone object
+	/// </summary>
+	IEnumerator DestroyDrone() {
+
+		// debug
+		Debug.LogWarning(this.transform + " playing animation");
+		meshObject.animation.Play("Deactivate");
+
+		// Wait for the animation to finish
+		yield return new WaitForSeconds(meshObject.animation["Deactivate"].clip.length);
+
+		// Fade out the drone object
+		FadeOutDrone();
+	}
+
+	/// <summary>
+	/// Uses iTween to fade out the destroyed drone
+	/// </summary>
+	void FadeOutDrone() {
+
+		// Creates a new hashtable
+		Hashtable ht = new Hashtable();
+
+		// Alpha should be 0
+		ht.Add("alpha",0);
+		// What to call when the animation is over
+		ht.Add("oncomplete","DestroyThisDrone");
+		// Where is the function to call when the animation is over. We need this because the animation is
+		// over the meshObject, not this object
+		ht.Add("oncompletetarget",this.gameObject);
+		// Call the iTween
+		iTween.FadeTo(meshObject.gameObject, ht);
+	}
+
+	/// <summary>
+	/// Actually destroy the drone game object
+	/// </summary>
+	void DestroyThisDrone() {
+
+		// Destroy the object
+		Destroy(this.gameObject);
+	}
+
 
 	/*
 	 * ===========================================================================================================
@@ -650,6 +705,14 @@ public class CDrone : CBaseEntity {
 	/// What to do when this object is disabled
 	/// </summary>
 	void OnDisable() {
+
+		AstarAIFollow.OnReachedEndOfPath -= OnAStarReachedEndOfPath;
+	}
+
+	/// <summary>
+	/// What to do when this object is destroyed
+	/// </summary>
+	void OnDestroy() {
 
 		AstarAIFollow.OnReachedEndOfPath -= OnAStarReachedEndOfPath;
 	}
