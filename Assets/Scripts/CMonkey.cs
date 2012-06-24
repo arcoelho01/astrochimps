@@ -16,6 +16,10 @@ public class CMonkey : CBaseEntity {
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
 	public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
 	public AudioClip sfxAttack;	// Played when the monkey is attacking a target
+	public AudioClip sfxReprogramming; //< Played when the Saboteur is reprogramming a drone
+
+	AudioClip sfxWorking; //< Wherever sound this monkey should do while working
+
 	private Transform transTarget;   // Target Transform
 	private Vector3 walkTo;
 	public float attackRange;      //  Attack Range to disable drones.
@@ -67,7 +71,7 @@ public class CMonkey : CBaseEntity {
 	//< Time needed to recycle a stunned drone
 	float fDroneRecycleTime = 4.0f;
 	//< Time needed to reprogram a stunned drone
-	float fDroneReprogramTime = 4.0f;
+	float fDroneReprogramTime = 5.0f;
 
 	/*
 	 * ===========================================================================================================
@@ -241,6 +245,11 @@ public class CMonkey : CBaseEntity {
 
 						tProgressBar = Instantiate(progressBarPrefab, sweetSpotObj.transform.position, 
 								Quaternion.identity) as Transform;
+					}
+
+					if(sfxWorking) {
+
+						AudioSource.PlayClipAtPoint(sfxWorking, transform.position);
 					}
 				}
 				break;
@@ -678,6 +687,7 @@ public class CMonkey : CBaseEntity {
 				{
 					// Sets the time needed to reprogram this drone
 					fWorkingTargetTime = fDroneReprogramTime;
+					sfxWorking = sfxReprogramming;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
