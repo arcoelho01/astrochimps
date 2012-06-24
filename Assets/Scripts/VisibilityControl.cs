@@ -11,7 +11,8 @@ public class VisibilityControl : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		if (gameObject.tag.CompareTo("Building") == 0 || gameObject.tag.CompareTo("Resource") == 0) {
+		if (gameObject.tag.CompareTo("Building") == 0 || gameObject.tag.CompareTo("Resource") == 0 
+				|| gameObject.tag == "RocketPart") {
 
 			// Trick stolen from Fernando: add a second bar in the line below to uncomment the command. Remove
 			// it to comment the entire block
@@ -31,7 +32,11 @@ public class VisibilityControl : MonoBehaviour {
 
 			keepVisible = false;
 		}
+
+
+		// FIXME: we can simplify this! All allied Objects visible, all other not visible
 	
+		// Allied units
 		if (gameObject.layer == MainScript.alliedLayer){
 			
 			/*
@@ -45,26 +50,19 @@ public class VisibilityControl : MonoBehaviour {
 				// DEBUG	
 				Debug.Log("Object " + gameObject.name + " is ALLIED and a Drone, enabling his renderer");
 				//*/
-
-				Transform mesh = this.transform.FindChild("Mesh");
-				mesh.gameObject.SetActiveRecursively(true);
-
-				// Added: now that each object hava a specific icon, it must be made visible too
-				Transform icon = this.transform.FindChild("Icon");
-				icon.gameObject.renderer.enabled = true;
-				
-				visible = true;
+				//
+				SetObjectVisible();
 			}
 			else {
-				/*
+				//*
 				// DEBUG	
-				Debug.Log("Object " + gameObject.name + " renderer enable");
+				Debug.Log("Object " + gameObject.name + " directly renderer enable");
 				//*/
 
 				renderer.enabled = true;
 				visible = true;
 			}
-		}
+		} // END IF - layer == allied
 		else if (gameObject.layer == MainScript.enemyLayer ) {
 			
 			/*
@@ -72,29 +70,22 @@ public class VisibilityControl : MonoBehaviour {
 			Debug.Log("Object " + gameObject.name + " is in enemy layer.");
 			//*/
 
-			if(this.CompareTag("Drone") || this.CompareTag("Monkey")){
+			if(this.CompareTag("Drone") || this.CompareTag("Monkey") || this.CompareTag("Building")){
 
-				Transform mesh = this.transform.FindChild("Mesh");
-				mesh.gameObject.SetActiveRecursively(false);
-
+				SetObjectNotVisible();
 			}
 			else {
+
+				// DEBUG
+				Debug.LogWarning(this.transform + " still acessing the renderer directly (have no mesh object)");
 
 				renderer.enabled = false;
 			}
 
-			// Added: now that each object have a specific icon, it must be made (in)visible too
-			Transform icon = this.transform.FindChild("Icon");
-			if(icon != null)
-				icon.gameObject.renderer.enabled = false;
-		}
+		} // END IF -  layer == enemy
 		else if (gameObject.layer == MainScript.neutralLayer) {
 
-			renderer.enabled = false;
-			// Added: now that each object have a specific icon, it must be made (in)visible too
-			Transform icon = this.transform.FindChild("Icon");
-			if(icon != null)
-				icon.gameObject.renderer.enabled = false;
+			SetObjectNotVisible();
 		}
 	}
 	
@@ -110,22 +101,11 @@ public class VisibilityControl : MonoBehaviour {
 
 			return;
 		}
-		
+
 		if(AppearsToEnemy() && !visible){
 			visible = true;
 			
-			if(this.CompareTag("Drone") || this.CompareTag("Monkey")){
-
-				Transform mesh = this.transform.FindChild("Mesh");
-				mesh.gameObject.SetActiveRecursively(visible);
-			}
-			else 
-				renderer.enabled = visible;
-
-			// Added: now that each object have a specific icon, it must be made (in)visible too
-			Transform icon = this.transform.FindChild("Icon");
-			if(icon != null)
-				icon.gameObject.renderer.enabled = true;
+			SetObjectVisible();
 		}
 
 		if (visible && !keepVisible){
@@ -134,25 +114,19 @@ public class VisibilityControl : MonoBehaviour {
 			
 			if(this.CompareTag("Drone") || this.CompareTag("Monkey")){
 			
-				Transform mesh = this.transform.FindChild("Mesh");
-				mesh.gameObject.SetActiveRecursively(visible);
-  
+				SetObjectVisible();
 			}
 			else
 				renderer.enabled = visible;
-
-			// Added: now that each object have a specific icon, it must be made (in)visible too
-			Transform icon = this.transform.FindChild("Icon");
-			if(icon != null)
-				icon.gameObject.renderer.enabled = true;
 		}
-		
-			
 	}
 	
-	// Only working for Drones
 	
 	bool AppearsToEnemy() { 
+
+		// FIXME: we're building a list with units at each frame! Main Script already have all units lists, use from
+		// there
+
 		GameObject[] gosArray;        
 		List<GameObject> gos = new List<GameObject>();
 
@@ -173,7 +147,7 @@ public class VisibilityControl : MonoBehaviour {
 
 		foreach (GameObject go in gos) {
 			
-			// IF Allied dont test
+			// We don't need to test allied units, because they are always visible to the player
 			if (gameObject.layer == MainScript.alliedLayer) {
 
 				/*
@@ -184,7 +158,7 @@ public class VisibilityControl : MonoBehaviour {
 				continue;
 			}
 			
-			// Dont test between teams
+			// Don't test between teams
 			if (gameObject.layer == go.layer ) {
 
 				/*
@@ -194,7 +168,7 @@ public class VisibilityControl : MonoBehaviour {
 
 				continue;
 			}
-			
+
 			Vector3 diff = go.transform.position - position;       
 			float curDistance = diff.sqrMagnitude;  
 			VisibilityControl enemyScript = go.GetComponent<VisibilityControl>();
@@ -235,5 +209,38 @@ public class VisibilityControl : MonoBehaviour {
 	public bool IsVisible() {
 
 		return visible;
+	}
+
+	/// <summary>
+	/// Set the object to visible 
+	/// </summary>
+	void SetObjectVisible() {
+
+		Transform mesh = this.transform.FindChild("Mesh");
+		if(mesh)
+			mesh.gameObject.SetActiveRecursively(true);
+
+		// Added: now that each object hava a specific icon, it must be made visible too
+		Transform icon = this.transform.FindChild("Icon");
+		if(icon)
+			icon.gameObject.renderer.enabled = true;
+
+		visible = true;
+	}
+
+	/// <summary>
+	/// Set object to not visible
+	/// </summary>
+	void SetObjectNotVisible() {
+
+		Transform mesh = this.transform.FindChild("Mesh");
+		if(mesh)
+			mesh.gameObject.SetActiveRecursively(false);
+
+		// Added: now that each object have a specific icon, it must be made (in)visible too
+		Transform icon = this.transform.FindChild("Icon");
+		if(icon != null)
+			icon.gameObject.renderer.enabled = false;
+
 	}
 }

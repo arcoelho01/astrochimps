@@ -30,14 +30,14 @@ public class CRocketPart : CBaseEntity {
 		String[] tempEnum = Enum.GetNames(typeof(eRocketPartType));
 		numberOfDefinedRocketParts = tempEnum.Length;
 
-		PartIsUnrevealed();
+		//PartIsUnrevealed();
 	}
 
 	// Use this for initialization
 	void Start () {
 
-		if(meshObject)
-			meshObject.gameObject.renderer.enabled = isRevealed;
+		//if(meshObject)
+		//	meshObject.gameObject.renderer.enabled = isRevealed;
 	}
 	
 	// Update is called once per frame
