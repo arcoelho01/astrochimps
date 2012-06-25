@@ -675,7 +675,7 @@ public class CDrone : CBaseEntity {
 		// over the meshObject, not this object
 		ht.Add("oncompletetarget",this.gameObject);
 		// Call the iTween
-		//iTween.FadeTo(meshObject.gameObject, ht);
+		iTween.FadeTo(meshObject.gameObject, ht);
 	}
 
 	/// <summary>
