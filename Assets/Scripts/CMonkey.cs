@@ -934,6 +934,17 @@ public class CMonkey : CBaseEntity {
 					bnCanResearchForRocketParts = 
 						!MainScript.cbCommandCenter.sabotado & !MainScript.cbResearchLab.sabotado;
 				}
+
+				// The Research Lab was sabotaged?
+				if(buildingEventRaiser.buildingType == CBuilding.eBuildingType.ResearchLab && !bnSabotageStatus) {
+
+					// Lost our research, must do it again
+					bnResearchIsComplete = false;
+					if(GetCurrentState() == FSMState.STATE_INSIDE_BUILDING) {
+						// reenter the building
+						EnterNewState(FSMState.STATE_INSIDE_BUILDING);
+					}
+				}
 			}
 		}
 	}

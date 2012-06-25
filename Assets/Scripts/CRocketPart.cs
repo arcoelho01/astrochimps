@@ -18,6 +18,7 @@ public class CRocketPart : CBaseEntity {
 	public int numberOfDefinedRocketParts;
 
 	public static CRocketPart Script;
+	VisibilityControl visibilityScript;
 
 	//
 	void Awake() {
@@ -30,14 +31,13 @@ public class CRocketPart : CBaseEntity {
 		String[] tempEnum = Enum.GetNames(typeof(eRocketPartType));
 		numberOfDefinedRocketParts = tempEnum.Length;
 
-		PartIsUnrevealed();
+		// Get the visibility control script
+		visibilityScript = gameObject.GetComponent<VisibilityControl>();
 	}
 
 	// Use this for initialization
 	void Start () {
 
-		if(meshObject)
-			meshObject.gameObject.renderer.enabled = isRevealed;
 	}
 	
 	// Update is called once per frame
@@ -51,12 +51,22 @@ public class CRocketPart : CBaseEntity {
 	/// </summary>
 	public void PartIsRevealed() {
 
+		if(visibilityScript.IsVisible()) {
+
+			// This part was already found by the player. Nothing to be done here
+			return;
+		}
+
+		// DEBUG QQQ
+		Debug.Log(this.transform + " Revealing part");
 		isRevealed = true;
-		meshObject.gameObject.renderer.enabled = true;
-		collider.enabled = true;
+		//collider.enabled = true;
 
 		// Turn off the gravity for this object
-		rigidbody.useGravity = true;
+		//rigidbody.useGravity = true;
+
+		// Extra: get the visibility control component and tells it to make this visible!
+		visibilityScript.SetObjectVisible();
 	}
 
 	/// <summary>
@@ -64,11 +74,69 @@ public class CRocketPart : CBaseEntity {
 	/// </summary>
 	public void PartIsUnrevealed() {
 
-		isRevealed = false;
-		meshObject.gameObject.renderer.enabled = false;
-		collider.enabled = false;
+		// This part was not found by research, so it keeps it visibility!
+		if(!isRevealed) {
+
+			return;
+		}
+
+		//isRevealed = false;
+		//collider.enabled = false;
 
 		// Turn off the gravity for this object
-		rigidbody.useGravity = false;
+		//rigidbody.useGravity = false;
+
+		// Extra: get the visibility control component and tells it to make this visible!
+		if(visibilityScript) {
+
+			visibilityScript.SetObjectNotVisible();
+		}
+	}
+
+	/*
+	 * ===========================================================================================================
+	 * EVENTS STUFF
+	 * ===========================================================================================================
+	 */
+	/// <summary>
+	/// What to do when this object is enabled
+	/// </summary>
+	void OnEnable() {
+
+		// Check if a building have been sabotaged or fixed
+		CBuilding.OnSabotageStatusChange += OnSabotageStatusChange;
+	}
+
+	/// <summary>
+	/// What to do when this object is disabled
+	/// </summary>
+	void OnDisable() {
+
+		// Check if a building have been sabotaged or fixed
+		CBuilding.OnSabotageStatusChange -= OnSabotageStatusChange;
+	}
+
+	/// <summary>
+	/// What to do when this object is destroyed
+	/// </summary>
+	void OnDestroy() {
+
+		// Check if a building have been sabotaged or fixed
+		CBuilding.OnSabotageStatusChange -= OnSabotageStatusChange;
+	}
+
+	/// <summary>
+	/// Called by an event when a building is sabotaged or fixed. If the Lab got sabotaged, we lost the view of
+	/// the researched parts
+	/// </summary>
+	/// <param name="buildingEventRaiser"> CBuilding component of whoever sended the event message </param>
+	/// <param name="bnSabotageStatus"> True if the building was sabotaged, false if it is fixed </param>
+	void OnSabotageStatusChange(CBuilding buildingEventRaiser, bool bnSabotageStatus) {
+
+		if(bnSabotageStatus && buildingEventRaiser.buildingType == CBuilding.eBuildingType.ResearchLab) {
+
+			// Sorry, part unrevealed
+			PartIsUnrevealed();
+		}
 	}
 }
