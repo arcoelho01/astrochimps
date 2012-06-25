@@ -680,7 +680,6 @@ public class MouseWorldPosition : MonoBehaviour {
 
 						// Unselect previous units
 						if(selectedObject != null) {
-
 							selectedObject.gameObject.GetComponent<CBaseEntity>().Deselect();
 							RemoveCursor();
 						}

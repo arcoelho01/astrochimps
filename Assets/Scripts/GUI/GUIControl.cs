@@ -27,17 +27,8 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D AtaqueTextureOFF;
 	public Texture2D MoverTextureOFF;
 	
-	private bool modeAtaqueM1 = false;
-	private bool modeMoverM1 = false;
-	private bool modeMoverM2 = false;
-	private bool modeMoverM3 = false;
-	private bool modeMoverM4 = false;
-	private bool modeReciclarM2 = false;
-	private bool modeRepararM2 = false;
-	private bool modeSabotarM3 = false;
-	private bool modeReprogramarM3 = false;
-	private bool modeProcurarM4 = false;
-	
+	private ArrayList allMonkeys;
+
 	
 	//Macaco 2 - Engenheiro
 	public Texture2D ReciclarTextureON;
@@ -67,15 +58,8 @@ public class GUIControl : MonoBehaviour {
 
 	int boxYmax;
 	int boxYmin;
-	int boxY1;
-	int boxY2; 
-	int boxY3;
-	int boxY4; 
-	
-	int y1dir = 0;
-	int y2dir = 0;
-	int y3dir = 0;
-	int y4dir = 0;
+	ArrayList boxYposition;
+	ArrayList yDirection;
 	
 	public Texture2D ComandoOxTexture;
 	public Texture2D LabOxTexture;
@@ -90,10 +74,7 @@ public class GUIControl : MonoBehaviour {
 	
 	public void nextSlot(int predio){
 		nextSlotPosition++;
-		setSlot(nextSlotPosition,  predio);	
-		
-		Debug.Log("NEXT SLOT CHAMADO");
-
+		setSlot(nextSlotPosition,  predio);
 	}
 	// DEFINE - tem que fazer
 	// Centro de Comando - 1
@@ -108,6 +89,18 @@ public class GUIControl : MonoBehaviour {
 	
 		
 		
+	}
+	
+	public void addMonkey(CMonkey newMonkey){
+		if (allMonkeys == null)
+			allMonkeys = new ArrayList();
+		allMonkeys.Add(newMonkey);
+		if (boxYposition == null)
+			boxYposition = new ArrayList();
+		boxYposition.Add(642);
+		if (yDirection == null)
+			yDirection = new ArrayList();
+		yDirection.Add(0);
 	}
 	
 	private void drawSlots(){
@@ -133,11 +126,13 @@ public class GUIControl : MonoBehaviour {
 	
 	
 	//FALTA FAZER OS SLOTS DOS PREDIOS
-	
+	int getYposition(int m){
+		return (int) boxYposition[m];
+	}
 	
 	void OnGUI () {
 		int box1x = 11;
-		int boxYDistance = 172;
+		int boxXDistance = 172;
 		int box5x = 826;
 		NivelOxigenioFloat = playerScript.oxygenLevel / 500;
 
@@ -146,7 +141,6 @@ public class GUIControl : MonoBehaviour {
 		GUI.Label (new Rect (150,10,RadarTextureON.width*3,RadarTextureON.height*3), RadarTextureON);
 		
 		GUI.Label (new Rect (950,10,MenuTextureON.width *3,MenuTextureON.height*3), MenuTextureON);
-		
 		
 		GUI.Label (new Rect (210,5,BoxMetalTexture.width,BoxMetalTexture.height), BoxMetalTexture);
 		GUI.Label (new Rect (380,5,BoxOxigenioTexture.width,BoxOxigenioTexture.height), BoxOxigenioTexture);
@@ -162,81 +156,101 @@ public class GUIControl : MonoBehaviour {
 		
 		drawSlots();
 			
+		GUI.Label (new Rect (box5x,boxYmax,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
+		
+		
+		int m = 0;
+		foreach( CMonkey monkey in allMonkeys){
 			
-		GUI.Label (new Rect (box1x,boxY1,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
-		GUI.Label (new Rect (box1x + boxYDistance, boxY2,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
-		GUI.Label (new Rect (box1x + boxYDistance * 2 ,boxY3,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
-		GUI.Label (new Rect (box1x + boxYDistance * 3,boxY4,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
-		GUI.Label (new Rect (box5x,boxY4,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
-		
-		
-		GUI.Label (new Rect (box1x +15, boxY1 +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
-		GUI.Label (new Rect (box1x +15 + boxYDistance ,boxY2 +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
-		GUI.Label (new Rect (box1x +15 + boxYDistance *2,boxY3 +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
-		GUI.Label (new Rect (box1x +15 + boxYDistance *3 ,boxY4 +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
-		
-		//int barraY = 642 + 7;
-		
-		GUI.Label (new Rect (box1x +79  , boxY1+7 , 84,10), BarraVaziaTexture);
-		GUI.Label (new Rect (box1x +79  + boxYDistance,boxY2+7 , BarraVaziaTexture.width,BarraVaziaTexture.height), BarraVaziaTexture);
-		GUI.Label (new Rect (box1x +79  + boxYDistance *2,boxY3+7 , BarraVaziaTexture.width,BarraVaziaTexture.height), BarraVaziaTexture);
-		GUI.Label (new Rect (box1x +79  + boxYDistance *3,boxY4+7 , BarraVaziaTexture.width,BarraVaziaTexture.height), BarraVaziaTexture);
-		
-		// Macaco 1 - ASTRONAUTA
-		if(modeAtaqueM1)
-			GUI.Label (new Rect (box1x + 18 , boxY1 + 71, AtaqueTextureON.width,AtaqueTextureON.height), AtaqueTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 , boxY1 + 71, AtaqueTextureON.width,AtaqueTextureON.height), AtaqueTextureOFF);
-		
-		if(modeMoverM1)
-			GUI.Label (new Rect (box1x + 18 + 45 , boxY1 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + 45 , boxY1 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
-		
-		// Macaco 2 - ENGENHEIRO
-		if(modeReciclarM2)
-			GUI.Label (new Rect (box1x + 18 +boxYDistance, boxY2 + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 +boxYDistance, boxY2 + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureOFF);
-		if(modeRepararM2)
-			GUI.Label (new Rect (box1x + 18 + 45 +boxYDistance, boxY2 + 71, RepararTextureON.width,RepararTextureON.height), RepararTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + 45 +boxYDistance, boxY2 + 71, RepararTextureON.width,RepararTextureON.height), RepararTextureOFF);
-		if(modeMoverM2)
-			GUI.Label (new Rect (box1x + 18 + 45 +45+boxYDistance, boxY2 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + 45 +45+boxYDistance, boxY2 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
-		
-		// Macaco 3 - SABOTADOR
-		if(modeSabotarM3)
-			GUI.Label (new Rect (box1x + 18 + boxYDistance*2, boxY3 + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + boxYDistance*2, boxY3 + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
-		if(modeReprogramarM3)
-			GUI.Label (new Rect (box1x + 18 + 45 +boxYDistance*2, boxY3 + 71, ReprogramarTextureON.width,ReprogramarTextureON.height), ReprogramarTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + 45 +boxYDistance*2, boxY3 + 71, ReprogramarTextureON.width,ReprogramarTextureON.height), ReprogramarTextureOFF);
-		if(modeMoverM3)
-			GUI.Label (new Rect (box1x + 18 + 45 + 45+boxYDistance*2, boxY3 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + 45 + 45+boxYDistance*2, boxY3 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
-		
-		// Macaco 4 - Cientista
-		if (modeProcurarM4)
-			GUI.Label (new Rect (box1x + 18 + boxYDistance*3, boxY4 + 71, ProcurarTextureON.width,ProcurarTextureON.height), ProcurarTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + boxYDistance*3, boxY4 + 71, ProcurarTextureON.width,ProcurarTextureON.height), ProcurarTextureOFF);
-		if (modeMoverM4)
-			GUI.Label (new Rect (box1x + 18 + 45+boxYDistance*3, boxY4 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
-		else
-			GUI.Label (new Rect (box1x + 18 + 45+boxYDistance*3, boxY4 + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
-		
-		// Fabrica de Drones
-		GUI.Label (new Rect (box1x +15 + boxYDistance *3 ,boxY4 +11,MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
-		
-		GUI.Label (new Rect (box5x + 18 , boxY4 + 71, DroneCacadorTexture.width,DroneCacadorTexture.height), DroneCacadorTexture);
-		GUI.Label (new Rect (box5x + 18 +45, boxY4 + 71, DroneSabotadorTexture.width,DroneSabotadorTexture.height), DroneSabotadorTexture);
-		GUI.Label (new Rect (box5x + 18 +45+45, boxY4 + 71, DronePatrulhaTexture.width,DronePatrulhaTexture.height), DronePatrulhaTexture);
+			int posX = box1x + boxXDistance * m;
+			int posY = (int) getYposition(m);
+			//Debug.Log("Macaco " + m + " Tipo " + monkey.monkeyClass);
+			GUI.Label (new Rect (posX + 79, posY+7 , 	BarraVaziaTexture.width,BarraVaziaTexture.height), BarraVaziaTexture);
+			GUI.Label (new Rect (posX, 		posY,		BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
+			GUI.Label (new Rect (posX +15,  posY +11,	MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
+				
+			if(monkey.monkeyClass == CMonkey.eMonkeyType.Astronaut){
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
+					GUI.Label (new Rect (posX + 18 , posY + 71, AtaqueTextureOFF.width,AtaqueTextureOFF.height), AtaqueTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , getYposition(m)  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+					//desceSlot(m);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WALKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, AtaqueTextureOFF.width,AtaqueTextureOFF.height), AtaqueTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
+					//sobeSlot(m);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_ATTACKING || monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_PURSUIT){
+					GUI.Label (new Rect (posX + 18 , posY + 71, AtaqueTextureON.width,AtaqueTextureON.height), AtaqueTextureON);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+					//sobeSlot(m);
+				} else {
+					GUI.Label (new Rect (posX + 18, getYposition(m) + 71, AtaqueTextureOFF.width,AtaqueTextureOFF.height), AtaqueTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+					//desceSlot(m);
+				}
+			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Engineer){
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
+					GUI.Label (new Rect (posX + 18 , posY + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, RepararTextureON.width,RepararTextureON.height), RepararTextureOFF);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WALKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, RepararTextureON.width,RepararTextureON.height), RepararTextureOFF);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WORKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureON);
+					GUI.Label (new Rect (posX + 18 + 45 , posY + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, RepararTextureOFF.width,RepararTextureOFF.height), RepararTextureOFF);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_ATTACKING){
+					GUI.Label (new Rect (posX + 18, posY + 71, ReciclarTextureOFF.width,ReciclarTextureOFF.height), ReciclarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY + 71, MoverTextureOFF.width,MoverTextureOFF.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, RepararTextureON.width,RepararTextureON.height), RepararTextureON);
+				} else 
+				{
+					GUI.Label (new Rect (posX + 18 , posY + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, RepararTextureON.width,RepararTextureON.height), RepararTextureOFF);
+				}
+			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Cientist){
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
+					GUI.Label (new Rect (posX + 18 , posY + 71, ProcurarTextureOFF.width,ProcurarTextureOFF.height), ProcurarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WALKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, ProcurarTextureOFF.width,ProcurarTextureOFF.height), ProcurarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WORKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, ProcurarTextureON.width,ProcurarTextureON.height), ProcurarTextureON);
+					GUI.Label (new Rect (posX + 18 + 45 , posY + 71, MoverTextureOFF.width,MoverTextureOFF.height), MoverTextureOFF);
+				} else 
+				{
+					GUI.Label (new Rect (posX + 18 , posY + 71, ProcurarTextureON.width,ProcurarTextureON.height), ProcurarTextureON);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+				}
+			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Saboteur){
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureON.width,ReprogramarTextureON.height), ReprogramarTextureOFF);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WALKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureOFF);
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WORKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureON);
+				} else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_ATTACKING){
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureON);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureOFF);
+				} else 
+				{
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureOFF);
+				}
+			}
+			m++;
+		}
 		
 		
 }
@@ -246,82 +260,58 @@ public class GUIControl : MonoBehaviour {
 		setSlot(1,1);
 		nextSlotPosition++;
 		
+		if (allMonkeys == null)
+			allMonkeys = new ArrayList();
+		if (boxYposition == null)
+			boxYposition = new ArrayList();
+		if (yDirection == null)
+			yDirection = new ArrayList();
+		
 		playerScript = GameObject.Find("Player").GetComponent<CPlayer>();
 		
-	boxYmax = 542;
-	boxYmin = 642;
-	boxY1 = boxYmin;
-	boxY2 = boxYmin; 
-	boxY3 = boxYmin;
-	boxY4 = boxYmin; 
+	boxYmax = 600;
+	boxYmin = 670;
+			
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if (y1dir != 0 && boxY1 > boxYmin && boxY1 < boxYmax)
-			boxY1 = boxY1+ y1dir;
-		if (y2dir != 0 && boxY2 > boxYmin && boxY2 < boxYmax)
-			boxY1 = boxY2+ y2dir;
-		if (y3dir != 0 && boxY3 > boxYmin && boxY3 < boxYmax)
-			boxY1 = boxY3+ y3dir;
-		if (y4dir != 0 && boxY4 > boxYmin && boxY4 < boxYmax)
-			boxY1 = boxY4+ y4dir;
+		show();
+		int i = 0;
+		foreach( int m in yDirection){
+			
+			if (   (int) yDirection[i] == 1 && (int) boxYposition[i] < 670){
+				boxYposition[i] = (int) boxYposition[i] + (int) yDirection[i] *4;
+			}else if ((int) yDirection[i] == -1 && (int) boxYposition[i] > 600){
+				boxYposition[i] = (int) boxYposition[i] + (int) yDirection[i] *4;
+			}
+			i++;
+		}
 
 	}
 	
-	public void setMover(bool liga, CMonkey.eMonkeyType macaco){
-		if (macaco == CMonkey.eMonkeyType.Astronaut){
-			if (liga) y1dir = -1; else y1dir = 1;
-			modeMoverM1 = liga;
-			modeAtaqueM1 = false;
-		}else if(macaco == CMonkey.eMonkeyType.Engineer){
-			if (liga) y2dir = -1; else y2dir = 1;
-			modeMoverM2 = liga;
-			modeReciclarM2 = false;
-		}else if(macaco == CMonkey.eMonkeyType.Saboteur){
-			if (liga) y3dir = -1; else y3dir = 1;
-			modeMoverM3 = liga;
-			modeReprogramarM3 = false;
-		}else if(macaco == CMonkey.eMonkeyType.Cientist){
-			if (liga) y4dir = -1; else y4dir = 1;
-			modeMoverM4 = liga;
-			modeProcurarM4 = false;
+	public void show(){
+		int i = 0;
+		foreach( CMonkey monkey in allMonkeys){
+			if( (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE && !monkey.isSelected) || 
+				monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_NULL ||
+				monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_CAPTURED ||
+				(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_INSIDE_BUILDING 
+				&& monkey.getResearchIsComplete()))
+				desceSlot(i);
+			else 
+				sobeSlot(i);
+			i++;
 		}
-		Debug.Log("SET mover = " + liga );
 	}
 	
-	public void setAtacar(bool liga, CMonkey.eMonkeyType macaco){
-		if (macaco == CMonkey.eMonkeyType.Astronaut){
-			modeMoverM1 = !liga;
-			modeAtaqueM1 = liga;
-		}else if (macaco == CMonkey.eMonkeyType.Engineer){
-			setReparar(true);
-		}else if (macaco == CMonkey.eMonkeyType.Saboteur){
-			setSabotar(true);
-		}
-		
+	private void sobeSlot(int slotN){
+		yDirection[slotN] = -1;
 		
 	}
-	public void setReparar(bool liga){
-			modeRepararM2 = liga;
-			modeMoverM2 = false;
-			modeReciclarM2 = false;
+	private void desceSlot(int slotN){
+		yDirection[slotN] = 1;
 		
 	}
-	public void setReciclar(bool liga){
-			modeReciclarM2 = liga;
-			modeMoverM2 = false;
-			modeRepararM2 = false;
-	}
-	
-	public void setSabotar(bool liga){
-			modeSabotarM3 = liga;	
-			modeMoverM3 = false;
-			modeSabotarM3 = false;
-	}
-	public void setProcurar(bool liga){
-			modeProcurarM4 = liga;
-			modeMoverM4 = false;
-	}
+		
 }

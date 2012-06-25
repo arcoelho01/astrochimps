@@ -25,8 +25,7 @@ public class CMonkey : CBaseEntity {
 	public float attackRange;      //  Attack Range to disable drones.
 
 	public enum FSMState {
-		STATE_IDLE,							// Doing nothing...
-			STATE_SELECTED,					// Selected by the player
+			STATE_IDLE,							// Doing nothing...
 			STATE_INSIDE_BUILDING,	// when the monkey is inside a building, cannot move
 			STATE_WALKING,					// Monkey walking around
 			STATE_STUNNED,					// Monkey stunned by an enemy drone, cannot move
@@ -114,6 +113,7 @@ public class CMonkey : CBaseEntity {
 		attackSpot = GetAttackSpot();
 		
 		GUIScript = GameObject.Find("HUD-Objects").GetComponent<GUIControl>();
+		GUIScript.addMonkey(this);
 		
 	}
 
@@ -124,7 +124,15 @@ public class CMonkey : CBaseEntity {
 
 		ExecuteCurrentState();
 	}
-
+	
+	
+	public FSMState getFSMCurrentState(){
+		return eFSMCurrentState;
+	}
+	
+	public bool getResearchIsComplete(){
+		return bnResearchIsComplete;
+	}
 
 	/*
 	 * ===========================================================================================================
@@ -158,11 +166,8 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_IDLE:
 				// Clear any previous targets
 				transTarget = null;
-				GUIScript.setMover(false,this.monkeyClass);
 				// DEBUG
 				//Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
-				break;
-			case FSMState.STATE_SELECTED:
 				break;
 
 			case FSMState.STATE_INSIDE_BUILDING:
@@ -173,14 +178,11 @@ public class CMonkey : CBaseEntity {
 						// Resets the timer
 						fResearchTimer = 0.0f;
 						fResearchTargetTime = 10.0f;
-						GUIScript.setProcurar(true);
-					}else
-					GUIScript.setMover(false,this.monkeyClass);
+					}
 				}
 				break;
 
 			case FSMState.STATE_WALKING:
-	            GUIScript.setMover(true,this.monkeyClass);
 				// DEBUG
 				Debug.Log(this.transform + " Entering STATE_WALKING");
 				if(sfxAck) {
@@ -210,7 +212,6 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_ATTACKING:
 				// SET AISCRIPT TO MOVE TO TARGET
-				GUIScript.setAtacar(true, monkeyClass);
 				break;
 
 			case FSMState.STATE_PURSUIT:
@@ -286,8 +287,6 @@ public class CMonkey : CBaseEntity {
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
 				}
 				break;
-			case FSMState.STATE_SELECTED:
-				break;
 
 			case FSMState.STATE_INSIDE_BUILDING:
 				{
@@ -323,8 +322,6 @@ public class CMonkey : CBaseEntity {
 							// If we're used a progress bar, now we get rid of it
 							if(tProgressBar) {
 						
-						
-								GUIScript.setProcurar(false);
 								Destroy(tProgressBar.gameObject);
 								tProgressBar = null;
 								
@@ -342,7 +339,7 @@ public class CMonkey : CBaseEntity {
 				Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
 				stunnedTimeCounter = stunnedTimeCounter - Time.deltaTime;
 				if ( stunnedTimeCounter <=0)
-					EnterNewState(FSMState.STATE_IDLE);
+						EnterNewState(FSMState.STATE_IDLE);
 				break;
 
 			case FSMState.STATE_ATTACKING:
@@ -360,7 +357,6 @@ public class CMonkey : CBaseEntity {
 					if (transTarget == null){
 						// DEBUG
 						Debug.Log(this.transform + " TARGET INVALID");
-
 						EnterNewState(FSMState.STATE_IDLE);
 						break;
 					}
@@ -418,9 +414,6 @@ public class CMonkey : CBaseEntity {
 					// DEBUG
 					Debug.Log(this.transform + " [LeaveCurrentState: " + GetCurrentState() + "]");
 				}
-				break;
-
-			case FSMState.STATE_SELECTED:
 				break;
 
 			case FSMState.STATE_INSIDE_BUILDING:
