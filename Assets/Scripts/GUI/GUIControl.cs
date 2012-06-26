@@ -22,6 +22,7 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D MenuTextureOFF;
 	
 	//Macaco 1 - Astronauta
+	public Texture2D AstronautaNomeTexture;
 	public Texture2D AtaqueTextureON;
 	public Texture2D MoverTextureON;
 	public Texture2D AtaqueTextureOFF;
@@ -31,6 +32,7 @@ public class GUIControl : MonoBehaviour {
 
 	
 	//Macaco 2 - Engenheiro
+	public Texture2D EngenheiroNomeTexture;
 	public Texture2D ReciclarTextureON;
 	public Texture2D RepararTextureON;
 	public Texture2D ReciclarTextureOFF;
@@ -38,12 +40,14 @@ public class GUIControl : MonoBehaviour {
 	
 	
 	//Macaco 3 - Sabotador
+	public Texture2D SabotadorNomeTexture;
 	public Texture2D SabotarTextureON;
 	public Texture2D SabotarTextureOFF;
 	public Texture2D ReprogramarTextureON;
 	public Texture2D ReprogramarTextureOFF;
 	
 	//Macaco 4 - Cientista
+	public Texture2D CientistaNomeTexture;
 	public Texture2D ProcurarTextureON;
 	public Texture2D ProcurarTextureOFF;
 	
@@ -170,6 +174,7 @@ public class GUIControl : MonoBehaviour {
 			GUI.Label (new Rect (posX +15,  posY +11,	MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
 				
 			if(monkey.monkeyClass == CMonkey.eMonkeyType.Astronaut){
+				GUI.Label (new Rect (posX + 70 , posY + 40, AstronautaNomeTexture.width,AstronautaNomeTexture.height), AstronautaNomeTexture);
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
 					GUI.Label (new Rect (posX + 18 , posY + 71, AtaqueTextureOFF.width,AtaqueTextureOFF.height), AtaqueTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , getYposition(m)  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
@@ -188,6 +193,7 @@ public class GUIControl : MonoBehaviour {
 					//desceSlot(m);
 				}
 			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Engineer){
+				GUI.Label (new Rect (posX + 70 , posY + 40, EngenheiroNomeTexture.width,EngenheiroNomeTexture.height), EngenheiroNomeTexture);
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
 					GUI.Label (new Rect (posX + 18 , posY + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
@@ -211,6 +217,7 @@ public class GUIControl : MonoBehaviour {
 					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, RepararTextureON.width,RepararTextureON.height), RepararTextureOFF);
 				}
 			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Cientist){
+				GUI.Label (new Rect (posX + 70 , posY + 40, CientistaNomeTexture.width,CientistaNomeTexture.height), CientistaNomeTexture);
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
 					GUI.Label (new Rect (posX + 18 , posY + 71, ProcurarTextureOFF.width,ProcurarTextureOFF.height), ProcurarTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
@@ -226,19 +233,20 @@ public class GUIControl : MonoBehaviour {
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
 				}
 			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Saboteur){
+				GUI.Label (new Rect (posX + 70 , posY + 40, SabotadorNomeTexture.width,SabotadorNomeTexture.height), SabotadorNomeTexture);
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
-					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureOFF.width,SabotarTextureOFF.height), SabotarTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
-					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureON.width,ReprogramarTextureON.height), ReprogramarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureOFF);
 				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WALKING){
-					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureOFF.width,SabotarTextureOFF.height), SabotarTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureON);
 					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureOFF);
-				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WORKING){
-					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureOFF);
-					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
-					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureON);
-				} else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_ATTACKING){
+				}else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WORKING && monkey.workingMouseState == MouseWorldPosition.eMouseStates.TargetingForReprogram){
+					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureOFF.width,SabotarTextureOFF.height), SabotarTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureOFF.width,MoverTextureOFF.height), MoverTextureOFF);
+					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureON.width,ReprogramarTextureON.height), ReprogramarTextureON);
+				} else if(monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_WORKING && ( monkey.workingMouseState == MouseWorldPosition.eMouseStates.CanSabotageBuilding || monkey.workingMouseState == MouseWorldPosition.eMouseStates.CanSabotageDrone)){
 					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureON.width,SabotarTextureON.height), SabotarTextureON);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureON.height), MoverTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 + 45, posY + 71, ReprogramarTextureOFF.width,ReprogramarTextureOFF.height), ReprogramarTextureOFF);

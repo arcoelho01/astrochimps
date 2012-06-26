@@ -47,10 +47,11 @@ public class CMonkey : CBaseEntity {
 	Vector3 v3Direction;
 	float fAttackRange = 2.2f;// FIXME
 	MouseWorldPosition.eMouseStates mouseState;	//< The mouse state when the player issued an order to the monkey
+	public MouseWorldPosition.eMouseStates workingMouseState;
 	float fWorkingTimer = 0.0f;	//< Timer for the working state
 	float fWorkingTargetTime = 0.0f; //< Time needed to perform a task. When working timer is bigger than this, 
 	// the task is done
-
+	
 	float fResearchTimer;	//< Timer to research something, like the cientist trying to find the rocket parts
 	float fResearchTargetTime; //< Time needed to complete the research above
 	bool bnResearchIsComplete; //< Is the research complete already?
@@ -647,6 +648,7 @@ public class CMonkey : CBaseEntity {
 
 					// Sets the time need to fix this building
 					fWorkingTargetTime = fBuildingFixTime;
+					workingMouseState = mouseState;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -654,6 +656,7 @@ public class CMonkey : CBaseEntity {
 			case MouseWorldPosition.eMouseStates.TargetingForRecycle:
 				{
 					fWorkingTargetTime = fDroneRecycleTime;
+					workingMouseState = mouseState;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -681,6 +684,7 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to reprogram this drone
 					fWorkingTargetTime = fDroneReprogramTime;
 					sfxWorking = sfxReprogramming;
+					workingMouseState = mouseState;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -690,6 +694,7 @@ public class CMonkey : CBaseEntity {
 
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fBuildingSabotageTime;
+					workingMouseState = mouseState;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -698,6 +703,7 @@ public class CMonkey : CBaseEntity {
 				{
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fDroneSabotageTime;
+					workingMouseState = mouseState;
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
