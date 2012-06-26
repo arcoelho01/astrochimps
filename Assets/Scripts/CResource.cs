@@ -36,6 +36,10 @@ public class CResource : CBaseEntity {
 		Selectable = true; 
 		Movable = false;
 		Type = eObjType.Resource;
+
+		// Get the position of some helpers objects
+		GetSweetSpotAndMeshObject();
+
 	}
 
 	//
