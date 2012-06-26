@@ -37,11 +37,13 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	public string descricao;
 	public int nivelEstrutura;
 	public int[] custoMetalEvoluirNivel;
+	public bool periferico;
 	
     private float progressoAtual = 0;
 	private GameObject prefabConstrucao;
 	private float tempoDecorrido = 0;
 	private GameObject cano;
+	private int rotacaoX;
 	
 	// Use this for initialization
 	void Start () {
@@ -54,6 +56,12 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		}
 		statusProgressao = StatusProgresso.LIBERADO;
 		nivelEstrutura = 1;
+		
+		if (periferico)
+			rotacaoX = 180;
+		else
+			rotacaoX = 0;
+		
 	}
 	
 	// Update is called once per frame
@@ -133,7 +141,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		}
 		
 		if(!drone){
-			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),Quaternion.Euler(0,0,0));
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y + 0.7f,transform.position.z),Quaternion.Euler(0,rotacaoX,0));
 			construcaoNova.name = nomeProvisorio + this.name.Substring(4,1);
 			GameObject.Find("Regiao"+this.name.Substring(4,1)).GetComponent<Regiao>().setor[1] = construcaoNova;
 			GameObject.Find("CommandCenter").GetComponent<GerenciadorSlots>().slots[int.Parse(this.name.Substring(4,1))-1] = construcaoNova;
