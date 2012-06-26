@@ -156,10 +156,11 @@ public class EventosMenu : MonoBehaviour {
 		//Eventos de menu das fazendas
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.FAZENDA)
 		{
-			metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
+			//metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
 			
 			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3))
 			{
+				metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
 				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
 					if(metal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel){
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
@@ -176,9 +177,10 @@ public class EventosMenu : MonoBehaviour {
 		//Eventos de menu da central de seguranca
 		if(tipoObj == DefinicaoEstrutura.TipoEstrutura.CENTRAL_SEGURANCA)
 		{
-			metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
+			//metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
 			
 			if((objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao == DefinicaoEstrutura.StatusProgresso.LIBERADO)&&(objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura < 3)){
+				metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
 				if(GUI.Button(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f),"Atualizar")){
 					if(metal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel){
 						objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
