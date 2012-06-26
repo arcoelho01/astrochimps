@@ -48,6 +48,7 @@ public class CDrone : CBaseEntity {
   // Sorry I know this is bad but i'm not smart enough right now to make it better
   public Saboteur saboteurScript;
   public Patrol patrolScript;
+  public DronePatrol patrolDroneScript;
 	public DroneHunter hunterAIScript;
   public EnemyPatrol enemyPatrolScript;
 
@@ -71,7 +72,10 @@ public class CDrone : CBaseEntity {
 	/// </summary>
 	void Awake() {
 
-    if(this.droneType == eDroneType.Patrol) patrolScript = this.gameObject.GetComponent<Patrol>();
+    if(this.droneType == eDroneType.Patrol){
+      patrolDroneScript  = this.gameObject.GetComponent<DronePatrol>();
+      patrolScript = this.gameObject.GetComponent<Patrol>();
+    }
     else if(this.droneType == eDroneType.Saboteur) saboteurScript = this.gameObject.GetComponent<Saboteur>();
 
 		// Check if it is a CPU controlled drone (or opponent drones, for that matter)
@@ -103,10 +107,10 @@ public class CDrone : CBaseEntity {
         // Set a flag to make easier for us
        isThisAnEnemyDrone = true;
 
-       if(!enemyPatrolScript) {
+       //if(!enemyPatrolScript) {
          // DEBUG
-         Debug.LogError("EnemyPatrol component not found in " + this.transform);
-       }
+       //  Debug.LogError("EnemyPatrol component not found in " + this.transform);
+       //}
 
       }
 
@@ -203,6 +207,14 @@ public class CDrone : CBaseEntity {
     this.typeTarget = transTarget.gameObject.GetComponent<CBaseEntity>().Type;
     EnterNewState(FSMState.STATE_PURSUIT);
  	}
+
+  public void Patrolling (){
+    EnterNewState(FSMState.STATE_WALKING);
+  }
+
+  public void Waiting (){
+    EnterNewState(FSMState.STATE_IDLE);
+  }
 
 	/// <summary>
 	/// Changes the FSM to a new state
@@ -744,13 +756,17 @@ public class CDrone : CBaseEntity {
 				// Back to idle
 				EnterNewState(FSMState.STATE_IDLE);
 			}
-		}
+		}else if(this.droneType == eDroneType.Patrol){
+
+       patrolDroneScript.bGoToNextMarker = true;
+
+    }
 	}
 
   public override void Deselect() {
 
-   if((this.droneType == eDroneType.Patrol) && patrolScript.setNewPatrol)
-      patrolScript.RevertPatrol();
+   if((this.droneType == eDroneType.Patrol) && patrolDroneScript.bSetNewPatrol)
+      patrolDroneScript.RevertPatrol();
 
    base.Deselect();
 

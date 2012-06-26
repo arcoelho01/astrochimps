@@ -20,7 +20,7 @@ public class PatrolMarkerTrigger : MonoBehaviour {
     if(other.tag != "Monkey" && other.tag != "Drone" && other.tag != "Building" && other.tag != "Resource" && other.tag != "RocketPart")
       return;
 
-    Debug.Log("Triggered by" + this.transform.name + " and " + other.transform.name);
+    //Debug.Log("Triggered by" + this.transform.name + " and " + other.transform.name);
     if(droneScript) droneScript.patrolScript.patrolPointsValid = false;
     this.transform.renderer.material.color = Color.red;
 
@@ -31,7 +31,7 @@ public class PatrolMarkerTrigger : MonoBehaviour {
     if(other.tag != "Monkey" && other.tag != "Drone" && other.tag != "Building" && other.tag != "Resource" && other.tag != "RocketPart")
       return;
 
-    Debug.Log("Triggered exity by" + this.transform.name);
+    //Debug.Log("Triggered exity by" + this.transform.name);
     if(droneScript) droneScript.patrolScript.patrolPointsValid = true;
     this.transform.renderer.material.color = Color.green;
 

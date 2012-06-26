@@ -800,8 +800,8 @@ public class MouseWorldPosition : MonoBehaviour {
 
 						if(thisSelectedDrone.droneType == CDrone.eDroneType.Patrol)
             {
-              if( thisSelectedDrone.patrolScript.setNewPatrol && thisSelectedDrone.patrolScript.patrolPointsValid)
-							thisSelectedDrone.patrolScript.patrolSet = true;
+              if( thisSelectedDrone.patrolDroneScript.bSetNewPatrol && thisSelectedDrone.patrolDroneScript.bPatrolPointsValid)
+							thisSelectedDrone.patrolDroneScript.bStartMoving = true;
             }
 						else thisSelectedDrone.WalkTo(WhatIsThePositionSelected());
 					}

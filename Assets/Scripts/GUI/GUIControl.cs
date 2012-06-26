@@ -113,10 +113,10 @@ public class GUIControl : MonoBehaviour {
 	private void drawSlots(){
 		int predio = 0;
 		int slot = 0;
-		while(predio != null && slot != 9){
+		while(predio != 0 && slot != 9){ // 0 == NULL WARNING
 			slot++;
 			predio = SlotPredios[slot];
-			if (predio != null){
+			if (predio != 0){ // 0 == NULL WARNING
 				if (predio == 1)
 					GUI.Label (new Rect (527 + 33*slot,16,ComandoOxTexture.width,ComandoOxTexture.height), ComandoOxTexture);
 				if (predio == 2)

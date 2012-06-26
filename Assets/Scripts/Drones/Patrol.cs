@@ -45,11 +45,17 @@ public class Patrol : MonoBehaviour {
   void Awake () {
 
   cdroneScript = this.GetComponent<CDrone>();
+
   myTransform = this.transform;
+
   enemyAround = false;
+
   setNewPatrol = false;
+
   patrolSet = false;
+
   patrolPointsValid = false;
+
   scannedColliders = new Collider[0];
 
   }
@@ -314,13 +320,13 @@ void Alerta () {
       patrolIndex = startPoint;
       setNewPatrol = false;
     }
-
+    /*
     if(Vector3.Distance(this.transform.position,patrolTarget[patrolIndex]) < 5.0f){
       //if(!AstarAIFollow.onAIMovingChange) {
       patrolIndex += 1;
       if(patrolIndex >= patrolTarget.Length) patrolIndex = 0;
         cdroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
-    }
+    }*/
     //}
   }
 

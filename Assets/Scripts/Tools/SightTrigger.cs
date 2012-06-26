@@ -3,6 +3,8 @@ using System.Collections;
 
 public class SightTrigger : MonoBehaviour {
 
+  public int myEnemyLayer;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -13,15 +15,17 @@ public class SightTrigger : MonoBehaviour {
 	
 	}
 
-  void OnTriggerEnter (){
+  void OnTriggerEnter (Collider other){
 
-    Debug.LogWarning("Got something");
+    if(other.tag == "Monkey" || other.tag == "Drone")
+     Debug.LogWarning("Got something: " + other.transform.name);
 
   }
 
-  void OnTriggerExit (){
+  void OnTriggerExit (Collider other){
 
-    Debug.LogWarning("That something got out");
+    if(other.tag == "Monkey" || other.tag == "Drone")
+      Debug.LogWarning("That something got out: " + other.transform.name);
 
   }
 }

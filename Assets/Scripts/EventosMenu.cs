@@ -45,8 +45,8 @@ public class EventosMenu : MonoBehaviour {
 	void OnGUI(){
 		GUI.skin = menuSkin;
 		
-		float screenX = Screen.width * 0.5f - largura * 0.5f;
-		float screenY = Screen.height * 0.5f - altura * 0.5f;
+		//float screenX = Screen.width * 0.5f - largura * 0.5f; // NOT USED WARNING
+		//float screenY = Screen.height * 0.5f - altura * 0.5f; // NOT USED WARNING
 		
 		//GUI.Box(new Rect(0,Screen.height - 100,Screen.width,100),"Menu");
 
