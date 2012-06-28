@@ -13,7 +13,7 @@ public class MeshMaterialChanger : MonoBehaviour {
 	// Array to hold all original materials in the object
 	Material[] originalMaterials;
 	// Transform of the model itself (the first child in the hierarchy, usually)
-	Transform myObject;
+	private Transform myObject;
 	// Material with disabled aspect to be set in the inspector
 	public Material disabledMaterial;
 

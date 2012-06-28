@@ -93,6 +93,15 @@ public class CRocketPart : CBaseEntity {
 		}
 	}
 
+	/// <summary>
+	/// Just a shortcut for the visibility of the part in the VisibilityControl script
+	/// </summary>
+	/// <returns> True if the part is visible, false otherwise </returns>
+	public bool IsVisible() {
+
+		return visibilityScript.IsVisible();
+	}
+
 	/*
 	 * ===========================================================================================================
 	 * EVENTS STUFF

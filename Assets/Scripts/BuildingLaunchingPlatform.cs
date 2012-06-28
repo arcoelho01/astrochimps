@@ -92,6 +92,13 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 		// Get the transform of the corresponding part in the complete rocket
 		Transform meshOfThisRocketPart = ltPartsOnTheRocket[nIdxOfRocketPartEnum];
+		
+		// DEBUG
+		if(!meshOfThisRocketPart) {
+
+			Debug.LogError(this.transform + " not found meshOfThisRocketPart, index " + nIdxOfRocketPartEnum);
+		}
+
 		// Get the material changer component
 		MeshMaterialChanger materialChangerOfThisRocketPart = 
 			meshOfThisRocketPart.GetComponent<MeshMaterialChanger>();
