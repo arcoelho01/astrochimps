@@ -92,13 +92,6 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 		// Get the transform of the corresponding part in the complete rocket
 		Transform meshOfThisRocketPart = ltPartsOnTheRocket[nIdxOfRocketPartEnum];
-		
-		// DEBUG
-		if(!meshOfThisRocketPart) {
-
-			Debug.LogError(this.transform + " not found meshOfThisRocketPart, index " + nIdxOfRocketPartEnum);
-		}
-
 		// Get the material changer component
 		MeshMaterialChanger materialChangerOfThisRocketPart = 
 			meshOfThisRocketPart.GetComponent<MeshMaterialChanger>();
@@ -129,8 +122,8 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 			// 1 - Detach the rocket part from the monkey
 			Transform rocketPart = hit.gameObject.transform;
-			CRocketPart rocketPartEntity = rocketPart.GetComponent<CRocketPart>();
-			rocketPartEntity.ReleaseMe();
+			//CRocketPart rocketPartEntity = rocketPart.GetComponent<CRocketPart>();
+			//rocketPartEntity.ReleaseMe();
 
 			// 2 - Add it to the parts list
 			PlayerBroughtAPart(rocketPart);
