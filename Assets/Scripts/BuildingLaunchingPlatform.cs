@@ -6,6 +6,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Implements the behaviour of the Launching Platform. The Launching Platform it's the place where the monkeys
 /// must bring the rocket parts, so it can be built and the game can be won
+/// Here, we check for all parts to assemble the rocket, and enabled them as the player bring them
 /// </summary>
 public class BuildingLaunchingPlatform : MonoBehaviour {
 
@@ -33,6 +34,9 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	// 
 	void Awake() {
 
+		// Register itself with the main script
+		MainScript.tLaunchingPlatform = this.transform;
+
 		// Get the building script
 		cBuildingScript = this.GetComponent<CBuilding>();
 
@@ -41,7 +45,6 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 		// Initializes the parts list
 		aPartsAlreadyBrought = new bool[partsEnumNames.Length];
-
 	}
 
 	// Use this for initialization
@@ -77,7 +80,7 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	/// <summary>
 	/// What to do when the player sucessfully brought a rocket part to the launching platform
 	/// </summary>
-	void PlayerBroughtAPart(Transform rocketPartToBeAdded) {
+	public void PlayerBroughtAPart(Transform rocketPartToBeAdded) {
 
 		if(sfxPartAdded) {
 
@@ -113,20 +116,20 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	/// <summary>
 	/// Sense when an object with a rigidbody attached enters the collider. We're using 
 	/// </summary>
-	void OnTriggerEnter(Collider hit) {
+	//void OnTriggerEnter(Collider hit) {
 
-		if(hit.gameObject.tag == "RocketPart") {
+	//	if(hit.gameObject.tag == "RocketPart") {
 
-			// DEBUG
-			Debug.Log("Rocket part entered the launching platform: " + hit.gameObject.transform.name);
+	//		// DEBUG
+	//		Debug.Log("Rocket part entered the launching platform: " + hit.gameObject.transform.name);
 
-			// 1 - Detach the rocket part from the monkey
-			Transform rocketPart = hit.gameObject.transform;
-			//CRocketPart rocketPartEntity = rocketPart.GetComponent<CRocketPart>();
-			//rocketPartEntity.ReleaseMe();
+	//		// 1 - Detach the rocket part from the monkey
+	//		Transform rocketPart = hit.gameObject.transform;
+	//		//CRocketPart rocketPartEntity = rocketPart.GetComponent<CRocketPart>();
+	//		//rocketPartEntity.ReleaseMe();
 
-			// 2 - Add it to the parts list
-			PlayerBroughtAPart(rocketPart);
-		}
-	}
+	//		// 2 - Add it to the parts list
+	//		PlayerBroughtAPart(rocketPart);
+	//	}
+	//}
 }
