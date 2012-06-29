@@ -274,7 +274,8 @@ public class MouseWorldPosition : MonoBehaviour {
 			if(selectedObjectEntity.Movable) {
 
 				// Are we pointing at the ground? Walk!
-				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer) {
+				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer 
+						|| whatIAmPointing.gameObject.layer == MainScript.neutralLayer) {
 					
 					cursorCurrent = cursorWalk;
 					MouseState = eMouseStates.CanWalk;
@@ -293,7 +294,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 					// Ok, cursor set, get out
 					return;
-				}
+				} // END IF - not pointing at the ground
 
 				// are we pointing at an enemy?
 				if(whatIAmPointing.gameObject.layer == MainScript.enemyLayer) {
@@ -511,7 +512,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
 
 					return;
-				}
+				} // END IF - not pointing at an enemy
 
 				// Not pointing at the ground and not pointing at an enemy.
 				// Is a monkey selected?
@@ -558,11 +559,8 @@ public class MouseWorldPosition : MonoBehaviour {
 						//	cursorCurrent = cursorNormal;
 						//	MouseState = eMouseStates.Hover;
 						//
-						return;
-					}
-				
-					// No, so are we pointing at a rocket part with the cientist monkey selected?
-					if(whatIAmPointing.tag == "RocketPart" && 
+					} // END IF - Monkey selected - pointing at a building
+					else if(whatIAmPointing.tag == "RocketPart" && 
 							selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Cientist) {
 
 						CRocketPart cRocketPart = whatIAmPointing.GetComponent<CRocketPart>();
@@ -587,9 +585,19 @@ public class MouseWorldPosition : MonoBehaviour {
 							//pointedObject = whatIAmPointing;
 						}
 					}	
+					else {
+
+						// well, then we can't walk
+						cursorCurrent = cursorWalkNotOk;
+						MouseState = eMouseStates.CannotWalk;
+					}
 				} // END IF - Monkey selected - not pointing at the ground, not pointing at an enemy
 				else { // not a monkey selected
 
+							// DEBUG
+							Debug.Log(this.transform + " RP + Monkey Cientist");
+							cursorCurrent = cursorNormal;
+							MouseState = eMouseStates.Hover;
 				}
 			} // END IF - Movable selected
 			else {
