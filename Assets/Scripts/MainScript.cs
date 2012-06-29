@@ -53,6 +53,8 @@ public class MainScript : MonoBehaviour {
 	public static CBuilding cbCommandCenter;
 	//< Shortcut for the Research Lab
 	public static CBuilding cbResearchLab;
+	//< Shortcut for the Launching Platform object
+	public static Transform tLaunchingPlatform;
 
 	// Shortcut to this script
 	public static MainScript Script;
