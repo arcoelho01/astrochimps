@@ -274,8 +274,7 @@ public class MouseWorldPosition : MonoBehaviour {
 			if(selectedObjectEntity.Movable) {
 
 				// Are we pointing at the ground? Walk!
-				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer 
-						|| whatIAmPointing.gameObject.layer == MainScript.neutralLayer) {
+				if(whatIAmPointing.gameObject.layer == MainScript.groundLayer) {
 					
 					cursorCurrent = cursorWalk;
 					MouseState = eMouseStates.CanWalk;
@@ -543,26 +542,25 @@ public class MouseWorldPosition : MonoBehaviour {
 							cursorCurrent = cursorGetInside;
 							MouseState = eMouseStates.MonkeyCanEnterBuilding;
 						}
-
-						// Is this a sabotaged building?
-						if(pointedBuilding.sabotado) {
-
-							// and we have the engineer selected?
-							if(selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Engineer) {
+						else if(pointedBuilding.sabotado && selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Engineer) {
 								
 								cursorCurrent = cursorBuild;
 								MouseState = eMouseStates.EngineerFix;
-							}
+						}
+						else {
+
+							cursorCurrent = cursorWalkNotOk;
+							MouseState = eMouseStates.CannotWalk;
 						}
 
 						// FIXME: check the correct cursor. Not walk, perhaps?
 						//	cursorCurrent = cursorNormal;
 						//	MouseState = eMouseStates.Hover;
-						//
+							
 					} // END IF - Monkey selected - pointing at a building
 					else if(whatIAmPointing.tag == "RocketPart" && 
 							selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Cientist) {
-
+						
 						CRocketPart cRocketPart = whatIAmPointing.GetComponent<CRocketPart>();
 
 						// Ok, but it's this part already being carried by someone in my team?
@@ -585,6 +583,12 @@ public class MouseWorldPosition : MonoBehaviour {
 							//pointedObject = whatIAmPointing;
 						}
 					}	
+					else if(whatIAmPointing.gameObject.layer == MainScript.neutralLayer) {
+
+						// Over neutral we can walk
+						cursorCurrent = cursorWalk;
+						MouseState = eMouseStates.CanWalk;
+					}
 					else {
 
 						// well, then we can't walk
