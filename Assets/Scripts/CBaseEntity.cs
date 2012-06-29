@@ -214,6 +214,10 @@ public class CBaseEntity : MonoBehaviour {
 				// Turn off the gravity for this object
 				this.rigidbody.useGravity = false;
 			}
+			if(!this.rigidbody.isKinematic) {
+
+				this.rigidbody.isKinematic = true;
+			}
 		}
 
 		if(MainScript.Script.prefabForceField && !captureForceField) {
@@ -274,6 +278,10 @@ public class CBaseEntity : MonoBehaviour {
 
 				// Turn off the gravity for this object
 				this.rigidbody.useGravity = true;
+			}
+			if(this.rigidbody.isKinematic) {
+
+				this.rigidbody.isKinematic = false;
 			}
 		}
 
