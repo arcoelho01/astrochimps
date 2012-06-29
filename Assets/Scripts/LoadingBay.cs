@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// This will enable a object to receive a rocket part and enable it in the launching platform. With this, we
@@ -23,19 +24,6 @@ public class LoadingBay : MonoBehaviour {
 		}
 	}
 
-	//
-	void Awake() {
-
-		// Get to the Lauching Platform script
-
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	/// <summary>
 	/// Sense when an object with a rigidbody attached enters the collider. We're using 
 	/// </summary>
@@ -43,13 +31,8 @@ public class LoadingBay : MonoBehaviour {
 
 		if(hit.gameObject.tag == "RocketPart") {
 
-			// DEBUG
-			Debug.Log("Rocket part entered the launching platform: " + hit.gameObject.transform.name);
-
 			// 1 - Detach the rocket part from the monkey
 			Transform rocketPart = hit.gameObject.transform;
-			//CRocketPart rocketPartEntity = rocketPart.GetComponent<CRocketPart>();
-			//rocketPartEntity.ReleaseMe();
 
 			// 2 - Add it to the parts list
 			scriptLaunchingPlatform.PlayerBroughtAPart(rocketPart);

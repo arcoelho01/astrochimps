@@ -112,24 +112,4 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 		// check aPartsAlreadyBrought for a false. If all elements are true, the rocket is complete
 
 	}
-
-	/// <summary>
-	/// Sense when an object with a rigidbody attached enters the collider. We're using 
-	/// </summary>
-	//void OnTriggerEnter(Collider hit) {
-
-	//	if(hit.gameObject.tag == "RocketPart") {
-
-	//		// DEBUG
-	//		Debug.Log("Rocket part entered the launching platform: " + hit.gameObject.transform.name);
-
-	//		// 1 - Detach the rocket part from the monkey
-	//		Transform rocketPart = hit.gameObject.transform;
-	//		//CRocketPart rocketPartEntity = rocketPart.GetComponent<CRocketPart>();
-	//		//rocketPartEntity.ReleaseMe();
-
-	//		// 2 - Add it to the parts list
-	//		PlayerBroughtAPart(rocketPart);
-	//	}
-	//}
 }
