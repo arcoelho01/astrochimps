@@ -112,4 +112,11 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 		// check aPartsAlreadyBrought for a false. If all elements are true, the rocket is complete
 
 	}
+
+	/// <summary>
+	/// Check if the player completed the completed the rocket
+	/// </summary>
+	public void CheckIfTheRocketIsComplete() {
+
+	}
 }

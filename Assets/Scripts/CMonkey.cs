@@ -286,6 +286,10 @@ public class CMonkey : CBaseEntity {
 				{
 					// DEBUG
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
+					if(!meshObject.animation.IsPlaying("idle")) {
+
+						meshObject.animation.Play("idle");
+					}
 				}
 				break;
 
