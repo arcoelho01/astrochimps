@@ -177,16 +177,6 @@ public class RTSCam : MonoBehaviour {
 
 		if(Input.GetKeyDown(KeyCode.Alpha2)) {
 
-			if(MainScript.MonkeyCientist) {
-
-				objectInFocus = MainScript.MonkeyCientist;
-				inputStuffScript.SelectObject(objectInFocus);
-				bnLookAtTarget = true;
-			}
-		}
-
-		if(Input.GetKeyDown(KeyCode.Alpha3)) {
-
 			if(MainScript.MonkeyEngineer) {
 
 				objectInFocus = MainScript.MonkeyEngineer;
@@ -195,11 +185,21 @@ public class RTSCam : MonoBehaviour {
 			}
 		}
 
-		if(Input.GetKeyDown(KeyCode.Alpha4)) {
+		if(Input.GetKeyDown(KeyCode.Alpha3)) {
 
 			if(MainScript.MonkeySaboteur) {
 
 				objectInFocus = MainScript.MonkeySaboteur;
+				inputStuffScript.SelectObject(objectInFocus);
+				bnLookAtTarget = true;
+			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.Alpha4)) {
+
+			if(MainScript.MonkeyCientist) {
+
+				objectInFocus = MainScript.MonkeyCientist;
 				inputStuffScript.SelectObject(objectInFocus);
 				bnLookAtTarget = true;
 			}
