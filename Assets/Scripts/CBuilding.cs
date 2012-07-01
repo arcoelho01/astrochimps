@@ -59,10 +59,6 @@ public class CBuilding : CBaseEntity {
 	public delegate void BuildingSabotageHandler(CBuilding buildingEventRaiser, bool isSabotaged);
 	public static event BuildingSabotageHandler OnSabotageStatusChange;
 
-	// For the elevator, keeps the boarded monkeys
-	List<Transform> lBoardedMonkeys = new List<Transform>();
-	bool bnAreAllMonkeysBoarded;
-
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -173,13 +169,6 @@ public class CBuilding : CBaseEntity {
 				myTimer = 0.0f;
 			}
 		}
-		
-		// Only for the Elevator on the Launching Platform
-		if(bnAreAllMonkeysBoarded) {
-
-			// DEBUG
-			Debug.LogWarning(this.transform + " ALL MONKEYS BOARDED! GAME OVER!!!");
-		}
 	}
 
 	/// <summary>
@@ -248,7 +237,7 @@ public class CBuilding : CBaseEntity {
 		monkeyInside = tMonkey;
 
 		// Add the boarded monkey to the list
-		lBoardedMonkeys.Add(tMonkey);
+		mainScript.lBoardedMonkeys.Add(tMonkey);
 
 		tMonkey.gameObject.GetComponent<CBaseEntity>().Deselect();
 		tMonkey.gameObject.GetComponent<CBaseEntity>().Selectable = false;
@@ -259,7 +248,7 @@ public class CBuilding : CBaseEntity {
 		monkeyInside.transform.position = controlSpot.transform.position;
 
 		// Check if we haven't boarded all monkeys. If so, the game was won!
-		bnAreAllMonkeysBoarded = CheckIfAllMonkeysAreBoarded();
+		mainScript.CheckIfAllMonkeysAreBoarded();
 	}
 
 	/// <summary>
@@ -534,25 +523,9 @@ public class CBuilding : CBaseEntity {
 
 		monkeyPrisoner.CapturedBy(this.transform, this.controlSpot, null);
 		this.capturedEntity = monkeyPrisoner;
+
+		// Check for game over conditions
+		mainScript.CheckIfAllMonkeysAreConvicts();
 	}
-
-	/// <summary>
-	/// Check if we have all the monkeys boarded in the rocket. If so, the game was won!
-	/// </summary>
-	/// <returns> True if all monkeys are boarded, false if are any monkey missing </returns>
-	bool CheckIfAllMonkeysAreBoarded() {
-
-		bool rv;
-
-		/// FIXME: this sucks! Shouldn't use a number, must be another way to know how many monkeys are in the
-		/// game
-		if(lBoardedMonkeys.Count == 4) 
-			rv = true;
-		else 
-			rv = false;
-
-		return rv;
-	}
-
 }
 

@@ -59,6 +59,10 @@ public class MainScript : MonoBehaviour {
 	// Shortcut to this script
 	public static MainScript Script;
 
+	//< Keeps a list of all boarded monkeys
+	public List<Transform> lBoardedMonkeys = new List<Transform>();
+	
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -440,5 +444,78 @@ public class MainScript : MonoBehaviour {
 		return lcRocketParts;
 	}
 
+	/*
+	 * ===========================================================================================================
+	 * GAME END STUFF
+	 * ===========================================================================================================
+	 */
 
+	/// <summary>
+	/// Check if we have all the monkeys boarded in the rocket. If so, the game was won!
+	/// </summary>
+	public void CheckIfAllMonkeysAreBoarded() {
+
+		bool rv;
+
+		/// FIXME: this sucks! Shouldn't use a number, must be another way to know how many monkeys are in the
+		/// game
+		if(lBoardedMonkeys.Count == 4) 
+			rv = true;
+		else 
+			rv = false;
+
+		if(rv) {
+
+			// Start the victory sequence
+			GameOverStartVictorySequence();
+		}
+	}
+
+	/// <summary>
+	/// Check if we all our monkeys are not under prison. If so, we lost the game.
+	/// Usually, this function is called when a drone delivers a monkey to a prison
+	/// </summary>
+	public void CheckIfAllMonkeysAreConvicts() {
+
+		// Let's assume that all monkeys are "inside"
+		bool rv = true;
+
+		foreach(Transform tMonkey in alliedMonkeys) {
+
+			CMonkey scriptMonkey = tMonkey.GetComponent<CMonkey>();
+
+			if(!scriptMonkey.IsInsideAPrison()) {
+				
+				// Monkey is free!!!!
+				rv = false;
+			}
+		}
+
+		// Ok, we have checked the status of all monkeys. What is the veredict?
+		if(rv) {
+
+			// Start the victory sequence
+			GameOverStartDefeatSequence();
+		}
+	}
+
+	/// <summary>
+	/// What happens when the game is lost
+	/// For now this happens when all player's monkeys are in jail
+	/// </summary>
+	void GameOverStartDefeatSequence() {
+
+		// DEBUG
+		Debug.LogWarning(this.transform + " G A M E  O V E R. Outcome: lost");
+	}
+
+	/// <summary>
+	/// What happens when the game is won
+	/// For now, this happens when all monkey are boarded in the rocket ship
+	/// <summary>
+	void GameOverStartVictorySequence() {
+
+		// DEBUG
+		Debug.LogWarning(this.transform + " G A M E  O V E R. Outcome: victory!");
+	}
 }

@@ -890,6 +890,26 @@ public class CMonkey : CBaseEntity {
 		}
 	}
 
+	/// <summary>
+	/// Shortcut to check if a monkey is inside a prison: must be with the isCaptured flag on and be inside a 
+	/// building.
+	/// </summary>
+	public bool IsInsideAPrison() {
+
+		bool rv = false;
+
+		if(!capturer || !isCaptured) {
+		
+			rv = false;
+		}
+		else if(capturer.GetComponent<CBaseEntity>().Type == CBaseEntity.eObjType.Building) {
+		
+			rv = true;
+		}
+
+		return rv;
+	}
+
 
 	/*
 	 * ===========================================================================================================
