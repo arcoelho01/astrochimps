@@ -530,7 +530,13 @@ public class CMonkey : CBaseEntity {
 
 	}
 
+	/// <summary>
+	/// Used to send a monkey to a point in the terrain. It will keep the target's position and change to
+	/// the 'walking' state
+	/// </summary>
+	/// <param name="walkTo"> A Vector3 with the position to walk to </param>
 	public void WalkTo(Vector3 walkTo){
+
 		this.walkTo = walkTo;
 		EnterNewState(FSMState.STATE_WALKING);
 	}

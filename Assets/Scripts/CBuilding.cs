@@ -258,11 +258,15 @@ public class CBuilding : CBaseEntity {
 		if(sfxLoadMonkey)
 			AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
-		monkeyInside.transform.position = exitSpot.transform.position;
-		monkeyInside.transform.rotation = Quaternion.identity;
-		monkeyInside.transform.Rotate(new Vector3(0.0f,90.0f,0.0f));
+		//monkeyInside.transform.position = exitSpot.transform.position;
+		Vector3 v3FloorPosition = 
+			new Vector3(monkeyInside.transform.position.x, 0.1f, monkeyInside.transform.position.z);
+		monkeyInside.transform.position = v3FloorPosition;
+		//monkeyInside.transform.LookAt(exitSpot);
+		//monkeyInside.transform.rotation = Quaternion.identity;
+		//monkeyInside.transform.Rotate(new Vector3(0.0f,90.0f,0.0f));
 		
-		CMonkey cmMonkeyInside =	monkeyInside.gameObject.GetComponent<CMonkey>();
+		CMonkey cmMonkeyInside = monkeyInside.gameObject.GetComponent<CMonkey>();
 		cmMonkeyInside.Selectable = true;
 		cmMonkeyInside.WalkTo(exitSpot.transform.position);
 
