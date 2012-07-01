@@ -296,7 +296,7 @@ public class CBaseEntity : MonoBehaviour {
 
 	/// <summary>
 	/// Get the sweet spot position, if this object is defined. Otherwise, will return this object position
-	/// </summar>
+	/// </summary>
 	protected Vector3 GetSweetSpotPosition() {
 
 		sweetSpotObj = transform.Find("SweetSpot");

@@ -13,10 +13,6 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	// The building script
 	CBuilding cBuildingScript;
 
-	//< The Loading Bay registered with this platform
-	public Transform tLoadingBay;
-	LoadingBay scriptLoadingBay;
-
 	// A checklist for all the parts already brought by the player
 	bool[] aPartsAlreadyBrought;
 
@@ -28,7 +24,10 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 	// PUBLIC
 	public AudioClip sfxPartAdded;
-	bool bnIsTheRocketCompleted;
+	public bool bnIsTheRocketCompleted;
+
+	//< Transform for the elevator. Will be enabled when the rocket is complete
+	public Transform tPlatformElevator;
 
 	/*
 	 * ===========================================================================================================
@@ -50,6 +49,8 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 		// Initializes the parts list
 		aPartsAlreadyBrought = new bool[partsEnumNames.Length];
+
+		InitializeElevatorObject();
 	}
 
 	// Use this for initialization
@@ -114,7 +115,8 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 			Destroy(rocketPartToBeAdded.gameObject);
 		
 		// Check if the rocket was completed with this part
-		bnIsTheRocketCompleted = IsTheRocketCompleted();
+		if(!bnIsTheRocketCompleted)
+			bnIsTheRocketCompleted = IsTheRocketCompleted();
 
 		if(bnIsTheRocketCompleted) {
 
@@ -142,6 +144,24 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Find the elevator object and disables it when the game start
+	/// </summary>
+	void InitializeElevatorObject() {
+
+		// Find the elevator object
+		tPlatformElevator = this.transform.Find("RocketElevator");
+
+		if(!tPlatformElevator) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " could not find the elevator object");
+		}
+
+		// Disables the elevator
+		tPlatformElevator.gameObject.SetActiveRecursively(false);
+	}
+
+	/// <summary>
 	/// Tasks to be performed when the rocket is complete
 	/// Enable the elevator
 	/// Disable the Loading Bay for the parts
@@ -150,32 +170,6 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	void EnableLoadingOfMonkeys() {
 
 		// Enable the elevator
-
-		// Disable the loading bay for parts and enables it for monkeys
-		scriptLoadingBay.EnableMonkeyLoading();
-	}
-
-	/// <summary>
-	/// Register a loading platform with this script. Will be called by the platform itself
-	/// </summary>
-	public void AddLoadingBay(Transform tNewLoadingBay) {
-
-		tLoadingBay = tNewLoadingBay;
-
-		if(!tLoadingBay) {
-
-			// DEBUG
-			Debug.LogError(this.transform + " LoadingBay is null!");
-		}
-		else {
-
-			scriptLoadingBay = tLoadingBay.GetComponent<LoadingBay>();
-
-			if(!scriptLoadingBay) {
-
-				// DEBUG
-				Debug.LogError(this.transform + " could not find ");
-			}
-		}
+		tPlatformElevator.gameObject.SetActiveRecursively(true);
 	}
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Class with building definitions
@@ -14,6 +15,7 @@ public class CBuilding : CBaseEntity {
 		DroneFactory, ResearchLab, LaunchingPlatform, Slot }; // Building type
 	public eBuildingType buildingType;
 	
+	// Audio Stuff
 	public AudioClip sfxLoadMonkey;
 	public AudioClip sfxSelected;
 	
@@ -57,6 +59,9 @@ public class CBuilding : CBaseEntity {
 	public delegate void BuildingSabotageHandler(CBuilding buildingEventRaiser, bool isSabotaged);
 	public static event BuildingSabotageHandler OnSabotageStatusChange;
 
+	// For the elevator, keeps the boarded monkeys
+	List<Transform> lBoardedMonkeys = new List<Transform>();
+	bool bnAreAllMonkeysBoarded;
 
 	/*
 	 * ===========================================================================================================
@@ -168,6 +173,13 @@ public class CBuilding : CBaseEntity {
 				myTimer = 0.0f;
 			}
 		}
+		
+		// Only for the Elevator on the Launching Platform
+		if(bnAreAllMonkeysBoarded) {
+
+			// DEBUG
+			Debug.LogWarning(this.transform + " ALL MONKEYS BOARDED! GAME OVER!!!");
+		}
 	}
 
 	/// <summary>
@@ -235,6 +247,9 @@ public class CBuilding : CBaseEntity {
 		// the last monkey who entered
 		monkeyInside = tMonkey;
 
+		// Add the boarded monkey to the list
+		lBoardedMonkeys.Add(tMonkey);
+
 		tMonkey.gameObject.GetComponent<CBaseEntity>().Deselect();
 		tMonkey.gameObject.GetComponent<CBaseEntity>().Selectable = false;
 
@@ -242,6 +257,9 @@ public class CBuilding : CBaseEntity {
 			AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 
 		monkeyInside.transform.position = controlSpot.transform.position;
+
+		// Check if we haven't boarded all monkeys. If so, the game was won!
+		bnAreAllMonkeysBoarded = CheckIfAllMonkeysAreBoarded();
 	}
 
 	/// <summary>
@@ -519,10 +537,21 @@ public class CBuilding : CBaseEntity {
 	}
 
 	/// <summary>
-	/// Research Lab Behaviour: show and marks all the rocket parts in the map
+	/// Check if we have all the monkeys boarded in the rocket. If so, the game was won!
 	/// </summary>
-	public void RevealRocketParts() {
+	/// <returns> True if all monkeys are boarded, false if are any monkey missing </returns>
+	bool CheckIfAllMonkeysAreBoarded() {
 
+		bool rv;
+
+		/// FIXME: this sucks! Shouldn't use a number, must be another way to know how many monkeys are in the
+		/// game
+		if(lBoardedMonkeys.Count == 4) 
+			rv = true;
+		else 
+			rv = false;
+
+		return rv;
 	}
 
 }

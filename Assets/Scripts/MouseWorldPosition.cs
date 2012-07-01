@@ -1041,6 +1041,19 @@ public class MouseWorldPosition : MonoBehaviour {
 			
 			HunterDrone.Attacked();
 		}
-		
+
+		if(Input.GetKeyDown(KeyCode.Semicolon)) {
+
+			BuildingLaunchingPlatform lauchingPlatform 
+				= GameObject.Find("/LaunchingPlatform").GetComponent<BuildingLaunchingPlatform>();
+
+			if(!lauchingPlatform) {
+
+				// DEBUG
+				Debug.LogError(this.transform + " launching platform not found");
+			}
+
+			lauchingPlatform.bnIsTheRocketCompleted = true;
+		}
 	}
 }

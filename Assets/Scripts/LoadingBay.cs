@@ -8,12 +8,7 @@ using System.Collections.Generic;
 /// </summary>
 public class LoadingBay : MonoBehaviour {
 
-	//< We can load the rocket parts. When the rocket is complete, we can load the monkeys at the same platform
-	public enum ELoadingType { RocketPart, Monkey};
-
 	BuildingLaunchingPlatform scriptLaunchingPlatform;
-
-	public ELoadingType eLoadingType;
 
 	// Use this for initialization
 	void Start () {
@@ -26,21 +21,6 @@ public class LoadingBay : MonoBehaviour {
 			// DEBUG
 			Debug.LogError(this.transform + " could not find the BuildingLaunchingPlatform script.");
 		}
-
-		// Always start as a cargo loading platform
-		//eLoadingType = ELoadingType.RocketPart;
-
-		// Register myself with the BuildingLaunchingPlatform script
-		scriptLaunchingPlatform.AddLoadingBay(this.transform);
-	}
-
-	void FixedUpdate() {
-
-		// For monkey loading, we do not use triggers, but check the distance
-		if(eLoadingType == ELoadingType.Monkey) {
-
-		}
-
 	}
 
 	/// <summary>
@@ -49,7 +29,7 @@ public class LoadingBay : MonoBehaviour {
 	void OnTriggerEnter(Collider hit) {
 
 		// Are we expecting parts and the player brought one?
-		if(hit.gameObject.tag == "RocketPart" && eLoadingType == ELoadingType.RocketPart) {
+		if(hit.gameObject.tag == "RocketPart") {
 
 			// 1 - Detach the rocket part from the monkey
 			Transform rocketPart = hit.gameObject.transform;
@@ -58,18 +38,4 @@ public class LoadingBay : MonoBehaviour {
 			scriptLaunchingPlatform.PlayerBroughtAPart(rocketPart);
 		}
 	}
-
-	/// <summary>
-	/// Switches the loading mode to monkey loading. This happens when the rocket is complete
-	/// </summary>
-	public void EnableMonkeyLoading() {
-
-		eLoadingType = ELoadingType.Monkey;
-
-		// DEBUG
-		Debug.Log(this.transform + " switching to monkey loading");
-	}
-
-	/// <summary>
-	/// Check if a monkey is in the range of the 
 }
