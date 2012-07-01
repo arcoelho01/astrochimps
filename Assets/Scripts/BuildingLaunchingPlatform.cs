@@ -13,6 +13,10 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 	// The building script
 	CBuilding cBuildingScript;
 
+	//< The Loading Bay registered with this platform
+	public Transform tLoadingBay;
+	LoadingBay scriptLoadingBay;
+
 	// A checklist for all the parts already brought by the player
 	bool[] aPartsAlreadyBrought;
 
@@ -24,6 +28,7 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 	// PUBLIC
 	public AudioClip sfxPartAdded;
+	bool bnIsTheRocketCompleted;
 
 	/*
 	 * ===========================================================================================================
@@ -40,7 +45,7 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 		// Get the building script
 		cBuildingScript = this.GetComponent<CBuilding>();
 
-		// Get all the parts defined in the enum
+		// Get all the parts 8503-2229 defined in the enum
 		partsEnumNames = Enum.GetNames(typeof(CRocketPart.eRocketPartType));
 
 		// Initializes the parts list
@@ -108,15 +113,69 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 		if(rocketPartToBeAdded)
 			Destroy(rocketPartToBeAdded.gameObject);
 		
-		// TODO: here will be a good place to check if the player have not yet assembled the rocket. To do this,
-		// check aPartsAlreadyBrought for a false. If all elements are true, the rocket is complete
+		// Check if the rocket was completed with this part
+		bnIsTheRocketCompleted = IsTheRocketCompleted();
 
+		if(bnIsTheRocketCompleted) {
+
+			// Enables the embarking of the monkeys on the rocket ship
+			EnableLoadingOfMonkeys();
+		}
 	}
 
 	/// <summary>
 	/// Check if the player completed the completed the rocket
 	/// </summary>
-	public void CheckIfTheRocketIsComplete() {
+	/// <returns> True if all parts are present, false if any is missing </returns>
+	bool IsTheRocketCompleted() {
 
+		// Let's assume that the player already completed the rocket
+		bool rv = true;
+
+		for(int i = 0; i < aPartsAlreadyBrought.Length; i++) {
+
+			if(!aPartsAlreadyBrought[i])
+				rv = false;
+		}
+
+		return rv;
+	}
+
+	/// <summary>
+	/// Tasks to be performed when the rocket is complete
+	/// Enable the elevator
+	/// Disable the Loading Bay for the parts
+	/// Create a Loading Bay for the monkeys
+	/// </summary>
+	void EnableLoadingOfMonkeys() {
+
+		// Enable the elevator
+
+		// Disable the loading bay for parts and enables it for monkeys
+		scriptLoadingBay.EnableMonkeyLoading();
+	}
+
+	/// <summary>
+	/// Register a loading platform with this script. Will be called by the platform itself
+	/// </summary>
+	public void AddLoadingBay(Transform tNewLoadingBay) {
+
+		tLoadingBay = tNewLoadingBay;
+
+		if(!tLoadingBay) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " LoadingBay is null!");
+		}
+		else {
+
+			scriptLoadingBay = tLoadingBay.GetComponent<LoadingBay>();
+
+			if(!scriptLoadingBay) {
+
+				// DEBUG
+				Debug.LogError(this.transform + " could not find ");
+			}
+		}
 	}
 }
