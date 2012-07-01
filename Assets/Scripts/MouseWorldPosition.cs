@@ -542,6 +542,11 @@ public class MouseWorldPosition : MonoBehaviour {
 							cursorCurrent = cursorGetInside;
 							MouseState = eMouseStates.MonkeyCanEnterBuilding;
 						}
+						else if(pointedBuilding.buildingType == CBuilding.eBuildingType.LaunchingPlatform) {
+
+							cursorCurrent = cursorGetInside;
+							MouseState = eMouseStates.MonkeyCanEnterBuilding;
+						}
 						else if(pointedBuilding.sabotado && selectedMonkey.monkeyClass == CMonkey.eMonkeyType.Engineer) {
 								
 								cursorCurrent = cursorBuild;

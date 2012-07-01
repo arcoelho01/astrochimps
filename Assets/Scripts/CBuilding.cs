@@ -214,7 +214,8 @@ public class CBuilding : CBaseEntity {
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Deselect();
 		// While inside the building, the monkey is not selectable anymore
 		monkeyInside.gameObject.GetComponent<CBaseEntity>().Selectable = false;	
-		AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
+		if(sfxLoadMonkey)
+			AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
 		
 		//this.Select();//gameObject.GetComponent<CBaseEntity>().Select();
 		
