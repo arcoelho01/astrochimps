@@ -97,7 +97,7 @@ public class CBuilding : CBaseEntity {
 		GetSweetSpotAndMeshObject();
 
 		// if is the Command Center, get the position of the monkey when inside the building
-		if(buildingType == eBuildingType.CommandCenter) {
+		if(buildingType == eBuildingType.CommandCenter || buildingType == eBuildingType.LaunchingPlatform) {
 
 			GetControlRoomSpot();
 			GetExitSpot();
@@ -224,6 +224,13 @@ public class CBuilding : CBaseEntity {
 		monkeyInside.transform.rotation = Quaternion.identity;
 		monkeyInside.Translate(new Vector3(0.0f,-2.5f,0.0f));
 		monkeyInside.transform.Rotate(new Vector3(0.0f,180.0f,0.0f));
+	}
+
+	/// <summary>
+	/// Put one of the monkey inside the rocket
+	/// </summary>
+	public void PutAMonkeyInsideRocket(Transform tMonkey, CMonkey.eMonkeyType eMonkeyClass) {
+	
 	}
 
 	/// <summary>
@@ -444,7 +451,7 @@ public class CBuilding : CBaseEntity {
 			if(!controlRoomSpotObj) {
 
 				// DEBUG
-				Debug.LogError(this.transform + "Object 'ControlSpot' not found for this Command Center");
+				Debug.LogError(this.transform + "Object 'ControlSpot' not found for this building");
 			}
 			else {
 			
@@ -463,7 +470,7 @@ public class CBuilding : CBaseEntity {
 			if(!exitSpotObj) {
 
 				// DEBUG
-				Debug.LogError("Object 'ExitSpot' not found for this Command Center");
+				Debug.LogError("Object 'ExitSpot' not found for this building");
 			}
 			else {
 			
