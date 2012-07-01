@@ -604,7 +604,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				else { // not a monkey selected
 
 							// DEBUG
-							Debug.Log(this.transform + " RP + Monkey Cientist");
+							//Debug.Log(this.transform + " RP + Monkey Cientist");
 							cursorCurrent = cursorNormal;
 							MouseState = eMouseStates.Hover;
 				}
