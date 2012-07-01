@@ -34,6 +34,15 @@ public class LoadingBay : MonoBehaviour {
 		scriptLaunchingPlatform.AddLoadingBay(this.transform);
 	}
 
+	void FixedUpdate() {
+
+		// For monkey loading, we do not use triggers, but check the distance
+		if(eLoadingType == ELoadingType.Monkey) {
+
+		}
+
+	}
+
 	/// <summary>
 	/// Sense when an object with a rigidbody attached enters the collider. We're using 
 	/// </summary>
@@ -48,11 +57,6 @@ public class LoadingBay : MonoBehaviour {
 			// 2 - Add it to the parts list
 			scriptLaunchingPlatform.PlayerBroughtAPart(rocketPart);
 		}
-		else if(hit.gameObject.tag == "Monkey" && eLoadingType == ELoadingType.Monkey) {
-
-			// DEBUG
-			Debug.Log(this.transform + " monkey at bay: " + hit.gameObject.name);
-		}
 	}
 
 	/// <summary>
@@ -65,4 +69,7 @@ public class LoadingBay : MonoBehaviour {
 		// DEBUG
 		Debug.Log(this.transform + " switching to monkey loading");
 	}
+
+	/// <summary>
+	/// Check if a monkey is in the range of the 
 }

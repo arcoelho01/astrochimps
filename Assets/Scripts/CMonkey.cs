@@ -724,7 +724,15 @@ public class CMonkey : CBaseEntity {
 						return;
 					}
 
-					attackedBuilding.PutAMonkeyInside(this.transform);
+					// Check if we are entering the rocket
+					if(attackedBuilding.buildingType == CBuilding.eBuildingType.LaunchingPlatform) {
+
+						attackedBuilding.PutAMonkeyInsideRocket(this.transform, this.monkeyClass);
+					}
+					else {
+
+						attackedBuilding.PutAMonkeyInside(this.transform);
+					}
 
 					// DEBUG
 					Debug.Log("MouseState for this action " + mouseState + " in " + attackedBuilding.transform);

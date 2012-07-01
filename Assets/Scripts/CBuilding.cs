@@ -230,7 +230,18 @@ public class CBuilding : CBaseEntity {
 	/// Put one of the monkey inside the rocket
 	/// </summary>
 	public void PutAMonkeyInsideRocket(Transform tMonkey, CMonkey.eMonkeyType eMonkeyClass) {
-	
+
+		// FIXME: actually we need a list of monkeys here, or else the GetTheMonkeyOut() will only release
+		// the last monkey who entered
+		monkeyInside = tMonkey;
+
+		tMonkey.gameObject.GetComponent<CBaseEntity>().Deselect();
+		tMonkey.gameObject.GetComponent<CBaseEntity>().Selectable = false;
+
+		if(sfxLoadMonkey)
+			AudioSource.PlayClipAtPoint(sfxLoadMonkey, transform.position);
+
+		monkeyInside.transform.position = controlSpot.transform.position;
 	}
 
 	/// <summary>

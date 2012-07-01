@@ -882,7 +882,7 @@ public class MouseWorldPosition : MonoBehaviour {
 				selectedObject.GetComponent<CMonkey>().PerformAction(pointedObject, MouseState);
 				break;
 
-			// A monkey entering the command center
+			// A monkey entering the command center or the launching elevator
 			case eMouseStates.MonkeyCanEnterBuilding:
 				{
 
