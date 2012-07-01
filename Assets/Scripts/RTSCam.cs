@@ -280,7 +280,7 @@ public class RTSCam : MonoBehaviour {
 		bnCamModified = true;
 
 		// Check
-		if(Vector3.Distance(camPanDirection, objectToLook.transform.position) < 0.1f) {
+		if(Vector3.Distance(camPanDirection, objectToLook.transform.position) < 1.1f) {
 
 			bnCamMoving = false;
 		}
