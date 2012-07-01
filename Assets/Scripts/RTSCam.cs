@@ -65,6 +65,8 @@ public class RTSCam : MonoBehaviour {
 	Transform commandCenter;
 
 	MouseWorldPosition inputStuffScript = null;
+	MainScript mainScript;
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -82,7 +84,8 @@ public class RTSCam : MonoBehaviour {
 		
 		
 
-		inputStuffScript = GameObject.Find("Codigo").gameObject.GetComponent<MouseWorldPosition>();
+		Transform tCodigo = GameObject.Find("Codigo").transform;
+		inputStuffScript = tCodigo.gameObject.GetComponent<MouseWorldPosition>();
 		if(inputStuffScript == null) {
 
 			// DEBUG
@@ -94,6 +97,8 @@ public class RTSCam : MonoBehaviour {
 			// DEBUG
 			Debug.LogError("Cannot find the 'microphone' object. Set it in the inspector.");
 		}
+
+		mainScript = tCodigo.gameObject.GetComponent<MainScript>();
 	}	
 
 	/// <summary>
@@ -121,6 +126,10 @@ public class RTSCam : MonoBehaviour {
 	///	Update
 	/// </summary>
 	void Update() {
+
+		// Rolling a cutscene? Ignore the player movement!
+		if(mainScript.bnOnCutscene)
+			return;
 		
 		// FIXME: put this in the mouse event script, not here!
 		// Calculates the mouse movement

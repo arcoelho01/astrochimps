@@ -65,6 +65,9 @@ public class MainScript : MonoBehaviour {
 	//< Pause status
 	public bool bnIsTheGamePaused;
 
+	//< Signal if we are in a cutscene to ignore player inputs
+	public bool bnOnCutscene;
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -541,5 +544,8 @@ public class MainScript : MonoBehaviour {
 
 		// DEBUG
 		Debug.LogWarning(this.transform + " G A M E  O V E R. Outcome: victory!");
+
+		// First thing to do: ignore player inputs
+		bnOnCutscene = true;
 	}
 }

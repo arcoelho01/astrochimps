@@ -116,7 +116,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	void Update () {
 
 		// Check if the game isn't paused
-		if(mainScript.bnIsTheGamePaused) {
+		if(mainScript.bnIsTheGamePaused || mainScript.bnOnCutscene) {
 
 			return;
 		}
