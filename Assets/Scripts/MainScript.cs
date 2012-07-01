@@ -62,6 +62,8 @@ public class MainScript : MonoBehaviour {
 	//< Keeps a list of all boarded monkeys
 	public List<Transform> lBoardedMonkeys = new List<Transform>();
 	
+	//< Pause status
+	public bool bnIsTheGamePaused;
 
 	/*
 	 * ===========================================================================================================
@@ -106,6 +108,7 @@ public class MainScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+		CheckInputKeys();
 	}
 
 	/*
@@ -113,6 +116,27 @@ public class MainScript : MonoBehaviour {
 	 * SCRIPT STUFF
 	 * ===========================================================================================================
 	 */
+
+	/// <summary>
+	/// Check for user input
+	/// </summary>
+	void CheckInputKeys() {
+
+		// Pause
+		if(Input.GetKeyDown(KeyCode.P)) {
+
+			bnIsTheGamePaused = !bnIsTheGamePaused;
+
+			if(bnIsTheGamePaused) {
+
+				Time.timeScale = 0.0f; // Freezes the game
+			}
+			else {
+
+				Time.timeScale = 1.0f; // Restore the game to full speed
+			}
+		}
+	}
 
 	/// <summary>
 	/// Get all units in the scene, filters them and add them to the corresponding list

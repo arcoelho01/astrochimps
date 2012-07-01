@@ -114,6 +114,12 @@ public class MouseWorldPosition : MonoBehaviour {
 	
 	// Update for physics stuff
 	void Update () {
+
+		// Check if the game isn't paused
+		if(mainScript.bnIsTheGamePaused) {
+
+			return;
+		}
 		
 		// Check what the mouse is pointing
 		MouseOver();
