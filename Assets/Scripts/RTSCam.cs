@@ -82,8 +82,6 @@ public class RTSCam : MonoBehaviour {
 
 		myCam = gameObject.GetComponent<Camera>();
 		
-		
-
 		Transform tCodigo = GameObject.Find("Codigo").transform;
 		inputStuffScript = tCodigo.gameObject.GetComponent<MouseWorldPosition>();
 		if(inputStuffScript == null) {
