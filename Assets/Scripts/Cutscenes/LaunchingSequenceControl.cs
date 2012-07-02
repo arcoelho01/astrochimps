@@ -12,6 +12,11 @@ public class LaunchingSequenceControl : MonoBehaviour {
 	Minimap scriptMinimap;
 	Transform tHud;
 	Transform tRocket;
+	Transform tLaunchExplosion;
+	bool bnRocketLaunched;
+
+	public Transform tPrefabLaunchExplosion;
+	public Transform tLaunchExplosionSpot;
 
 	// Use this for initialization
 	void Start () {
@@ -39,14 +44,18 @@ public class LaunchingSequenceControl : MonoBehaviour {
 				break;
 			}
 		}
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
 
-		if(Input.GetKeyDown(KeyCode.Semicolon)) {
+		if(bnRocketLaunched)
+			return;
+	
+		if(Input.GetKeyDown(KeyCode.Z)) {
+
+			// DEBUG
+			Debug.Log(this.transform + " starting cutscene");
 
 			LaunchingSequence();
 		}
@@ -55,6 +64,8 @@ public class LaunchingSequenceControl : MonoBehaviour {
 	/// <summary>
 	/// </summary>
 	void LaunchingSequence() {
+
+		bnRocketLaunched = true;
 
 		// Play the countdown
 		// Add white smoke
@@ -77,10 +88,34 @@ public class LaunchingSequenceControl : MonoBehaviour {
 		// Change the view to our camera
 		camLaunchCam.enabled = true;
 
+		// This is for the Detonator package to work
+		camLaunchCam.tag = "MainCamera";
+
 		// Play the launching animation
 		tRocket.animation.Play("RocketLaunching");
 		// For the camera too
 		camLaunchCam.animation.Play("LaunchingCamAtLaunch");
-		
+
+		tLaunchExplosion = Instantiate(tPrefabLaunchExplosion, tLaunchExplosionSpot.transform.position, Quaternion.identity) as Transform;
+	}
+
+	/// <summary>
+	/// If we are using the Detonator package, do the launching explosion
+	/// <summary>
+	void DoDetonatorLaunchingExplosion() {
+
+		// Trigger the launching explosion
+		if(tPrefabLaunchExplosion && tLaunchExplosionSpot) {
+
+			tLaunchExplosion = Instantiate(tPrefabLaunchExplosion, tLaunchExplosionSpot.transform.position, Quaternion.identity) as Transform;
+
+			Detonator scriptDetonator = tLaunchExplosion.GetComponent<Detonator>();
+
+			if(!scriptDetonator)
+				Debug.LogError(this.transform + " detonator script not found!");
+
+			scriptDetonator.destroyTime = 0.0f;
+			scriptDetonator.Explode();
+		}
 	}
 }
