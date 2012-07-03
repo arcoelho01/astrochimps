@@ -17,6 +17,9 @@ public class AstarAIFollow : MonoBehaviour {
 	//public static event AstarMovingHandler OnMovingChange;
 	public static event AstarMovingHandler OnReachedEndOfPath;
 	
+	/** Putting this damn boolean back **/
+	bool newTargetClicked = false;
+
 	/** Target position */
 	Vector3 targetPosition;
 	
@@ -150,7 +153,7 @@ public class AstarAIFollow : MonoBehaviour {
 	public virtual void Repath () {
 		lastPathSearch = Time.time;
 		
-		if (seeker == null || !canSearch || !seeker.IsDone ()) {
+		if (seeker == null || !newTargetClicked || !canSearch || !seeker.IsDone ()) {
 			StartCoroutine (WaitToRepath ());
 			return;
 		}
