@@ -89,12 +89,12 @@ public class DronePatrol : MonoBehaviour {
       AllyUpdate();
     else EnemyUpdate();
 
-/*/ Patrol status should be when theres nothing in colliders, Alert status when there is someone but not inside sight and Detect status once its detected
-    if(status == eAlertLevel.PATROL)
+// Patrol status should be when theres nothing in colliders, Alert status when there is someone but not inside sight and Detect status once its detected
+    if(alertLevel == eAlertLevel.PATROL)
       this.Patrol();
-    else if(status == eAlertLevel.ALERT)
+    else if(alertLevel == eAlertLevel.ALERT)
       this.Alert();
-    else if(status == eAlertLevel.DETECT)
+    else if(alertLevel == eAlertLevel.DETECT)
       this.Detect();
 //*/
 
@@ -102,12 +102,32 @@ public class DronePatrol : MonoBehaviour {
 
 
   void Patrol(){
+    /*/
+    fTimer += Time.deltaTime;
+
+    if(fTimer > fCheckViewTimer){
+
+      scannedColliders = Physics.OverlapSphere(this.transform.position,viewRadius,myEnemyLayer);
+      if(scannedColliders.Length > 0)
+        foreach(Collider colliderScanned in scannedColliders)
+          Debug.LogWarning(colliderScanned.transform.name);
+
+      fTimer = 0;
+    }
+    //*/
+  }
+
+  void Alert(){
 
 
 
   }
 
+  void Detect(){
 
+
+
+  }
 
 
   public bool AllyStart () {
@@ -141,14 +161,18 @@ public class DronePatrol : MonoBehaviour {
 
     cDroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
 
+    //cDroneScript.Patrolling();
+
     return true;
 
   }
 
   void AllyUpdate () {
     //This one has to go first
+
     if(bStartMoving)
       StartPatrol();
+
 
     if(bSetNewPatrol)
       PatrolSet();
@@ -175,7 +199,7 @@ public class DronePatrol : MonoBehaviour {
 
     if(myEnemyLayer == MainScript.enemyLayer){
       bStartMoving = false;
-      cDroneScript.Waiting();
+      //cDroneScript.Waiting();
     }
 
     if(x == 4)
@@ -189,7 +213,7 @@ public class DronePatrol : MonoBehaviour {
       patrolMarkers[n].GetComponent<PatrolMarkerTrigger>().droneScript = this.cDroneScript;
     }
 
-   if(myEnemyLayer == MainScript.alliedLayer) cDroneScript.Patrolling();
+   //if(myEnemyLayer == MainScript.alliedLayer) cDroneScript.Patrolling();
 
   }
 
@@ -201,7 +225,8 @@ public class DronePatrol : MonoBehaviour {
       }
 
       bSetNewPatrol = false;
-      if(myEnemyLayer == MainScript.enemyLayer) cDroneScript.Patrolling();
+      cDroneScript.AIScript.ClickedTargetPosition(patrolTarget[patrolIndex]);
+      //if(myEnemyLayer == MainScript.enemyLayer) cDroneScript.Patrolling();
     }
 
     if(bGoToNextMarker){

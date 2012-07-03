@@ -24,6 +24,9 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 	// PUBLIC
 	public AudioClip sfxPartAdded;
+	
+	public AudioClip sfxSpaceShipReady;
+	
 	public bool bnIsTheRocketCompleted;
 
 	//< Transform for the elevator. Will be enabled when the rocket is complete
@@ -119,7 +122,9 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 			bnIsTheRocketCompleted = IsTheRocketCompleted();
 
 		if(bnIsTheRocketCompleted) {
-
+			if(sfxSpaceShipReady)
+				AudioSource.PlayClipAtPoint(sfxSpaceShipReady, transform.position);
+			
 			// Enables the embarking of the monkeys on the rocket ship
 			EnableLoadingOfMonkeys();
 		}

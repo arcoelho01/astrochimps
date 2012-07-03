@@ -21,7 +21,7 @@ public class PatrolMarkerTrigger : MonoBehaviour {
       return;
 
     //Debug.Log("Triggered by" + this.transform.name + " and " + other.transform.name);
-    if(droneScript) droneScript.patrolScript.patrolPointsValid = false;
+    if(droneScript) droneScript.patrolDroneScript.bPatrolPointsValid = false;
     this.transform.renderer.material.color = Color.red;
 
   }
@@ -32,7 +32,7 @@ public class PatrolMarkerTrigger : MonoBehaviour {
       return;
 
     //Debug.Log("Triggered exity by" + this.transform.name);
-    if(droneScript) droneScript.patrolScript.patrolPointsValid = true;
+    if(droneScript) droneScript.patrolDroneScript.bPatrolPointsValid = true;
     this.transform.renderer.material.color = Color.green;
 
   }
