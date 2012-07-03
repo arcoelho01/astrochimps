@@ -68,10 +68,16 @@ public class AstarAIFollow : MonoBehaviour {
 
 	/** True if the AI is moving, false if not */
 	public bool bnIsMoving = false;
+
+	void Awake() {
+
+		seeker = GetComponent<Seeker>();
+	}
 	
 	/** Use this for initialization */
 	public void Start () {
-		seeker = GetComponent<Seeker>();
+		// The next line was moved to the Awake()
+		//seeker = GetComponent<Seeker>();
 		controller = GetComponent<CharacterController>();
 		
 		tr = transform;
