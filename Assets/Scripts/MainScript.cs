@@ -12,6 +12,9 @@ public class MainScript : MonoBehaviour {
 	public Transform prefabForceField;
 	public Transform prefabCaptureRay;
 
+	//< Prefab to instantiate when te player wins
+	public Transform prefabVictorySequence;
+
 	public GUIBottomMenu bottomMenu;	// Pointer to the bottom menu bar
 	public Transform playerObject;	// Pointer to the player object
 	public CPlayer player;	// Pointer to the player itself
@@ -547,5 +550,11 @@ public class MainScript : MonoBehaviour {
 
 		// First thing to do: ignore player inputs
 		bnOnCutscene = true;
+
+		if(prefabVictorySequence) {
+
+			Instantiate(prefabVictorySequence, Vector3.zero, Quaternion.identity);
+		}
+
 	}
 }

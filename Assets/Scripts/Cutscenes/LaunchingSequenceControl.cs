@@ -44,6 +44,9 @@ public class LaunchingSequenceControl : MonoBehaviour {
 				break;
 			}
 		}
+
+		// Comment the line below to test the launching
+		LaunchingSequence();
 	}
 	
 	// Update is called once per frame
@@ -52,6 +55,8 @@ public class LaunchingSequenceControl : MonoBehaviour {
 		if(bnRocketLaunched)
 			return;
 	
+		// Code below just for testing the launching sequence directly.
+		/*
 		if(Input.GetKeyDown(KeyCode.Z)) {
 
 			// DEBUG
@@ -59,6 +64,8 @@ public class LaunchingSequenceControl : MonoBehaviour {
 
 			LaunchingSequence();
 		}
+		/*/
+
 	}
 
 	/// <summary>
