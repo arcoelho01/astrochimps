@@ -11,9 +11,13 @@ public class DronePatrol : MonoBehaviour {
   private Collider[] scannedColliders;
 
   private float viewRadius = 50.0f; // Larger because this is an initial check
-  private float fCheckViewTimer = 0.9f; // So they dont all make checks at exaclty the same time
+  private float fCheckViewTimer = 1.6f; // So they dont all make checks at exaclty the same time
+  private float fAlertViewTimer = 5.0f;
+  private float fDetectViewTimer = 3.0f;
   private float fTimer = 0.0f;
-  private bool enemyInRange = false;
+  //private bool enemyInRange = false;
+
+  Transform currentTarget = null;
 
   //Field of View
   private float detectionDistance = 14.0f;
@@ -44,6 +48,9 @@ public class DronePatrol : MonoBehaviour {
 
   private GameObject existingAlert; // This is to avoid destroy problems
 
+  public delegate void EnemyDiscoveryHandler(Transform eventRaiser, Transform target);
+  public static event EnemyDiscoveryHandler OnEnemyFound;
+
   void Awake () {
 
     // Get the CDrone script
@@ -59,7 +66,7 @@ public class DronePatrol : MonoBehaviour {
 
     }
 
-    //mySightTrigger.myEnemyLayer = myEnemyLayer;
+    mySightTrigger.myEnemyLayer = myEnemyLayer;
 
     scannedColliders = new Collider[0];
 
@@ -102,16 +109,20 @@ public class DronePatrol : MonoBehaviour {
 
 
   void Patrol(){
-    /*/
+    //
     fTimer += Time.deltaTime;
 
     if(fTimer > fCheckViewTimer){
 
-      scannedColliders = Physics.OverlapSphere(this.transform.position,viewRadius,myEnemyLayer);
+      scannedColliders = Physics.OverlapSphere(this.transform.position,viewRadius,1<<myEnemyLayer);
       if(scannedColliders.Length > 0)
-        foreach(Collider colliderScanned in scannedColliders)
-          Debug.LogWarning(colliderScanned.transform.name);
-
+        foreach(Collider colliderScanned in scannedColliders){
+          if(colliderScanned.tag != "Building"){
+            Debug.LogWarning("Alert Mode !");
+            alertLevel = eAlertLevel.ALERT;
+            break;
+          }
+        }
       fTimer = 0;
     }
     //*/
@@ -119,14 +130,65 @@ public class DronePatrol : MonoBehaviour {
 
   void Alert(){
 
+    //
+    fTimer += Time.deltaTime;
 
+      //currentTarget = mySightTrigger.oppositeDroneSeen;
 
+      if(mySightTrigger.oppositeDroneSeen != null){
+        currentTarget = mySightTrigger.oppositeDroneSeen;
+        //Debug.LogError("Bumped into some enemy drone");
+        alertLevel = eAlertLevel.DETECT;
+        if(existingAlert) GameObject.Destroy(existingAlert);
+        //existingAlert = GameObject.Instantiate(detectAlert,new Vector3(currentTarget.position.x,currentTarget.position.y + 15, currentTarget.position.z),
+        //                                      Quaternion.identity) as GameObject;
+        if(OnEnemyFound != null)
+          OnEnemyFound(this.transform,currentTarget);
+      }
+
+    if(fTimer > fAlertViewTimer){
+      fTimer = 0;
+      alertLevel = eAlertLevel.PATROL;
+      if(currentTarget) currentTarget = null;
+      if(existingAlert) GameObject.Destroy(existingAlert);
+      Debug.LogWarning("Back to Patrol mode");
+    }
+    //*/
   }
 
   void Detect(){
+    //
+    fTimer += Time.deltaTime;
 
+     if(!existingAlert)
+       existingAlert = GameObject.Instantiate(detectAlert,new Vector3(currentTarget.position.x,currentTarget.position.y + 15, currentTarget.position.z),
+                                              Quaternion.identity) as GameObject;
 
+   if(mySightTrigger.oppositeDroneLost != null){
 
+        Transform targetExit = mySightTrigger.oppositeDroneLost;
+        if(targetExit == currentTarget){
+
+          alertLevel = eAlertLevel.ALERT;
+          if(OnEnemyFound != null)
+            OnEnemyFound(this.transform,currentTarget);
+
+        }else{
+
+          currentTarget = targetExit;
+
+          if(existingAlert) GameObject.Destroy(existingAlert);
+
+          existingAlert = GameObject.Instantiate(detectAlert,new Vector3(currentTarget.position.x,currentTarget.position.y + 15, currentTarget.position.z),
+                                                  Quaternion.identity) as GameObject;
+          if(OnEnemyFound != null)
+            OnEnemyFound(this.transform,currentTarget);
+        
+          alertLevel = eAlertLevel.ALERT;
+        }
+      }
+
+    //*/
   }
 
 
