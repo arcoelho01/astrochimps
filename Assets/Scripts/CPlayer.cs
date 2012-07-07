@@ -62,5 +62,8 @@ public class CPlayer : CBaseEntity {
 	/// <param name ="amount"> Float with the amount of oxygen to be subtracted </param>	
 	public void SubResourceOxygen(float amount){
 		mOxygenLevel -= amount;
+
+		// Tells the game. Actually, we could check it here, but I think this way is cleaner
+		mainScript.CheckIfWeHaveOxygen();
 	}	
 }

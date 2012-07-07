@@ -143,7 +143,12 @@ public class MainScript : MonoBehaviour {
 
 				Time.timeScale = 1.0f; // Restore the game to full speed
 			}
+
 		}
+
+		//*
+		DoCheatingStuff();
+		//*/
 	}
 
 	/// <summary>
@@ -527,18 +532,41 @@ public class MainScript : MonoBehaviour {
 		if(rv) {
 
 			// Start the victory sequence
-			GameOverStartDefeatSequence();
+			GameOverStartJailedSequence();
 		}
+	}
+
+	/// <summary>
+	/// Check if we have enough oxygen to keep the monkeys alive
+	/// </summary>
+	public void CheckIfWeHaveOxygen() {
+
+		if(player.oxygenLevel >= 0.1f) {
+
+			return;
+		}
+
+		// Oops, not enough oxygen. Kill the monkeys!
+		GameOverStartDeathByAsphyxiationSequence();
 	}
 
 	/// <summary>
 	/// What happens when the game is lost
 	/// For now this happens when all player's monkeys are in jail
 	/// </summary>
-	void GameOverStartDefeatSequence() {
+	void GameOverStartJailedSequence() {
 
 		// DEBUG
-		Debug.LogWarning(this.transform + " G A M E  O V E R. Outcome: lost");
+		Debug.LogWarning(this.transform + " G A M E  O V E R. Outcome: all in prison!");
+	}
+
+	/// <summary>
+	/// Call the scenes when the player has no oxygen left, so the monkeys die asphyxieted
+	/// </summary>
+	void GameOverStartDeathByAsphyxiationSequence() {
+
+		// DEBUG
+		Debug.LogWarning(this.transform + " G A M E  O V E R. Outcome: all monkeys dead!");
 	}
 
 	/// <summary>
@@ -556,6 +584,29 @@ public class MainScript : MonoBehaviour {
 		if(prefabVictorySequence) {
 
 			Instantiate(prefabVictorySequence, Vector3.zero, Quaternion.identity);
+		}
+
+	}
+
+	/*
+	 * ===========================================================================================================
+	 * CHEATING STUFF
+	 * ===========================================================================================================
+	 */
+
+	/// <summary>
+	/// Do some cheats, for development purposes only
+	/// </summary>
+	void DoCheatingStuff() {
+
+		// Mess with the oxygen levels
+		if(Input.GetKeyDown(KeyCode.Minus)){
+
+			player.SubResourceOxygen(15.0f);
+		}
+		if(Input.GetKeyDown(KeyCode.Equals)){
+
+			player.AddResourceOxygen(15.0f);
 		}
 
 	}
