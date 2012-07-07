@@ -18,6 +18,7 @@ public class CBuilding : CBaseEntity {
 	// Audio Stuff
 	public AudioClip sfxLoadMonkey;
 	public AudioClip sfxSelected;
+	public AudioClip sfxSabotados;
 	
 	public int level = 1;	// Level of this building
 	public float workTime = 1.0f;
@@ -422,6 +423,8 @@ public class CBuilding : CBaseEntity {
 
 		sabotado = true;
 
+		AudioSource.PlayClipAtPoint(sfxSabotados, transform.position);
+		
 		// Add a visual aid
 		if(sabotagedParticleSystem) {
 
