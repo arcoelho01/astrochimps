@@ -909,6 +909,7 @@ public class CMonkey : CBaseEntity {
 					}
 					// Fix the broken building
 					attackedBuilding.FixByEngineer();
+					playAttackSound();
 					// Do nothing afterwards
 					EnterNewState(FSMState.STATE_IDLE);
 				}
@@ -920,7 +921,7 @@ public class CMonkey : CBaseEntity {
 
 					// TODO: the sabotage time could be taken from the building itself
 					buildingTarget.TemporarySabotage(8.0f);
-					
+					playAttackSound();
 
 					EnterNewState(FSMState.STATE_IDLE);
 				}
@@ -932,6 +933,7 @@ public class CMonkey : CBaseEntity {
 
 					// FIXME: for now, we leave the sabotage having the same effect as if the drone was attacked
 					droneTarget.Attacked();
+					playAttackSound();
 
 					EnterNewState(FSMState.STATE_IDLE);
 				}
@@ -943,6 +945,7 @@ public class CMonkey : CBaseEntity {
 
 					// Drone recycled
 					droneTarget.Recycled();
+					playAttackSound();
 
 					EnterNewState(FSMState.STATE_IDLE);
 				}
@@ -954,6 +957,7 @@ public class CMonkey : CBaseEntity {
 
 					// Drone reprogrammed
 					droneTarget.Reprogrammed();
+					playAttackSound();
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;
