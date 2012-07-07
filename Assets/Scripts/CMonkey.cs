@@ -12,10 +12,31 @@ public class CMonkey : CBaseEntity {
 	// PUBLIC
 	public enum eMonkeyType { Astronaut, Cientist, Engineer, Saboteur, NONE }; // Monkeys types
 
-	public AudioClip sfxSelected; // Played when the monkey is selected by the player
+	public AudioClip sfxSelectedDefault; // Played when the monkey is selected by the player
+	public AudioClip sfxSelectedIdle; // Played when the monkey is selected by the player when Idle
+	public AudioClip sfxSelectedAstronaut; // Played when the monkey Astronaut is selected by the player
+	public AudioClip sfxSelectedCientist; // Played when the monkey Cientist is selected by the player
+	public AudioClip sfxSelectedEngineer; // Played when the monkey Engineer is selected by the player
+	public AudioClip sfxSelectedSaboteur; // Played when the monkey Saboteur is selected by the player	
 	public AudioClip sfxAttacked;	// Played when attacked (by a drone, for instance)
-	public AudioClip sfxAck;	// Played when the monkey received and acknowledged an order
-	public AudioClip sfxAttack;	// Played when the monkey is attacking a target
+	public AudioClip sfxAckDefault;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAckAstronaut;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAckCientist;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAckEngineer;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAckSaboteur;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxResearchComplete;	// Played when the monkey received and acknowledged an order
+	public AudioClip sfxAttackAstronaut;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackCientist;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackEngineer;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackSaboteur;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackAckAstronaut;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackAckCientist;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackAckEngineer;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackAckSaboteur;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackedAstronaut;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackedCientist;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackedEngineer;	// Played when the monkey is attacking a target
+	public AudioClip sfxAttackedSaboteur;	// Played when the monkey is attacking a target
 	public AudioClip sfxReprogramming; //< Played when the Saboteur is reprogramming a drone
 
 	AudioClip sfxWorking; //< Wherever sound this monkey should do while working
@@ -186,9 +207,9 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_WALKING:
 				// DEBUG
 				Debug.Log(this.transform + " Entering STATE_WALKING");
-				if(sfxAck) {
+				if(sfxAckDefault) {
 
-					AudioSource.PlayClipAtPoint(sfxAck, transform.position);
+					AudioSource.PlayClipAtPoint(sfxAckDefault, transform.position);
 				}
 				AIScript.ClickedTargetPosition(walkTo);
 
@@ -310,7 +331,8 @@ public class CMonkey : CBaseEntity {
 						fResearchTimer += Time.deltaTime;
 
 						// Updates the progress bar
-						if(tProgressBar) {
+						if(tProgressBar) {	
+							
 
 							tProgressBar.gameObject.GetComponent<ProgressBar>().UpdateIncreaseBar(
 									fResearchTimer, fResearchTargetTime);
@@ -320,6 +342,7 @@ public class CMonkey : CBaseEntity {
 						if(fResearchTimer >= fResearchTargetTime) {
 
 							bnResearchIsComplete = true;
+							playResearchComplete();
 
 							//
 							CientistRevealedRocketParts();
@@ -512,25 +535,20 @@ public class CMonkey : CBaseEntity {
 	 */
 
 	/// <summary>
-	/// Selected is override to play a sound
+	/// Selected is overriden to play a sound
 	/// </summary>
 	public override Transform Select() {
 
-		if(sfxSelected) {
+		if(sfxSelectedDefault) {
 
-			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
+			AudioSource.PlayClipAtPoint(sfxSelectedDefault, transform.position);
 		}
 
 		selectorRadius = myController.radius;
 		return base.Select();
 	}
 
-	/// <summary>
-	/// Play a sound and change the FSM state when this monkey is attacked
-	///</summary>
-	public override void Attacked(){
 
-	}
 
 	/// <summary>
 	/// Used to send a monkey to a point in the terrain. It will keep the target's position and change to
@@ -621,7 +639,104 @@ public class CMonkey : CBaseEntity {
 		// Go into pursuit mode -> walk to the target. When it is in range, perform the action
 		EnterNewState(FSMState.STATE_PURSUIT);
 	}
-
+	
+	void playAckSound(){
+		if (monkeyClass == eMonkeyType.Astronaut){
+			if (sfxAckAstronaut)
+				AudioSource.PlayClipAtPoint(sfxAckAstronaut, transform.position);
+		}else if (monkeyClass == eMonkeyType.Cientist){
+			if (sfxAckCientist)
+				AudioSource.PlayClipAtPoint(sfxAckCientist, transform.position);
+		}else if (monkeyClass == eMonkeyType.Engineer){
+			if (sfxAckEngineer)
+				AudioSource.PlayClipAtPoint(sfxAckEngineer, transform.position);
+		}else if (monkeyClass == eMonkeyType.Saboteur){
+			if (sfxAckSaboteur)
+				AudioSource.PlayClipAtPoint(sfxAckSaboteur, transform.position);
+		}else 
+			if (sfxAckDefault)
+				AudioSource.PlayClipAtPoint(sfxAckDefault, transform.position);			
+	}
+	void playSelectedSound(){
+		if(eFSMCurrentState == FSMState.STATE_IDLE)
+			if (sfxSelectedIdle){
+				AudioSource.PlayClipAtPoint(sfxSelectedIdle, transform.position);
+				return;
+		}
+		
+		if (monkeyClass == eMonkeyType.Astronaut){
+			if (sfxSelectedAstronaut)
+				AudioSource.PlayClipAtPoint(sfxSelectedAstronaut, transform.position);
+		}else if (monkeyClass == eMonkeyType.Cientist){
+			if (sfxSelectedCientist)
+				AudioSource.PlayClipAtPoint(sfxSelectedCientist, transform.position);
+		}else if (monkeyClass == eMonkeyType.Engineer){
+			if (sfxSelectedEngineer)
+				AudioSource.PlayClipAtPoint(sfxSelectedEngineer, transform.position);
+		}else if (monkeyClass == eMonkeyType.Saboteur){
+			if (sfxSelectedSaboteur)
+				AudioSource.PlayClipAtPoint(sfxSelectedSaboteur, transform.position);
+		}		
+	}
+	
+	void playAttackSound(){
+		
+		if (monkeyClass == eMonkeyType.Astronaut){
+			if (sfxAttackAstronaut)
+				AudioSource.PlayClipAtPoint(sfxAttackAstronaut, transform.position);
+		}else if (monkeyClass == eMonkeyType.Cientist){
+			if (sfxAttackCientist)
+				AudioSource.PlayClipAtPoint(sfxAttackCientist, transform.position);
+		}else if (monkeyClass == eMonkeyType.Engineer){
+			if (sfxAttackEngineer)
+				AudioSource.PlayClipAtPoint(sfxAttackEngineer, transform.position);
+		}else if (monkeyClass == eMonkeyType.Saboteur){
+			if (sfxAttackSaboteur)
+				AudioSource.PlayClipAtPoint(sfxAttackSaboteur, transform.position);
+		}		
+	}
+	
+	void playAttackAckSound(){
+		
+		if (monkeyClass == eMonkeyType.Astronaut){
+			if (sfxAttackAckAstronaut)
+				AudioSource.PlayClipAtPoint(sfxAttackAckAstronaut, transform.position);
+		}else if (monkeyClass == eMonkeyType.Cientist){
+			if (sfxAttackAckCientist)
+				AudioSource.PlayClipAtPoint(sfxAttackAckCientist, transform.position);
+		}else if (monkeyClass == eMonkeyType.Engineer){
+			if (sfxAttackAckEngineer)
+				AudioSource.PlayClipAtPoint(sfxAttackAckEngineer, transform.position);
+		}else if (monkeyClass == eMonkeyType.Saboteur){
+			if (sfxAttackAckSaboteur)
+				AudioSource.PlayClipAtPoint(sfxAttackAckSaboteur, transform.position);
+		}		
+	}
+	
+	void playCapturedSound(){
+		if (monkeyClass == eMonkeyType.Astronaut){
+			if (sfxAttackedAstronaut)
+				AudioSource.PlayClipAtPoint(sfxAttackedAstronaut, transform.position);
+		}else if (monkeyClass == eMonkeyType.Cientist){
+			if (sfxAttackedCientist)
+				AudioSource.PlayClipAtPoint(sfxAttackedCientist, transform.position);
+		}else if (monkeyClass == eMonkeyType.Engineer){
+			if (sfxAttackedEngineer)
+				AudioSource.PlayClipAtPoint(sfxAttackedEngineer, transform.position);
+		}else if (monkeyClass == eMonkeyType.Saboteur){
+			if (sfxAttackedSaboteur)
+				AudioSource.PlayClipAtPoint(sfxAttackedSaboteur, transform.position);
+		}	
+		
+	}
+	
+	void playResearchComplete(){
+		if (sfxResearchComplete)
+				AudioSource.PlayClipAtPoint(sfxResearchComplete, transform.position);
+		
+	}
+		
+		
 	void MonkeyAttack() {
 
 		// TODO here applies the following rules:
@@ -636,6 +751,9 @@ public class CMonkey : CBaseEntity {
 
 		// NEW CODE
 		// Perform the action according to the mouse state
+		
+		
+			
 		switch(mouseState) {
 
 			// Astronaut monkey
@@ -645,8 +763,7 @@ public class CMonkey : CBaseEntity {
 					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 					if(droneTarget != null) {
 
-						if(sfxAttack) 
-							AudioSource.PlayClipAtPoint(sfxAttack, transform.position);
+						playAttackAckSound();
 
 						droneTarget.Attacked();
 					}
@@ -661,6 +778,7 @@ public class CMonkey : CBaseEntity {
 					// Sets the time need to fix this building
 					fWorkingTargetTime = fBuildingFixTime;
 					workingMouseState = mouseState;
+					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -669,6 +787,7 @@ public class CMonkey : CBaseEntity {
 				{
 					fWorkingTargetTime = fDroneRecycleTime;
 					workingMouseState = mouseState;
+					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -678,7 +797,7 @@ public class CMonkey : CBaseEntity {
 				{
 					// Cientist monkey capturing a RocketPart
 					CBaseEntity cCapturedEntity = transTarget.GetComponent<CBaseEntity>();
-
+					playAttackAckSound();
 					if(!cCapturedEntity) {
 
 						// DEBUG
@@ -699,6 +818,7 @@ public class CMonkey : CBaseEntity {
 					fWorkingTargetTime = fDroneReprogramTime;
 					sfxWorking = sfxReprogramming;
 					workingMouseState = mouseState;
+					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -709,6 +829,7 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fBuildingSabotageTime;
 					workingMouseState = mouseState;
+					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -718,6 +839,7 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fDroneSabotageTime;
 					workingMouseState = mouseState;
+					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
 				break;
@@ -798,6 +920,7 @@ public class CMonkey : CBaseEntity {
 
 					// TODO: the sabotage time could be taken from the building itself
 					buildingTarget.TemporarySabotage(8.0f);
+					
 
 					EnterNewState(FSMState.STATE_IDLE);
 				}
@@ -850,8 +973,7 @@ public class CMonkey : CBaseEntity {
 			return;
 
 		// Play a sound, if any
-		if(sfxAttacked)
-			AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
+		playCapturedSound();
 
 		// Change the FSM State
 		EnterNewState(FSMState.STATE_CAPTURED);
