@@ -106,6 +106,8 @@ public class MainScript : MonoBehaviour {
 			// DEBUG
 			Debug.LogError("Cannot find the MouseWorldPosition component. Please check.");
 		}
+		
+		//Instantiate(GameObject.("Monkey"), new Vector3(79.07609f,33.39249f,13.41692f), Quaternion.identity);
 
 		// Get all the monkeys in the scene and assign their objects to some variables, so we have shortcuts to them
 		GetMonkeysObjects();

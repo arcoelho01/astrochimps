@@ -7,7 +7,8 @@ public class VisibilityControl : MonoBehaviour {
 	private bool visible;
 	public bool keepVisible;
 	public float sight_range;
-	
+	public AudioClip sfxRecursoLocalizado;
+	public AudioClip  sfxPecaLocalizada;
 	// Use this for initialization
 	void Start () {
 
@@ -104,6 +105,13 @@ public class VisibilityControl : MonoBehaviour {
 
 		if(AppearsToEnemy() && !visible){
 			visible = true;
+			if ( this.CompareTag("Resource"))
+				if (sfxRecursoLocalizado)
+					AudioSource.PlayClipAtPoint(sfxRecursoLocalizado, transform.position);
+			if ( this.CompareTag("RocketPart"))
+				if (sfxPecaLocalizada)
+					AudioSource.PlayClipAtPoint(sfxPecaLocalizada, transform.position);
+			
 			
 			SetObjectVisible();
 		}

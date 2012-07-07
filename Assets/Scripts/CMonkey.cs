@@ -539,10 +539,8 @@ public class CMonkey : CBaseEntity {
 	/// </summary>
 	public override Transform Select() {
 
-		if(sfxSelectedDefault) {
-
-			AudioSource.PlayClipAtPoint(sfxSelectedDefault, transform.position);
-		}
+			playSelectedSound();
+		
 
 		selectorRadius = myController.radius;
 		return base.Select();
