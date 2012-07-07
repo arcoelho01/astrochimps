@@ -18,6 +18,9 @@ public class CBaseEntity : MonoBehaviour {
 
 	// This object can be selected?
 	public bool Selectable;	
+
+	protected float selectorRadius = 0.0f;
+
 	// Can this unit be moved? (monkeys, drones, vehicles)
 	public bool Movable;
 	public eObjTeam Team;
@@ -160,7 +163,10 @@ public class CBaseEntity : MonoBehaviour {
 	void CreateSelector() {
 
 		// New code with instantiate
-		float objectRadius = Mathf.Max(transform.localScale.x, transform.localScale.z);
+		if(selectorRadius == 0.0f) {
+		
+			selectorRadius = Mathf.Max(transform.localScale.x, transform.localScale.z);
+		}
 
 		// 1 - Instantiate the selector
 		selector = Instantiate(selectorObject,transform.position, Quaternion.identity) as Transform;
@@ -169,7 +175,7 @@ public class CBaseEntity : MonoBehaviour {
 		if (projector != null ){
 			
 			selector.rotation = Quaternion.Euler(90,0,0);
-			projector.orthographicSize = objectRadius;	
+			projector.orthographicSize = selectorRadius * 2;	
 			// 3 - Put the projector as a child to this object, so it moves together
 			selector.transform.parent = this.transform;
 		}
@@ -292,6 +298,17 @@ public class CBaseEntity : MonoBehaviour {
 
 		if(captureRay)
 			Destroy(captureRay.gameObject);
+	}
+
+	/// <summary>
+	/// Check if this unit is carrying something or someone
+	/// </summary>
+	public bool CheckIfHaveSomethingCaptured() {
+
+		if(capturedEntity == null)
+			return false;
+		else
+			return true;
 	}
 
 	/// <summary>

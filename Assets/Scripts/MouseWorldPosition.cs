@@ -584,7 +584,7 @@ public class MouseWorldPosition : MonoBehaviour {
 							// Keeps the pointed object
 							//pointedObject = whatIAmPointing;
 						}
-						else if(cRocketPart.IsVisible()){
+						else if(cRocketPart.IsVisible() && !selectedMonkey.CheckIfHaveSomethingCaptured()){
 
 							// Set the cursor
 							cursorCurrent = cursorCaptureRay;

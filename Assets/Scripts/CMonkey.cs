@@ -520,6 +520,8 @@ public class CMonkey : CBaseEntity {
 
 			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
 		}
+
+		selectorRadius = myController.radius;
 		return base.Select();
 	}
 
@@ -675,15 +677,17 @@ public class CMonkey : CBaseEntity {
 			case MouseWorldPosition.eMouseStates.CanCapture:
 				{
 					// Cientist monkey capturing a RocketPart
-					CBaseEntity capturedEntity = transTarget.GetComponent<CBaseEntity>();
+					CBaseEntity cCapturedEntity = transTarget.GetComponent<CBaseEntity>();
 
-					if(!capturedEntity) {
+					if(!cCapturedEntity) {
 
 						// DEBUG
 						Debug.LogError("Cannot find component CBaseEntity for this object: " + transTarget.name);
 					}
 
-					capturedEntity.CapturedBy(this.transform, this.captureSpot, this.captureRaySpot);
+					cCapturedEntity.CapturedBy(this.transform, this.captureSpot, this.captureRaySpot);
+					this.capturedEntity = cCapturedEntity;
+
 					EnterNewState(FSMState.STATE_IDLE);
 				}
 				break;

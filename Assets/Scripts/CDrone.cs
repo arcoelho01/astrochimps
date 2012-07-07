@@ -61,6 +61,9 @@ public class CDrone : CBaseEntity {
 	//< Time that the drone will last after being reprogrammed
 	float fWasReprogrammedTargetTime = 5.0f;
 
+	//< The character controller for this drone
+	CharacterController myController;
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -132,6 +135,9 @@ public class CDrone : CBaseEntity {
 		// Starts the object variables, like the sweet spot and the main mesh object
 		GetSweetSpotAndMeshObject();
 
+		// Get info about the collider
+		GetColliderInfo();
+
 	}
 	
 	public void WalkTo(Vector3 walkTo){
@@ -154,8 +160,21 @@ public class CDrone : CBaseEntity {
     else if(this.droneType == eDroneType.Saboteur)
           mainScript.bottomMenu.PlayerInfoMenuEnable(this);
 		
+		selectorRadius = myController.radius;
 		return base.Select();
 	}
+
+	/// <summary>
+	/// Get info about the collider in this object. This is needed so we know what are the boundaries of the
+	/// object. With this, we can calculate the distance of the object from others, knowing if we can attack 
+	/// them, for instance
+	/// </summary>
+	void GetColliderInfo() {
+
+		// Get the collider - actually a CharacterController
+		myController = gameObject.GetComponent<CharacterController>();
+	}
+
 
 	/*
 	 * ===========================================================================================================
