@@ -44,6 +44,8 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	private float tempoDecorrido = 0;
 	private GameObject cano;
 	private int rotacaoX;
+	private Vector3 posicao1;
+	private Vector3 posicao2;
 	
 	// Use this for initialization
 	void Start () {
@@ -149,8 +151,15 @@ public class DefinicaoEstrutura : MonoBehaviour {
 			cano.renderer.enabled = true;
 			cano.animation.Play("Tube_Acordeon");
 		}
-		else
-			construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x+4,transform.position.y+1,transform.position.z+3),Quaternion.Euler(0,0,0));
+		else{
+			posicao1 = transform.Find("Mesh/Position1").transform.position;
+			Debug.Log(posicao1);
+			//construcaoNova = (GameObject)Instantiate(prefabConstrucao,new Vector3(transform.position.x,transform.position.y+1,transform.position.z),Quaternion.Euler(0,0,0));
+			construcaoNova = (GameObject)Instantiate(prefabConstrucao,posicao1,Quaternion.Euler(0,0,0));
+			posicao2 = transform.Find("Mesh/Position2").transform.position;
+			//construcaoNova.GetComponent<CDrone>().WalkTo(posicao1);
+			construcaoNova.GetComponent<CDrone>().WalkTo(posicao2);
+		}
 			
 	}
 	
