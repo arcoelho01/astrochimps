@@ -423,7 +423,8 @@ public class CBuilding : CBaseEntity {
 
 		sabotado = true;
 
-		AudioSource.PlayClipAtPoint(sfxSabotados, transform.position);
+		if(sfxSabotados)
+			AudioSource.PlayClipAtPoint(sfxSabotados, transform.position);
 		
 		// Add a visual aid
 		if(sabotagedParticleSystem) {
