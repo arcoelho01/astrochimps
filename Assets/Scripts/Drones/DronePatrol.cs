@@ -10,7 +10,7 @@ public class DronePatrol : MonoBehaviour {
   private int myEnemyLayer; //The other side
   private Collider[] scannedColliders;
 
-  private float viewRadius = 50.0f; // Larger because this is an initial check
+  private float viewRadius = 35.0f; // Larger because this is an initial check
   private float fCheckViewTimer = 1.6f; // So they dont all make checks at exaclty the same time
   private float fAlertViewTimer = 5.0f;
   private float fDetectViewTimer = 3.0f;
@@ -111,6 +111,7 @@ public class DronePatrol : MonoBehaviour {
   void Patrol(){
     //
     fTimer += Time.deltaTime;
+    Transform tempTarget;
 
     if(fTimer > fCheckViewTimer){
 
@@ -118,6 +119,13 @@ public class DronePatrol : MonoBehaviour {
       if(scannedColliders.Length > 0)
         foreach(Collider colliderScanned in scannedColliders){
           if(colliderScanned.tag != "Building"){
+
+            if(colliderScanned.tag == "Drone"){
+              tempTarget = colliderScanned.transform;
+              if(tempTarget.GetComponent<CDrone>().droneType == CDrone.eDroneType.Saboteur)
+                Debug.Log("Saboteur");
+            }
+
             Debug.LogWarning("Alert Mode !");
             alertLevel = eAlertLevel.ALERT;
             break;
@@ -137,11 +145,10 @@ public class DronePatrol : MonoBehaviour {
 
       if(mySightTrigger.oppositeDroneSeen != null){
         currentTarget = mySightTrigger.oppositeDroneSeen;
-        //Debug.LogError("Bumped into some enemy drone");
+
         alertLevel = eAlertLevel.DETECT;
         if(existingAlert) GameObject.Destroy(existingAlert);
-        //existingAlert = GameObject.Instantiate(detectAlert,new Vector3(currentTarget.position.x,currentTarget.position.y + 15, currentTarget.position.z),
-        //                                      Quaternion.identity) as GameObject;
+
         if(OnEnemyFound != null)
           OnEnemyFound(this.transform,currentTarget);
       }
@@ -230,8 +237,8 @@ public class DronePatrol : MonoBehaviour {
   }
 
   void AllyUpdate () {
-    //This one has to go first
 
+    //This one has to go first
     if(bStartMoving)
       StartPatrol();
 
@@ -366,10 +373,12 @@ public class DronePatrol : MonoBehaviour {
   public void RevertPatrol(){
 
     if(previousPatrolTarget.Length > 0){
-      patrolTarget = previousPatrolTarget;
-      //Debug.LogWarning("previousPatrolTarget: " +previousPatrolTarget[0]);
       bStartMoving = true;
       bSetNewPatrol = false;
+      for(int x = 0; x < patrolTarget.Length; x++){
+        GameObject.Destroy(patrolMarkers[x]);
+      }
+      patrolTarget = previousPatrolTarget;
     }else{
       bStartMoving = false;
       bSetNewPatrol = false;
