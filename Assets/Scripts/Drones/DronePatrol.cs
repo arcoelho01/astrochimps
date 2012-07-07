@@ -58,6 +58,10 @@ public class DronePatrol : MonoBehaviour {
 
     mySightTrigger = this.GetComponentInChildren<SightTrigger>();
 
+    if(!mySightTrigger)
+      Debug.LogError("IM BROKE");
+
+
     // Who are our enemies? //Thanks Alexandre =D
    if(gameObject.layer == MainScript.enemyLayer)
      myEnemyLayer = MainScript.alliedLayer;
