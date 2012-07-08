@@ -38,6 +38,7 @@ public class CMonkey : CBaseEntity {
 	public AudioClip sfxAttackedEngineer;	// Played when the monkey is attacking a target
 	public AudioClip sfxAttackedSaboteur;	// Played when the monkey is attacking a target
 	public AudioClip sfxReprogramming; //< Played when the Saboteur is reprogramming a drone
+	public AudioClip sfxDying; //< Played when the monkey dies
 
 	AudioClip sfxWorking; //< Wherever sound this monkey should do while working
 
@@ -54,6 +55,7 @@ public class CMonkey : CBaseEntity {
 			STATE_PURSUIT,					// Walk until the target is in range, then attack it
 			STATE_WORKING,					// Monkey working on something. Action that requires a certain time
 			STATE_CAPTURED,					// Monkey was captured by an enemy
+			STATE_DEAD,							// Monkey died asphyxiated
 			STATE_NULL							// null
 	};
 
@@ -98,6 +100,7 @@ public class CMonkey : CBaseEntity {
 
 	//< Name of the animation to play in loop when this monkey is working is something that takes time
 	string stAnimationWorking;
+	string stDyingAnimation = "tapa";
 	string stAnimTargetingForBrawl = "tapa";
 	string stAnimEngineerFix = "reprogramando";
 	string stAnimTargetingForRecycle = "reprogramando";
@@ -298,6 +301,25 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
+			case FSMState.STATE_DEAD:
+				{
+
+					// Play the dying animation
+					if(meshObject) {
+
+						if(meshObject.animation.isPlaying)
+							meshObject.animation.CrossFade(stDyingAnimation);
+						else
+							meshObject.animation.Play(stDyingAnimation);
+					}
+					
+					if(sfxDying) {
+
+						AudioSource.PlayClipAtPoint(sfxDying, this.transform.position);
+					}
+				}
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -438,6 +460,9 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_CAPTURED:
 				break;
 
+			case FSMState.STATE_DEAD:
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -539,6 +564,9 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_NULL:
 				break;
 
+			case FSMState.STATE_DEAD:
+				break;
+
 			default:
 				// DEBUG
 				Debug.LogError("I shouldn't be here.");
@@ -575,6 +603,14 @@ public class CMonkey : CBaseEntity {
 
 		this.walkTo = walkTo;
 		EnterNewState(FSMState.STATE_WALKING);
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public void KillMonkey() {
+
+		EnterNewState(FSMState.STATE_DEAD);
 	}
 
 	/// <summary>
@@ -1102,7 +1138,6 @@ public class CMonkey : CBaseEntity {
 
 		return rv;
 	}
-
 
 	/*
 	 * ===========================================================================================================
