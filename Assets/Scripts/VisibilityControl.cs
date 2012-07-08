@@ -141,13 +141,13 @@ public class VisibilityControl : MonoBehaviour {
 		gosArray = GameObject.FindGameObjectsWithTag("Drone");
 
 		foreach (GameObject go in gosArray)  {
-
-				gos.Add(go);
+				if (go.layer != MainScript.enemyLayer)
+					gos.Add(go);
 		}
 
 		gosArray = GameObject.FindGameObjectsWithTag("Monkey");
 		foreach (GameObject go in gosArray)  {
-
+			if (go.layer != MainScript.enemyLayer)
 				gos.Add(go);
 		}
    
