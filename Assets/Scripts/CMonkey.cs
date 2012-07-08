@@ -307,7 +307,8 @@ public class CMonkey : CBaseEntity {
 				{
 					// DEBUG
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
-					if(!meshObject.animation.IsPlaying("idle")) {
+					//if(!meshObject.animation.IsPlaying("idle")) {
+					if(!meshObject.animation.isPlaying) {
 
 						meshObject.animation.Play("idle");
 					}
@@ -761,6 +762,12 @@ public class CMonkey : CBaseEntity {
 					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 					if(droneTarget != null) {
 
+						// Play the attack animation
+						if(meshObject) {
+
+							meshObject.animation.Play("tapa");
+						}
+
 						playAttackAckSound();
 
 						droneTarget.Attacked();
@@ -776,6 +783,13 @@ public class CMonkey : CBaseEntity {
 					// Sets the time need to fix this building
 					fWorkingTargetTime = fBuildingFixTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						meshObject.animation.Play("reprogramando");
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -785,6 +799,13 @@ public class CMonkey : CBaseEntity {
 				{
 					fWorkingTargetTime = fDroneRecycleTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						meshObject.animation.Play("reprogramando");
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -816,6 +837,13 @@ public class CMonkey : CBaseEntity {
 					fWorkingTargetTime = fDroneReprogramTime;
 					sfxWorking = sfxReprogramming;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						meshObject.animation.Play("reprogramando");
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -827,6 +855,13 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fBuildingSabotageTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						meshObject.animation.Play("reprogramando");
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -837,6 +872,13 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fDroneSabotageTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						meshObject.animation.Play("reprogramando");
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
