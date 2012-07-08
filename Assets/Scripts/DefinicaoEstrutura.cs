@@ -15,7 +15,9 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		EXTRATOR,
 		LABORATORIO,
 		PLATAFORMA_LANCAMENTO,
-		DRONE_NORMAL
+		DRONE_NORMAL,
+		DRONE_SABOTADOR,
+		DRONE_VIGILANCIA
 	};
 	public bool sabotado;
 	public bool conectado;
@@ -139,6 +141,14 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		//drones
 		if(objetoAConstruir == TipoEstrutura.DRONE_NORMAL){
 			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabUnidadeDrone;
+			drone = true;
+		}
+		if(objetoAConstruir == TipoEstrutura.DRONE_SABOTADOR){
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabUnidadeDroneSabotador;
+			drone = true;
+		}
+		if(objetoAConstruir == TipoEstrutura.DRONE_VIGILANCIA){
+			prefabConstrucao = GameObject.Find("Codigo").GetComponent<EventosMenu>().prefabUnidadeDroneVigilancia;
 			drone = true;
 		}
 		
