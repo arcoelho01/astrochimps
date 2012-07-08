@@ -7,6 +7,17 @@ using System.Collections.Generic;
 /// </summary>
 public class MonkeyDeathControl : MonoBehaviour {
 
+	public GUISkin skin;
+
+	bool bnWaitForKey;
+	Rect rectEndMessage;
+	string stEndMessage = "Pressione qualquer tecla";
+	float fEndMessageHeight = 50;
+	float fEndMessageWidth = 200;
+	float fEndMessagePosY;
+	//<
+	public string sceneMainScreen = "";
+
 	MainScript scriptMainScript;
 	Camera camLaunchCam;
 	Minimap scriptMinimap;
@@ -25,6 +36,11 @@ public class MonkeyDeathControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		// Calculate the message position on the screen
+		fEndMessagePosY = Screen.height - (fEndMessageHeight * 1.5f);
+		rectEndMessage = new Rect(Screen.width * 0.5f - fEndMessageWidth * 0.5f,
+				fEndMessagePosY, fEndMessageWidth, fEndMessageHeight);
 	
 		// Cache the main script
 		scriptMainScript = GameObject.Find("/Codigo").GetComponent<MainScript>();
@@ -40,16 +56,22 @@ public class MonkeyDeathControl : MonoBehaviour {
 
 		// All the monkeys in the game
 		lAllMonkeys = scriptMainScript.GetListOfAllMonkeys();
+
+		SetupCameras();
+		DeathSequence();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		if(Input.GetKeyDown(KeyCode.X)) {
+		if(bnWaitForKey) {
 
-			//
-			SetupCameras();
-			DeathSequence();
+			if(Input.anyKey) {
+
+				scriptMainScript.bnOnCutscene = false;
+				// Back to the main menu
+				Application.LoadLevel(sceneMainScreen);
+			}
 		}
 	}
 
@@ -81,7 +103,7 @@ public class MonkeyDeathControl : MonoBehaviour {
 
 				camMonkeys[nIdx].transform.LookAt(lAllMonkeys[nIdx].transform);
 				// DEBUG
-				Debug.Log(this.transform + " Cam " + nIdx + " looking at " + lAllMonkeys[nIdx].transform);
+				//Debug.Log(this.transform + " Cam " + nIdx + " looking at " + lAllMonkeys[nIdx].transform);
 			}
 		}
 	}
@@ -109,6 +131,8 @@ public class MonkeyDeathControl : MonoBehaviour {
 
 		// Play the animation
 		PlayMonkeysDyingAnimation();
+
+		bnWaitForKey = true;
 	}
 
 	/// <summary>
@@ -123,5 +147,15 @@ public class MonkeyDeathControl : MonoBehaviour {
 				cMonkey.KillMonkey();
 			}
 		}
+	}
+
+	void OnGUI() {
+
+		GUI.skin = skin;
+
+		if(!bnWaitForKey)
+			return;
+
+		GUI.Label(rectEndMessage, stEndMessage);
 	}
 }

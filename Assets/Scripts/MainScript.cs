@@ -14,6 +14,8 @@ public class MainScript : MonoBehaviour {
 
 	//< Prefab to instantiate when te player wins
 	public Transform prefabVictorySequence;
+	//< Prefab to instantiate when the player loses by depleting his oxygen reserve
+	public Transform prefabDefeatByDeath;
 
 	public GUIBottomMenu bottomMenu;	// Pointer to the bottom menu bar
 	public Transform playerObject;	// Pointer to the player object
@@ -575,6 +577,15 @@ public class MainScript : MonoBehaviour {
 
 		// DEBUG
 		Debug.LogWarning(this.transform + " G A M E  O V E R. Outcome: all monkeys dead!");
+
+		// First thing to do: ignore player inputs
+		bnOnCutscene = true;
+
+		if(prefabDefeatByDeath) {
+
+			Instantiate(prefabDefeatByDeath, Vector3.zero, Quaternion.identity);
+		}
+
 	}
 
 	/// <summary>
