@@ -94,6 +94,18 @@ public class CMonkey : CBaseEntity {
 	//< Time needed to reprogram a stunned drone
 	float fDroneReprogramTime = 5.0f;
 
+	//< ANIMATIONS
+
+	//< Name of the animation to play in loop when this monkey is working is something that takes time
+	string stAnimationWorking;
+	string stAnimTargetingForBrawl = "tapa";
+	string stAnimEngineerFix = "reprogramando";
+	string stAnimTargetingForRecycle = "reprogramando";
+//	string stAnimCanCapture = "";
+	string stAnimTargetingForReprogram = "reprogramando";
+	string stAnimCanSabotageBuilding = "reprogramando";
+	string stAnimCanSabotageDrone = "reprogramando";
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -414,6 +426,11 @@ public class CMonkey : CBaseEntity {
 						fWorkingTimer = 0.0f;
 
 						WorkIsDone();
+					}
+
+					if(!meshObject.animation.IsPlaying(stAnimationWorking)) {
+
+						meshObject.animation.Play(stAnimationWorking);
 					}
 				}
 				break;
@@ -765,7 +782,8 @@ public class CMonkey : CBaseEntity {
 						// Play the attack animation
 						if(meshObject) {
 
-							meshObject.animation.Play("tapa");
+							stAnimationWorking = stAnimTargetingForBrawl;
+							meshObject.animation.Play(stAnimationWorking);
 						}
 
 						playAttackAckSound();
@@ -786,8 +804,9 @@ public class CMonkey : CBaseEntity {
 
 					// Play the attack animation
 					if(meshObject) {
-
-						meshObject.animation.Play("reprogramando");
+						
+						stAnimationWorking = stAnimEngineerFix;
+						meshObject.animation.Play(stAnimationWorking);
 					}
 
 					playAttackAckSound();
@@ -803,7 +822,8 @@ public class CMonkey : CBaseEntity {
 					// Play the attack animation
 					if(meshObject) {
 
-						meshObject.animation.Play("reprogramando");
+						stAnimationWorking = stAnimTargetingForRecycle;
+						meshObject.animation.Play(stAnimationWorking);
 					}
 
 					playAttackAckSound();
@@ -813,7 +833,7 @@ public class CMonkey : CBaseEntity {
 
 				// Cientist monkey
 			case MouseWorldPosition.eMouseStates.CanCapture:
-				{
+				{	
 					// Cientist monkey capturing a RocketPart
 					CBaseEntity cCapturedEntity = transTarget.GetComponent<CBaseEntity>();
 					playAttackAckSound();
@@ -841,7 +861,8 @@ public class CMonkey : CBaseEntity {
 					// Play the attack animation
 					if(meshObject) {
 
-						meshObject.animation.Play("reprogramando");
+						stAnimationWorking = stAnimTargetingForReprogram;
+						meshObject.animation.Play(stAnimationWorking);
 					}
 
 					playAttackAckSound();
@@ -859,7 +880,8 @@ public class CMonkey : CBaseEntity {
 					// Play the attack animation
 					if(meshObject) {
 
-						meshObject.animation.Play("reprogramando");
+						stAnimationWorking = stAnimCanSabotageBuilding;
+						meshObject.animation.Play(stAnimationWorking);
 					}
 
 					playAttackAckSound();
@@ -876,7 +898,8 @@ public class CMonkey : CBaseEntity {
 					// Play the attack animation
 					if(meshObject) {
 
-						meshObject.animation.Play("reprogramando");
+						stAnimationWorking = stAnimCanSabotageDrone;
+						meshObject.animation.Play(stAnimationWorking);
 					}
 
 					playAttackAckSound();
