@@ -94,6 +94,18 @@ public class CMonkey : CBaseEntity {
 	//< Time needed to reprogram a stunned drone
 	float fDroneReprogramTime = 5.0f;
 
+	//< ANIMATIONS
+
+	//< Name of the animation to play in loop when this monkey is working is something that takes time
+	string stAnimationWorking;
+	string stAnimTargetingForBrawl = "tapa";
+	string stAnimEngineerFix = "reprogramando";
+	string stAnimTargetingForRecycle = "reprogramando";
+//	string stAnimCanCapture = "";
+	string stAnimTargetingForReprogram = "reprogramando";
+	string stAnimCanSabotageBuilding = "reprogramando";
+	string stAnimCanSabotageDrone = "reprogramando";
+
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -307,7 +319,8 @@ public class CMonkey : CBaseEntity {
 				{
 					// DEBUG
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
-					if(!meshObject.animation.IsPlaying("idle")) {
+					//if(!meshObject.animation.IsPlaying("idle")) {
+					if(!meshObject.animation.isPlaying) {
 
 						meshObject.animation.Play("idle");
 					}
@@ -413,6 +426,11 @@ public class CMonkey : CBaseEntity {
 						fWorkingTimer = 0.0f;
 
 						WorkIsDone();
+					}
+
+					if(!meshObject.animation.IsPlaying(stAnimationWorking)) {
+
+						meshObject.animation.Play(stAnimationWorking);
 					}
 				}
 				break;
@@ -761,6 +779,13 @@ public class CMonkey : CBaseEntity {
 					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 					if(droneTarget != null) {
 
+						// Play the attack animation
+						if(meshObject) {
+
+							stAnimationWorking = stAnimTargetingForBrawl;
+							meshObject.animation.Play(stAnimationWorking);
+						}
+
 						playAttackAckSound();
 
 						droneTarget.Attacked();
@@ -776,6 +801,14 @@ public class CMonkey : CBaseEntity {
 					// Sets the time need to fix this building
 					fWorkingTargetTime = fBuildingFixTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+						
+						stAnimationWorking = stAnimEngineerFix;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -785,6 +818,14 @@ public class CMonkey : CBaseEntity {
 				{
 					fWorkingTargetTime = fDroneRecycleTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimTargetingForRecycle;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -792,7 +833,7 @@ public class CMonkey : CBaseEntity {
 
 				// Cientist monkey
 			case MouseWorldPosition.eMouseStates.CanCapture:
-				{
+				{	
 					// Cientist monkey capturing a RocketPart
 					CBaseEntity cCapturedEntity = transTarget.GetComponent<CBaseEntity>();
 					playAttackAckSound();
@@ -816,6 +857,14 @@ public class CMonkey : CBaseEntity {
 					fWorkingTargetTime = fDroneReprogramTime;
 					sfxWorking = sfxReprogramming;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimTargetingForReprogram;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -827,6 +876,14 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fBuildingSabotageTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimCanSabotageBuilding;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -837,6 +894,14 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fDroneSabotageTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimCanSabotageDrone;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}

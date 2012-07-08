@@ -2,6 +2,18 @@ fileFormatVersion: 2
 guid: 6b0f236e96ea5b34f994445fe79e52b5
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - selectorObject: {instanceID: 0}
+  - mainScript: {instanceID: 0}
+  - materialDisabled: {instanceID: 0}
+  - mainRendererObject: {instanceID: 0}
+  - progressBarPrefab: {instanceID: 0}
+  - sfxLoadMonkey: {fileID: 8300000, guid: 4a08ac32c616f44119467282a5216dd1, type: 1}
+  - sfxSelected: {instanceID: 0}
+  - sfxSabotados: {fileID: 8300000, guid: 38ac57defe5314327af1dd6364f57c95, type: 1}
+  - monkeyInside: {instanceID: 0}
+  - resourceSite: {instanceID: 0}
+  - showInfoObject: {instanceID: 0}
+  - sabotagedParticleSystem: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}

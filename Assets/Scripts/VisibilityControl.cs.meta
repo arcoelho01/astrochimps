@@ -2,6 +2,9 @@ fileFormatVersion: 2
 guid: 8b0ff83a8ccf4484c9c9b3069acba866
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - sfxRecursoLocalizado: {fileID: 8300000, guid: d370701a62b3641fdb0bf82334b7adc7,
+      type: 1}
+  - sfxPecaLocalizada: {fileID: 8300000, guid: abd8d176221cc48fb8cb8b98c055c160, type: 1}
   executionOrder: 0
   icon: {instanceID: 0}

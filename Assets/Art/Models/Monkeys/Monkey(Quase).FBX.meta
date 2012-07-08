@@ -42,22 +42,22 @@ ModelImporter:
     - name: reprogramando
       firstFrame: 190
       lastFrame: 290
-      wrapMode: 2
+      wrapMode: 1
       loop: 0
     - name: tapa
-      firstFrame: 290
+      firstFrame: 295
       lastFrame: 360
-      wrapMode: 2
+      wrapMode: 1
       loop: 0
     - name: pegando_objeto
       firstFrame: 360
       lastFrame: 380
-      wrapMode: 2
+      wrapMode: 1
       loop: 0
     - name: andando_com_objeto
       firstFrame: 380
       lastFrame: 470
-      wrapMode: 2
+      wrapMode: 1
       loop: 0
     - name: deixando_objeto
       firstFrame: 470
