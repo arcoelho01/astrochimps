@@ -4,12 +4,14 @@ using System.Collections;
 public class UnderConstructionBox : MonoBehaviour {
 
 	bool bnStart = false;
+	bool playedAudio = false;
 	float buildTime = 0.0f;
 	Transform prefabToBuild;
 	Transform builtOver;
 	Transform newBuilding;
 	float fTimer = 0.0f;
 	Transform ProgressIcon;
+	public	AudioClip sfxConstrucaoConcluida;
 
 	// Use this for initialization
 	void Start () {
@@ -45,9 +47,16 @@ public class UnderConstructionBox : MonoBehaviour {
 		
 		// 2 - And in parallel, instantiate the new building, if any
 		if(prefabToBuild && !newBuilding) {
-	
+			
 			CreateNewBuilding();
+			
 		}
+		if (!playedAudio){
+			AudioSource.PlayClipAtPoint(sfxConstrucaoConcluida, transform.position);
+			playedAudio = true;
+		}
+		
+		
 	}
 
 	/// <summary>
