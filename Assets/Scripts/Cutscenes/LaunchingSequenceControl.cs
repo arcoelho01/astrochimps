@@ -13,10 +13,12 @@ public class LaunchingSequenceControl : MonoBehaviour {
 	Transform tHud;
 	Transform tRocket;
 	Transform tLaunchExplosion;
+	Transform tRocketThrust;
 	bool bnRocketLaunched;
 
 	public Transform tPrefabLaunchExplosion;
 	public Transform tLaunchExplosionSpot;
+	public AudioClip sfxRocketLaunching;
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +47,15 @@ public class LaunchingSequenceControl : MonoBehaviour {
 			}
 		}
 
+		// Rocket engine thrust
+		tRocketThrust = tRocket.transform.Find("RocketThrust");
+
+		if(!tRocketThrust) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " cannot find the rocket thrust particle system");
+		}
+
 		// Comment the line below to test the launching
 		LaunchingSequence();
 	}
@@ -52,11 +63,8 @@ public class LaunchingSequenceControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if(bnRocketLaunched)
-			return;
-	
 		// Code below just for testing the launching sequence directly.
-		/*
+		//*
 		if(Input.GetKeyDown(KeyCode.Z)) {
 
 			// DEBUG
@@ -64,8 +72,11 @@ public class LaunchingSequenceControl : MonoBehaviour {
 
 			LaunchingSequence();
 		}
-		/*/
+		//*/
 
+		if(bnRocketLaunched)
+			return;
+	
 	}
 
 	/// <summary>
@@ -98,6 +109,9 @@ public class LaunchingSequenceControl : MonoBehaviour {
 		// This is for the Detonator package to work
 		camLaunchCam.tag = "MainCamera";
 
+		// Start the engine
+		tRocketThrust.gameObject.active = true;
+
 		// Play the launching animation
 		tRocket.animation.Play("RocketLaunching");
 		// For the camera too
@@ -124,5 +138,12 @@ public class LaunchingSequenceControl : MonoBehaviour {
 			scriptDetonator.destroyTime = 0.0f;
 			scriptDetonator.Explode();
 		}
+	}
+
+	void LoadNextCutscene() {
+
+		iTween.CameraFadeAdd();
+		iTween.CameraFadeTo(0.5f, 3.0f);
+		Application.LoadLevel("end_victory");
 	}
 }
