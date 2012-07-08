@@ -481,6 +481,14 @@ public class MainScript : MonoBehaviour {
 		return lcRocketParts;
 	}
 
+	/// <summary>
+	/// Returns the list of all monkeys currently in the game
+	/// </summary>
+	public List<Transform> GetListOfAllMonkeys() {
+
+		return alliedMonkeys;
+	}
+
 	/*
 	 * ===========================================================================================================
 	 * GAME END STUFF
@@ -561,7 +569,7 @@ public class MainScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Call the scenes when the player has no oxygen left, so the monkeys die asphyxieted
+	/// Call the scenes when the player has no oxygen left, so the monkeys die asphyxiated
 	/// </summary>
 	void GameOverStartDeathByAsphyxiationSequence() {
 
