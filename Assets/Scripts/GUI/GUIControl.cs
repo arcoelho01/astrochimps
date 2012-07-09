@@ -9,6 +9,7 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D BoxMapaTexture;
 	
 	public Texture2D MonkeyTexture;
+	public Texture2D MonkeyTextureOFF;
 	public Texture2D BarraVaziaTexture;
 	public Texture2D BoxMetalTexture;
 	public Texture2D BoxOxigenioTexture;
@@ -23,6 +24,9 @@ public class GUIControl : MonoBehaviour {
 	
 	//Macaco 1 - Astronauta
 	public Texture2D AstronautaNomeTexture;
+	public Texture2D AstronautaMonkeyTexture;
+	public Texture2D AstronautaMonkeyTexturePreso;
+	public Texture2D AstronautaMonkeyTextureDown;
 	public Texture2D AtaqueTextureON;
 	public Texture2D MoverTextureON;
 	public Texture2D AtaqueTextureOFF;
@@ -33,6 +37,9 @@ public class GUIControl : MonoBehaviour {
 	
 	//Macaco 2 - Engenheiro
 	public Texture2D EngenheiroNomeTexture;
+	public Texture2D EngenheiroMonkeyTexture;
+	public Texture2D EngenheiroMonkeyTexturePreso;
+	public Texture2D EngenheiroMonkeyDown;
 	public Texture2D ReciclarTextureON;
 	public Texture2D RepararTextureON;
 	public Texture2D ReciclarTextureOFF;
@@ -41,6 +48,9 @@ public class GUIControl : MonoBehaviour {
 	
 	//Macaco 3 - Sabotador
 	public Texture2D SabotadorNomeTexture;
+	public Texture2D SabotadorMonkeyTexture;
+	public Texture2D SabotadorMonkeyTexturePreso;
+	public Texture2D SabotadorMonkeyTextureDown;
 	public Texture2D SabotarTextureON;
 	public Texture2D SabotarTextureOFF;
 	public Texture2D ReprogramarTextureON;
@@ -48,6 +58,9 @@ public class GUIControl : MonoBehaviour {
 	
 	//Macaco 4 - Cientista
 	public Texture2D CientistaNomeTexture;
+	public Texture2D CientistaMonkeyTexture;
+	public Texture2D CientistaMonkeyTexturePreso;
+	public Texture2D CientistaMonkeyTextureDown;
 	public Texture2D ProcurarTextureON;
 	public Texture2D ProcurarTextureOFF;
 	
@@ -171,10 +184,15 @@ public class GUIControl : MonoBehaviour {
 			//Debug.Log("Macaco " + m + " Tipo " + monkey.monkeyClass);
 			GUI.Label (new Rect (posX + 79, posY+7 , 	BarraVaziaTexture.width,BarraVaziaTexture.height), BarraVaziaTexture);
 			GUI.Label (new Rect (posX, 		posY,		BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
-			GUI.Label (new Rect (posX +15,  posY +11,	MonkeyTexture.width,MonkeyTexture.height), MonkeyTexture);
+			
 				
 			if(monkey.monkeyClass == CMonkey.eMonkeyType.Astronaut){
 				GUI.Label (new Rect (posX + 70 , posY + 40, AstronautaNomeTexture.width,AstronautaNomeTexture.height), AstronautaNomeTexture);
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_CAPTURED)
+					GUI.Label (new Rect (posX +15,  posY +11,	AstronautaMonkeyTexturePreso.width,AstronautaMonkeyTexturePreso.height), AstronautaMonkeyTexturePreso);
+				else
+					GUI.Label (new Rect (posX +15,  posY +11,	AstronautaMonkeyTexture.width,AstronautaMonkeyTexture.height), AstronautaMonkeyTexture);
+				
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
 					GUI.Label (new Rect (posX + 18 , posY + 71, AtaqueTextureOFF.width,AtaqueTextureOFF.height), AtaqueTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , getYposition(m)  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
@@ -194,6 +212,10 @@ public class GUIControl : MonoBehaviour {
 				}
 			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Engineer){
 				GUI.Label (new Rect (posX + 70 , posY + 40, EngenheiroNomeTexture.width,EngenheiroNomeTexture.height), EngenheiroNomeTexture);
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_CAPTURED)
+					GUI.Label (new Rect (posX +15,  posY +11,	EngenheiroMonkeyTexturePreso.width,EngenheiroMonkeyTexturePreso.height), EngenheiroMonkeyTexturePreso);
+				else
+					GUI.Label (new Rect (posX +15,  posY +11,	EngenheiroMonkeyTexture.width,EngenheiroMonkeyTexture.height), EngenheiroMonkeyTexture);
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
 					GUI.Label (new Rect (posX + 18 , posY + 71, ReciclarTextureON.width,ReciclarTextureON.height), ReciclarTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
@@ -218,6 +240,10 @@ public class GUIControl : MonoBehaviour {
 				}
 			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Cientist){
 				GUI.Label (new Rect (posX + 70 , posY + 40, CientistaNomeTexture.width,CientistaNomeTexture.height), CientistaNomeTexture);
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_CAPTURED)
+					GUI.Label (new Rect (posX +15,  posY +11,	CientistaMonkeyTexturePreso.width,CientistaMonkeyTexturePreso.height), CientistaMonkeyTexturePreso);
+				else
+					GUI.Label (new Rect (posX +15,  posY +11,	CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
 					GUI.Label (new Rect (posX + 18 , posY + 71, ProcurarTextureOFF.width,ProcurarTextureOFF.height), ProcurarTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
@@ -234,6 +260,10 @@ public class GUIControl : MonoBehaviour {
 				}
 			} else 	if(monkey.monkeyClass == CMonkey.eMonkeyType.Saboteur){
 				GUI.Label (new Rect (posX + 70 , posY + 40, SabotadorNomeTexture.width,SabotadorNomeTexture.height), SabotadorNomeTexture);
+				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_CAPTURED)
+					GUI.Label (new Rect (posX +15,  posY +11,	SabotadorMonkeyTexturePreso.width,SabotadorMonkeyTexturePreso.height), SabotadorMonkeyTexturePreso);
+				else
+					GUI.Label (new Rect (posX +15,  posY +11,	SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
 				if (monkey.getFSMCurrentState() == CMonkey.FSMState.STATE_IDLE){
 					GUI.Label (new Rect (posX + 18 , posY + 71, SabotarTextureOFF.width,SabotarTextureOFF.height), SabotarTextureOFF);
 					GUI.Label (new Rect (posX + 18 + 45 , posY  + 71, MoverTextureON.width,MoverTextureOFF.height), MoverTextureOFF);
