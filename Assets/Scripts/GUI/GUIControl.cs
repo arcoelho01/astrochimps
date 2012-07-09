@@ -12,6 +12,7 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D BoxMacacoTexture;
 	public Texture2D BoxCentroComandoTexture;
 	public Texture2D BoxPredioTexture;
+	public Texture2D BoxSlotTexture;
 	public Texture2D BoxMapaTexture;
 	
 	public GUISkin skin;
@@ -23,6 +24,10 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D FazendaTexture;
 	public Texture2D ExtratorTexture;
 	public Texture2D SegurancaTexture;
+	public Texture2D SlotTexture;
+	
+	public Texture2D AguaTexture;
+	public Texture2D MetalTexture;
 	
 	
 	public Texture2D MonkeyTexture;
@@ -258,7 +263,16 @@ public class GUIControl : MonoBehaviour {
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.EXTRATOR){
 				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
-				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"EXTRATOR");
+				if (building.resourceSite.GetComponent<CResource>().resourceType == CResource.eResourceType.Metal && building.resourceSite.GetComponent<CResource>().resourceLevel != 0 )
+					GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"EXTRATOR DE METAL");
+				if (building.resourceSite.GetComponent<CResource>().resourceType == CResource.eResourceType.Metal && building.resourceSite.GetComponent<CResource>().resourceLevel <= 0 )
+					GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"EXTRATOR DE METAL DESATIVADO");
+				
+				if (building.resourceSite.GetComponent<CResource>().resourceType == CResource.eResourceType.Oxygen && building.resourceSite.GetComponent<CResource>().resourceLevel != 0 )
+					GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"EXTRATOR DE OXIGENIO");
+				if (building.resourceSite.GetComponent<CResource>().resourceType == CResource.eResourceType.Oxygen && building.resourceSite.GetComponent<CResource>().resourceLevel <= 0 )
+					GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"EXTRATOR DE OXIGENIO DESATIVADO");
+				
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRAL_SEGURANCA){
@@ -288,17 +302,20 @@ public class GUIControl : MonoBehaviour {
 			
 			if (eventosMenu.isSlot() && building.Selectable){
 			
-				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 30,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture,"Laboratorio")){
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxSlotTexture.width,BoxSlotTexture.height)), BoxSlotTexture);
+				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"AREA DE CONSTRUCAO");
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SlotTexture.width,SlotTexture.height), SlotTexture);
+				
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture,"Laboratorio")){
 					eventosMenu.ConstruirLaboratorio();
 				}
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 80,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture,"Seguranca")){
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture,"Seguranca")){
 					eventosMenu.ConstruirCentralSeguranca();
 				}
-				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 30,FazendaTexture.width,FazendaTexture.height), FazendaTexture,"Fazenda")){
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height), FazendaTexture,"Fazenda")){
 					eventosMenu.ConstruirFazenda();
 				}
-				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 80,FabricaTexture.width,FabricaTexture.height), FabricaTexture,"Fabrica")){
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), FabricaTexture,"Fabrica")){
 					eventosMenu.ConstruirFabrica();
 				}
 				return;
@@ -311,7 +328,16 @@ public class GUIControl : MonoBehaviour {
 			if (r.isSelected)
 			{
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 30, ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture,"Laboratorio")){
+				if (r.resourceType == CResource.eResourceType.Metal){
+					GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"METAL");
+					GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,MetalTexture.width,MetalTexture.height), MetalTexture);
+				}
+				if (r.resourceType == CResource.eResourceType.Oxygen){
+					GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FONTE DE H2O");
+					GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,AguaTexture.width,AguaTexture.height), MetalTexture);
+				}
+				
+				if (GUI.Button(new Rect (baseXSide + 40, baseYSide + 80, ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture,"Laboratorio")){
 					recurso.GetComponent<CBaseEntity>().BuildIt();
 				}
 			}
