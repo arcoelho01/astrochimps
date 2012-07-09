@@ -10,19 +10,19 @@ public class DronePatrol : MonoBehaviour {
   private int myEnemyLayer; //The other side
   private Collider[] scannedColliders;
 
-  private float viewRadius = 35.0f; // Larger because this is an initial check
+  private float viewRadius = 20.0f; // Larger because this is an initial check
   private float fCheckViewTimer = 1.6f; // So they dont all make checks at exaclty the same time
   private float fAlertViewTimer = 5.0f;
-  private float fDetectViewTimer = 3.0f;
+  //private float fDetectViewTimer = 3.0f;
   private float fTimer = 0.0f;
   //private bool enemyInRange = false;
 
   Transform currentTarget = null;
 
-  //Field of View
-  private float detectionDistance = 14.0f;
-  private float detectionRadius = 25.0f;
-  private float alertRadius = 60.0f;
+  //Field of View // This is the old type of field of view
+  //private float detectionDistance = 14.0f;
+  //private float detectionRadius = 25.0f;
+  //private float alertRadius = 60.0f;
 
   //Field of View Alternate
   private SightTrigger mySightTrigger;
