@@ -156,7 +156,7 @@ public class MainScript : MonoBehaviour {
 	/// <summary>
 	/// Get all units in the scene, filters them and add them to the corresponding list
 	/// </summary>
-	void GetCurrentUnitsInScene() {
+	public void GetCurrentUnitsInScene() {
 
 		// Monkeys
 		GameObject[] goMonkeys;
@@ -490,7 +490,12 @@ public class MainScript : MonoBehaviour {
 
 		return alliedMonkeys;
 	}
+	
+	
+	public List<Transform> GetListOfAllAlliedBuildings() {
 
+		return alliedBuildings;
+	}
 	/*
 	 * ===========================================================================================================
 	 * GAME END STUFF

@@ -1,12 +1,25 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GUIControl : MonoBehaviour {
 	
 	CPlayer playerScript;
+	MainScript mainScript;
 	
 	public Texture2D BoxMacacoTexture;
+	public Texture2D BoxCentroComandoTexture;
+	public Texture2D BoxPredioTexture;
 	public Texture2D BoxMapaTexture;
+	
+	
+	public Texture2D CentroComandoTexture;
+	public Texture2D LaboratorioTexture;
+	public Texture2D FabricaTexture;
+	public Texture2D FazendaTexture;
+	public Texture2D ExtratorTexture;
+	public Texture2D SegurancaTexture;
+	
 	
 	public Texture2D MonkeyTexture;
 	public Texture2D MonkeyTextureOFF;
@@ -65,7 +78,6 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D ProcurarTextureOFF;
 	
 	// FABRICA
-	public Texture2D FabricaTexture;
 	public Texture2D DroneCacadorTexture;
 	public Texture2D DroneSabotadorTexture;
 	public Texture2D DronePatrulhaTexture;
@@ -77,6 +89,11 @@ public class GUIControl : MonoBehaviour {
 	int boxYmin;
 	ArrayList boxYposition;
 	ArrayList yDirection;
+	int xDirection;
+	
+	int box1x = 11;
+	int boxXDistance = 172;
+	int box5x = 826;
 	
 	public Texture2D ComandoOxTexture;
 	public Texture2D LabOxTexture;
@@ -88,6 +105,8 @@ public class GUIControl : MonoBehaviour {
 	
 	private bool callUpdate = false;
 	
+	
+	List<Transform> lAllBuilding = new List<Transform>();
 	
 	public void nextSlot(int predio){
 		nextSlotPosition++;
@@ -148,9 +167,7 @@ public class GUIControl : MonoBehaviour {
 	}
 	
 	void OnGUI () {
-		int box1x = 11;
-		int boxXDistance = 172;
-		int box5x = 826;
+		
 		NivelOxigenioFloat = playerScript.oxygenLevel / 500;
 
 		
@@ -173,8 +190,65 @@ public class GUIControl : MonoBehaviour {
 		
 		drawSlots();
 			
-		GUI.Label (new Rect (box5x,boxYmax,BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
+		drawMonkeys();
 		
+		drawBuilding();
+		
+		
+}
+	
+	
+	void drawBuilding(){
+		int baseYSide = 300;
+		int baseXSide = 760;
+		CBuilding building;
+		lAllBuilding = mainScript.GetListOfAllAlliedBuildings();
+
+		foreach ( Transform predio in lAllBuilding){ 
+			building = predio.GetComponent<CBuilding>();
+			if (building == null)
+				continue;
+			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRO_COMANDO){
+			
+				GUI.Label (new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height), BoxCentroComandoTexture);
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,CentroComandoTexture.width,CentroComandoTexture.height), CentroComandoTexture);
+				GUI.Label (new Rect (baseXSide + 20, baseYSide + 60,EngenheiroMonkeyTexture.width,EngenheiroMonkeyTexture.height), EngenheiroMonkeyTexture);
+				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 60,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
+				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 60 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
+				break;
+			}
+		
+			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.EXTRATOR){
+			
+				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture);
+			}
+			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRAL_SEGURANCA){
+			
+				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture);
+			}
+			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FAZENDA){
+			
+				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FazendaTexture.width,FazendaTexture.height), FazendaTexture);
+			}
+			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FABRICA_DRONES){
+			
+				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FabricaTexture.width,FabricaTexture.height), FabricaTexture);
+			}
+			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.LABORATORIO){
+			
+				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture);
+			}
+		}
+	}
+	
+	
+	
+	void drawMonkeys(){
 		
 		int m = 0;
 		foreach( CMonkey monkey in allMonkeys){
@@ -289,9 +363,7 @@ public class GUIControl : MonoBehaviour {
 			}
 			m++;
 		}
-		
-		
-}
+	}
 	
 	// Use this for initialization
 	void Start () {
@@ -306,9 +378,12 @@ public class GUIControl : MonoBehaviour {
 			yDirection = new ArrayList();
 		
 		playerScript = GameObject.Find("Player").GetComponent<CPlayer>();
+		mainScript = GameObject.Find("Codigo").GetComponent<MainScript>();
 		
-	boxYmax = 600;
-	boxYmin = 670;
+		boxYmax = 600;
+		boxYmin = 670;
+		
+		xDirection = 0;
 			
 	}
 	
@@ -341,6 +416,13 @@ public class GUIControl : MonoBehaviour {
 				sobeSlot(i);
 			i++;
 		}
+	}
+	
+	private void direitaCentroComando(){
+		xDirection = 1;
+	}
+	private void esquerdaCentroComando(){
+		xDirection = -1;
 	}
 	
 	private void sobeSlot(int slotN){

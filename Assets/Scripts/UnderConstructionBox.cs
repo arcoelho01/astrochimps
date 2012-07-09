@@ -12,12 +12,14 @@ public class UnderConstructionBox : MonoBehaviour {
 	float fTimer = 0.0f;
 	Transform ProgressIcon;
 	public	AudioClip sfxConstrucaoConcluida;
+	MainScript mainScript;
 
 	// Use this for initialization
 	void Start () {
 	
 		// Get the progress icon, bar, or whatever
 		ProgressIcon = this.transform.FindChild("ProgressBar");
+		mainScript = GameObject.Find("Codigo").GetComponent<MainScript>();
 	}
 	
 	// Update is called once per frame
@@ -50,10 +52,12 @@ public class UnderConstructionBox : MonoBehaviour {
 			
 			CreateNewBuilding();
 			
+			
 		}
 		if (!playedAudio){
 			AudioSource.PlayClipAtPoint(sfxConstrucaoConcluida, transform.position);
 			playedAudio = true;
+			mainScript.GetCurrentUnitsInScene();
 		}
 		
 		
