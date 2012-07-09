@@ -38,6 +38,7 @@ public class CMonkey : CBaseEntity {
 	public AudioClip sfxAttackedEngineer;	// Played when the monkey is attacking a target
 	public AudioClip sfxAttackedSaboteur;	// Played when the monkey is attacking a target
 	public AudioClip sfxReprogramming; //< Played when the Saboteur is reprogramming a drone
+	public AudioClip sfxDying; //< Played when the monkey dies
 
 	AudioClip sfxWorking; //< Wherever sound this monkey should do while working
 
@@ -54,6 +55,7 @@ public class CMonkey : CBaseEntity {
 			STATE_PURSUIT,					// Walk until the target is in range, then attack it
 			STATE_WORKING,					// Monkey working on something. Action that requires a certain time
 			STATE_CAPTURED,					// Monkey was captured by an enemy
+			STATE_DEAD,							// Monkey died asphyxiated
 			STATE_NULL							// null
 	};
 
@@ -93,6 +95,19 @@ public class CMonkey : CBaseEntity {
 	float fDroneRecycleTime = 4.0f;
 	//< Time needed to reprogram a stunned drone
 	float fDroneReprogramTime = 5.0f;
+
+	//< ANIMATIONS
+
+	//< Name of the animation to play in loop when this monkey is working is something that takes time
+	string stAnimationWorking;
+	string stDyingAnimation = "tapa";
+	string stAnimTargetingForBrawl = "tapa";
+	string stAnimEngineerFix = "reprogramando";
+	string stAnimTargetingForRecycle = "reprogramando";
+//	string stAnimCanCapture = "";
+	string stAnimTargetingForReprogram = "reprogramando";
+	string stAnimCanSabotageBuilding = "reprogramando";
+	string stAnimCanSabotageDrone = "reprogramando";
 
 	/*
 	 * ===========================================================================================================
@@ -286,6 +301,25 @@ public class CMonkey : CBaseEntity {
 				}
 				break;
 
+			case FSMState.STATE_DEAD:
+				{
+
+					// Play the dying animation
+					if(meshObject) {
+
+						if(meshObject.animation.isPlaying)
+							meshObject.animation.CrossFade(stDyingAnimation);
+						else
+							meshObject.animation.Play(stDyingAnimation);
+					}
+					
+					if(sfxDying) {
+
+						AudioSource.PlayClipAtPoint(sfxDying, this.transform.position);
+					}
+				}
+				break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -307,7 +341,8 @@ public class CMonkey : CBaseEntity {
 				{
 					// DEBUG
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
-					if(!meshObject.animation.IsPlaying("idle")) {
+					//if(!meshObject.animation.IsPlaying("idle")) {
+					if(!meshObject.animation.isPlaying) {
 
 						meshObject.animation.Play("idle");
 					}
@@ -414,10 +449,18 @@ public class CMonkey : CBaseEntity {
 
 						WorkIsDone();
 					}
+
+					if(!meshObject.animation.IsPlaying(stAnimationWorking)) {
+
+						meshObject.animation.Play(stAnimationWorking);
+					}
 				}
 				break;
 
 			case FSMState.STATE_CAPTURED:
+				break;
+
+			case FSMState.STATE_DEAD:
 				break;
 
 			case FSMState.STATE_NULL:
@@ -521,6 +564,9 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_NULL:
 				break;
 
+			case FSMState.STATE_DEAD:
+				break;
+
 			default:
 				// DEBUG
 				Debug.LogError("I shouldn't be here.");
@@ -557,6 +603,14 @@ public class CMonkey : CBaseEntity {
 
 		this.walkTo = walkTo;
 		EnterNewState(FSMState.STATE_WALKING);
+	}
+
+	/// <summary>
+	///
+	/// </summary>
+	public void KillMonkey() {
+
+		EnterNewState(FSMState.STATE_DEAD);
 	}
 
 	/// <summary>
@@ -761,6 +815,13 @@ public class CMonkey : CBaseEntity {
 					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 					if(droneTarget != null) {
 
+						// Play the attack animation
+						if(meshObject) {
+
+							stAnimationWorking = stAnimTargetingForBrawl;
+							meshObject.animation.Play(stAnimationWorking);
+						}
+
 						playAttackAckSound();
 
 						droneTarget.Attacked();
@@ -776,6 +837,14 @@ public class CMonkey : CBaseEntity {
 					// Sets the time need to fix this building
 					fWorkingTargetTime = fBuildingFixTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+						
+						stAnimationWorking = stAnimEngineerFix;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -785,6 +854,14 @@ public class CMonkey : CBaseEntity {
 				{
 					fWorkingTargetTime = fDroneRecycleTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimTargetingForRecycle;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -792,7 +869,7 @@ public class CMonkey : CBaseEntity {
 
 				// Cientist monkey
 			case MouseWorldPosition.eMouseStates.CanCapture:
-				{
+				{	
 					// Cientist monkey capturing a RocketPart
 					CBaseEntity cCapturedEntity = transTarget.GetComponent<CBaseEntity>();
 					playAttackAckSound();
@@ -816,6 +893,14 @@ public class CMonkey : CBaseEntity {
 					fWorkingTargetTime = fDroneReprogramTime;
 					sfxWorking = sfxReprogramming;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimTargetingForReprogram;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -827,6 +912,14 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fBuildingSabotageTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimCanSabotageBuilding;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -837,6 +930,14 @@ public class CMonkey : CBaseEntity {
 					// Sets the time needed to sabotage a building
 					fWorkingTargetTime = fDroneSabotageTime;
 					workingMouseState = mouseState;
+
+					// Play the attack animation
+					if(meshObject) {
+
+						stAnimationWorking = stAnimCanSabotageDrone;
+						meshObject.animation.Play(stAnimationWorking);
+					}
+
 					playAttackAckSound();
 					EnterNewState(FSMState.STATE_WORKING);
 				}
@@ -1037,7 +1138,6 @@ public class CMonkey : CBaseEntity {
 
 		return rv;
 	}
-
 
 	/*
 	 * ===========================================================================================================

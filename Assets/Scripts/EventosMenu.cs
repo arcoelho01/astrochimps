@@ -11,6 +11,8 @@ public class EventosMenu : MonoBehaviour {
 	public GameObject prefabCentralSeguranca;
 	public GameObject prefabFabricaDrones;
 	public GameObject prefabUnidadeDrone;
+	public GameObject prefabUnidadeDroneSabotador;
+	public GameObject prefabUnidadeDroneVigilancia;
 	public Transform objetoSelecionado;
    	public DefinicaoEstrutura.TipoEstrutura tipoObj;
 	
@@ -141,11 +143,16 @@ public class EventosMenu : MonoBehaviour {
 				
 				if(GUI.Button(new Rect(80* 2.65f,Screen.height - 44,70 * 1.80f,70 * 0.53f),"Drone de Vigilancia")){
 				
-					objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_NORMAL;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_VIGILANCIA;
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
 				}
-		
+				if(GUI.Button(new Rect(155* 2.65f,Screen.height - 44,70 * 1.80f,70 * 0.53f),"Drone Sabotador")){
+				
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_SABOTADOR;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+					objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
+				}		
 			}
 			if(objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao != DefinicaoEstrutura.StatusProgresso.LIBERADO){
 				GUI.Label(new Rect(5 * 25,Screen.height - 44,70 * 1.15f,70 * 0.53f), "Progress: " + objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoAtualConstrucao + "%");

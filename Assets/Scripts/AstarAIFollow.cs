@@ -69,18 +69,35 @@ public class AstarAIFollow : MonoBehaviour {
 	/** True if the AI is moving, false if not */
 	public bool bnIsMoving = false;
 
-	void Awake() {
+	/** Use this for initialization */
+	void Awake () {
 
 		seeker = GetComponent<Seeker>();
-	}
-	
-	/** Use this for initialization */
-	public void Start () {
+
+		if(!seeker) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " seeker component not found!");
+		}
+		Debug.Log(this.transform + "Starting");
 		// The next line was moved to the Awake()
 		//seeker = GetComponent<Seeker>();
 		controller = GetComponent<CharacterController>();
+
+		if(!controller) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " controller component not found!");
+		}
 		
 		tr = transform;
+
+		if(!tr) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " transform not found!");
+
+		}
 		Repath ();
 	}
 	
@@ -106,6 +123,8 @@ public class AstarAIFollow : MonoBehaviour {
 		float minDist = Mathf.Infinity;
 		int notCloserHits = 0;
 		
+		// debug
+		Debug.Log(this.transform + " OnPathComplete " + path.Length + " and tr" + tr);
 		for (int i=0;i<path.Length-1;i++) {
 			float dist = Mathfx.DistancePointSegmentStrict (path[i],path[i+1],tr.position);
 			if (dist < minDist) {
@@ -116,6 +135,9 @@ public class AstarAIFollow : MonoBehaviour {
 				break;
 			}
 		}
+
+		// DEBUG
+		//Debug.LogWarning("Leaving OnPathComplete");
 	}
 	
 	/** Waits the remaining time until the AI should issue a new path request.
@@ -173,9 +195,12 @@ public class AstarAIFollow : MonoBehaviour {
 		//FloodPathTracer fpathTrace = new FloodPathTracer (transform.position,fpath,null);
 		//seeker.StartPath (fpathTrace,OnPathComplete);
 		
-		if(canSearch)
+		if(canSearch) {
+			// DEBUG
+			//Debug.LogWarning(this.transform + " calling startPath");
 		//Start a new path from transform.positon to target.position, return the result to the function OnPathComplete
 		seeker.StartPath (transform.position,targetPosition,OnPathComplete);
+		}
 	}
 	
 	/** Start a new path moving to \a targetPoint */
@@ -187,6 +212,8 @@ public class AstarAIFollow : MonoBehaviour {
 		}
 		
 		//Start a new path from transform.positon to target.position, return the result to OnPathComplete
+		// DEBUG
+		//Debug.LogWarning("Calling startParh with " + transform.position + " targetPoint " + targetPoint);
 		seeker.StartPath (transform.position,targetPoint,OnPathComplete);
 	}
 	
@@ -283,5 +310,7 @@ public class AstarAIFollow : MonoBehaviour {
 
 		PathToTarget(newTargetPosition);
 		Resume();
+		// DEBUG
+		//Debug.LogWarning(this.transform + " Clicked at " + newTargetPosition);
 	}
 }
