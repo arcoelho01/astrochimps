@@ -106,7 +106,7 @@ public class UnderConstructionBox : MonoBehaviour {
 	/// Actually creates a building. First, instantiate it, then do the basic setup if needed
 	/// </summary>
 	void CreateNewBuilding() {
-
+		mainScript.GetCurrentUnitsInScene();
 		// Already instantiated? Get out of here!
 		if(newBuilding)
 			return;
@@ -116,7 +116,7 @@ public class UnderConstructionBox : MonoBehaviour {
 		// Setup the new building
 		CBuilding myBuildingClass = newBuilding.GetComponent<CBuilding>();
 
-
+		
 		// ok, the building has the CBuilding class
 		if(myBuildingClass) {
 

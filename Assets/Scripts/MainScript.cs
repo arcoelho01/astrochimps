@@ -161,6 +161,10 @@ public class MainScript : MonoBehaviour {
 		// Monkeys
 		GameObject[] goMonkeys;
 		goMonkeys = GameObject.FindGameObjectsWithTag("Monkey");
+		alliedMonkeys.Clear();
+		alliedBuildings.Clear();
+		opponentBuildings.Clear();
+		neutralResources.Clear();
 		foreach(GameObject oneMonkey in goMonkeys) {
 
 			if(oneMonkey.layer == alliedLayer) {
