@@ -37,11 +37,13 @@ public class CDrone : CBaseEntity {
 		STATE_DESTROYED,					// Destroyed (recycled) by an enemy
     STATE_PURSUIT,            // Walk until the target is in range, then attack it // NOT USE FOR NOW
 		STATE_PRISONER_MONKEY,		// Drone have a monkey as prisoner. Must head to the nearest center to leave it
+    STATE_DISABLED,            // Drone sabotaged by an enemy, cannot move
 		STATE_NULL								// null
 	};
 	
 	FSMState eFSMCurrentState;	// Keeps the current FSM state
 	float stunnedTimeCounter;
+  float disabledTimeCounter;
 	public AstarAIFollow AIScript = null; // Cache a pointer to the AI script
 	private float sabotageTime;
 
@@ -77,21 +79,21 @@ public class CDrone : CBaseEntity {
 
     if(this.droneType == eDroneType.Patrol){
       patrolDroneScript  = this.gameObject.GetComponent<DronePatrol>();
-      patrolScript = this.gameObject.GetComponent<Patrol>();
+      //patrolScript = this.gameObject.GetComponent<Patrol>();
     }
     else if(this.droneType == eDroneType.Saboteur) saboteurScript = this.gameObject.GetComponent<Saboteur>();
 
 		// Check if it is a CPU controlled drone (or opponent drones, for that matter)
 		if(this.gameObject.layer == MainScript.enemyLayer) {
 
+        // Set a flag to make easier for us
+       isThisAnEnemyDrone = true;
+
 			// Check the type and get the component
 			// AI hunter drone
 			if(this.droneType == eDroneType.Hunter) {
 
 				hunterAIScript = this.gameObject.GetComponent<DroneHunter>();
-
-				// Set a flag to make easier for us
-				isThisAnEnemyDrone = true;
 
 				captureSpot = GetCaptureSpot();
 				captureRaySpot = GetCaptureRaySpot();
@@ -106,14 +108,8 @@ public class CDrone : CBaseEntity {
       if(this.droneType == eDroneType.Patrol) {
 
         enemyPatrolScript = this.gameObject.GetComponent<EnemyPatrol>();
-
         // Set a flag to make easier for us
-       isThisAnEnemyDrone = true;
-
-       //if(!enemyPatrolScript) {
-         // DEBUG
-       //  Debug.LogError("EnemyPatrol component not found in " + this.transform);
-       //}
+       //isThisAnEnemyDrone = true;
 
       }
 
@@ -225,6 +221,7 @@ public class CDrone : CBaseEntity {
     this.transTarget = transTarget;
     this.typeTarget = transTarget.gameObject.GetComponent<CBaseEntity>().Type;
     EnterNewState(FSMState.STATE_PURSUIT);
+
  	}
 
   public void Patrolling (){
@@ -354,6 +351,39 @@ public class CDrone : CBaseEntity {
 				}
 				break;
 
+    case FSMState.STATE_DISABLED:
+
+       if(sfxAttacked) {
+
+         AudioSource.PlayClipAtPoint(sfxAttacked, transform.position);
+       }
+
+       // Do the animation
+       //if(meshObject){
+
+         //meshObject.animation.Play("Deactivate");
+       //}
+
+       // If have somebody captured, release it
+       if(capturedEntity != null) {
+
+         if(capturedEntity.Type == eObjType.Monkey) {
+
+           // Cast CBaseEntity to CMonkey (it is actually a CMonkey instance, anyway)
+           CMonkey monkeyEntity = capturedEntity as CMonkey;
+           monkeyEntity.ReleaseMe();
+         }
+       }
+
+      disabledTimeCounter = 8; // Stay disabled for 8 seconds.
+
+      this.Deselect();
+      this.Selectable = false;
+
+      AIScript.Stop();
+
+      break;
+
 			case FSMState.STATE_NULL:
 				break;
 
@@ -402,6 +432,23 @@ public class CDrone : CBaseEntity {
 							}
 						}
 					}
+          if(isThisAnEnemyDrone && this.droneType == eDroneType.Saboteur) {
+
+           // Search for targets
+           Transform tempTarget = saboteurScript.CheckRadiusForAgents();
+
+           if(tempTarget) {
+
+             CDrone droneTempTarget = tempTarget.gameObject.GetComponent<CDrone>();
+             // There's a target...
+             if(!(droneTempTarget.GetCurrentState() == FSMState.STATE_DISABLED) && (tempTarget != transTarget) ) {
+               // ... and it is a new target
+               transTarget = tempTarget;
+               // Chase it!
+               EnterNewState(FSMState.STATE_PURSUIT);
+             }
+           }
+         }
 				}
 				break;
 
@@ -439,19 +486,29 @@ public class CDrone : CBaseEntity {
 
 						return;
 					}
-					
-					Vector3 diffPursuit = transTarget.transform.position - gameObject.transform.position;
-					float curDistancePursuit = diffPursuit.sqrMagnitude;
+          // Is an AI Saboteur Drone attacking?
+         if(isThisAnEnemyDrone && this.droneType == eDroneType.Saboteur) {
 
-					// FIXME: distance must be at least the radius of the monkey collider plus the radius of the target collider
-					if (curDistancePursuit < 50.0f)
-					{
-						EnterNewState(FSMState.STATE_ATTACKING);
-					}
-					else {
-						// FIXME: it's working for a stationary target. But if the targets moves away? I guess we should
-						// keep walking to the new target position
-					}
+           // Check if the target is in range
+           if(mainScript.CheckIfTargetIsInRange(this.transform, transTarget, this.attackRange)) {
+             //Debug.LogWarning("Entering Attack state from Pursuit state");
+             // Target in range, switching to attack
+             EnterNewState(FSMState.STATE_ATTACKING);
+           }
+
+           return;
+         }
+					
+
+          if(!isThisAnEnemyDrone && this.droneType == eDroneType.Saboteur) {
+
+            if(mainScript.CheckIfTargetIsInRange(this.transform, transTarget, this.attackRange)) {
+             // Target in range, switching to attack
+             EnterNewState(FSMState.STATE_ATTACKING);
+           }
+
+          }
+
 				}
 				break;
 
@@ -484,33 +541,42 @@ public class CDrone : CBaseEntity {
 					return;
 				}
 
-				Vector3 diffAttack = transTarget.transform.position - gameObject.transform.position;       
-				float curDistanceAttack = diffAttack.sqrMagnitude; 
+        if(this.droneType == eDroneType.Saboteur){
 
-				// FIXME: This is just a temporary attack on drones, sabotaged and stunned should be 2 different states
-				if (curDistanceAttack < 20.0f)
-				{
-					CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
-					if (droneTarget != null)
-					{
-						droneTarget.EnterNewState(CDrone.FSMState.STATE_STUNNED);
-						EnterNewState(FSMState.STATE_IDLE);
-					}
+          if(isThisAnEnemyDrone) {
 
-				}
+           CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
 
-				if(this.droneType == eDroneType.Saboteur && this.typeTarget == CBaseEntity.eObjType.Building)
-				{
-					sabotageTime = sabotageTime - Time.deltaTime;
-					if(sabotageTime < 0)
-					{
-						Debug.LogWarning("Sabotage target: " + transTarget);
-						saboteurScript.SabotageBuilding(transTarget.gameObject);
-						sabotageTime = 2.0f;
-						EnterNewState(FSMState.STATE_IDLE);
-					}
-				}
-				break;
+           if (droneTarget != null){
+
+              droneTarget.EnterNewState(CDrone.FSMState.STATE_DISABLED);
+
+              EnterNewState(FSMState.STATE_IDLE);
+           }
+          }else{
+            if(this.typeTarget == CBaseEntity.eObjType.Building){
+              //sabotageTime = sabotageTime - Time.deltaTime;
+
+              //if(sabotageTime < 0){
+                saboteurScript.SabotageBuilding(transTarget.gameObject);
+                //sabotageTime = 2.0f;
+                EnterNewState(FSMState.STATE_IDLE);
+              //}
+            }
+           if(this.typeTarget == CBaseEntity.eObjType.Drone){
+              CDrone droneTarget = transTarget.gameObject.GetComponent<CDrone>();
+              if (droneTarget != null){
+
+                droneTarget.EnterNewState(CDrone.FSMState.STATE_DISABLED);
+
+                EnterNewState(FSMState.STATE_IDLE);
+              }
+           }
+          }
+
+      }
+
+			break;
 
 			case FSMState.STATE_BEING_RECYCLED:
 				{
@@ -535,6 +601,15 @@ public class CDrone : CBaseEntity {
 					
 				}
 				break;
+
+    case FSMState.STATE_DISABLED:
+
+       disabledTimeCounter = disabledTimeCounter - Time.deltaTime;
+
+       if ( disabledTimeCounter <= 0)
+         EnterNewState(FSMState.STATE_IDLE);
+
+      break;
 
 			case FSMState.STATE_NULL:
 				break;
@@ -605,6 +680,12 @@ public class CDrone : CBaseEntity {
 
 			case FSMState.STATE_NULL:
 				break;
+
+      case FSMState.STATE_DISABLED:
+
+         this.Selectable = true;
+
+       break;
 
 			default:
 				// DEBUG
