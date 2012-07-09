@@ -71,12 +71,6 @@ public class GUIBottomMenu : MonoBehaviour {
 			case eMenuType.PlayerInfo:
 				PlayerInfoMenu();
 				break;
-			case eMenuType.BuildExtractor:
-				BuildExtractorMenu();
-				break;
-			case eMenuType.BuildingInfo:
-				BuildingInfoMenu();
-				break;
 			case eMenuType.PatrolDrone:
 				PatrolDroneMenu();
 				break;
@@ -167,32 +161,7 @@ public class GUIBottomMenu : MonoBehaviour {
 		GUI.Label(new Rect(5, posY + 30, 90, 20), "Metal: " + player.metalLevel);
 	}
 
-	/// <summary>
-	/// Shows the menu bar for building an extractor in a resource site
-	/// </summary>
-	void BuildExtractorMenu() {
-
-		if(GUI.Button(new Rect(5, posY + 5, 120, 25),"Build Extractor")) {
-
-			caller.BuildIt();
-
-			// Disable the building menu
-			menuType = eMenuType.PlayerInfo;
-		}
-	}
-
-	/// <summary>
-	/// Shows info about the player status
-	/// </summary>
-	void BuildingInfoMenu() {
-
-		if(GUI.Button(new Rect(5, posY + 5, 120, 25),"Remove monkey")) {
-
-			callerBuilding.GetTheMonkeyOut();
-			// Disable the info menu
-			menuType = eMenuType.PlayerInfo;
-		}
-	}
+	
 	/// <summary>
 	/// Shows the possible patrol route options.
 	/// </summary>

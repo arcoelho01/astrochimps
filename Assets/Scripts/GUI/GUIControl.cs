@@ -292,6 +292,19 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FABRICA DE DRONES");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FabricaTexture.width,FabricaTexture.height), FabricaTexture);
+			
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),"","DroneSabotador")){
+					eventosMenu.ConstruirLaboratorio();
+				}
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), "", "DroneVigia")){
+					eventosMenu.ConstruirCentralSeguranca();
+				}
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height),"", "DronePatrulha")){
+					eventosMenu.ConstruirFazenda();
+				}
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), "", "DroneCacador")){
+					eventosMenu.ConstruirFabrica();
+				}
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.LABORATORIO){
 			
