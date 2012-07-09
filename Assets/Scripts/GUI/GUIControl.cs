@@ -7,6 +7,7 @@ public class GUIControl : MonoBehaviour {
 	CPlayer playerScript;
 	MainScript mainScript;
 	EventosMenu eventosMenu;
+	MouseWorldPosition mouseWorld;
 	
 	public Texture2D BoxMacacoTexture;
 	public Texture2D BoxCentroComandoTexture;
@@ -207,16 +208,16 @@ public class GUIControl : MonoBehaviour {
 }
 	public bool CheckClickOnRects( Vector2 point){
 		
-		Debug.Log("allRects.Count "+ allRects.Count);
+		//Debug.Log("allRects.Count "+ allRects.Count);
 		if (allRects.Count != 0)
 		foreach ( Rect r  in allRects ){
 			Rect temp = new Rect(r.x,r.y,r.width,r.height);
 			if (temp.Contains(point)){
-				Debug.Log("Clicou SOBRE");
+				//Debug.Log("Clicou SOBRE");
 				return true;
 			}
 		}
-		Debug.Log("Clicou FORA");
+		//Debug.Log("Clicou FORA");
 		return false;
 	} 
 	
@@ -241,6 +242,14 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (new Rect (baseXSide + 20, baseYSide + 60,EngenheiroMonkeyTexture.width,EngenheiroMonkeyTexture.height), EngenheiroMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 60,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 60 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
+				if (building.TheresAMonkeyInside() != null)
+					if(GUI.Button(new Rect (baseXSide + 20 , baseYSide + 110 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height),"RemoverMacaco")){
+						Transform monkey = building.TheresAMonkeyInside();
+						building.GetTheMonkeyOut();
+						building.Deselect();
+						mouseWorld.SelectObject(monkey);
+						
+					}
 				GUI.skin = null;
 				break;
 			}
@@ -426,6 +435,8 @@ public class GUIControl : MonoBehaviour {
 		playerScript = GameObject.Find("Player").GetComponent<CPlayer>();
 		mainScript = GameObject.Find("Codigo").GetComponent<MainScript>();
 		eventosMenu = GameObject.Find("Codigo").GetComponent<EventosMenu>();
+		
+		mouseWorld = GameObject.Find("Codigo").GetComponent<MouseWorldPosition>();
 		
 		boxYmax = 600;
 		boxYmin = 670;
