@@ -25,8 +25,9 @@ public class EventosMouse : MonoBehaviour {
 		RaycastHit hit;
 	
 		// Do the raycast, but ignore the minimap's layers	
-		if(Physics.Raycast(ray,out hit, Mathf.Infinity, 
-					~(1 << MainScript.minimapLayer | 1 << MainScript.minimapGroundLayer)))
+		if(	Physics.Raycast(ray,out hit, Mathf.Infinity, 
+					~(1 << MainScript.minimapLayer | 1 << MainScript.minimapGroundLayer ))
+		  )
 		{
 
 			// If the mesh collider is a child object...
@@ -35,6 +36,10 @@ public class EventosMouse : MonoBehaviour {
 				transform.GetComponent<EventosMenu>().tipoObj = hit.transform.GetComponent<DefinicaoEstrutura>().tipo;
 				transform.GetComponent<EventosMenu>().objetoSelecionado = hit.transform;
 			}
+		}
+		else{
+			
+			Debug.Log("Click ignored " + hit.transform.ToString());
 		}
 	}
 }

@@ -63,7 +63,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	// Defines a 'bar' in the screen. Mouse clicks outside this bar are ignored
 	public float gameBarTop;	// From the top o the screen		
 	public float gameBarBottom;	// From the bottom of the screen. Usually the height of the bottom menu bar
-
+	GUIControl  GUIScript;
 	/*
 	 * ===========================================================================================================
 	 * UNITY STUFF
@@ -87,6 +87,8 @@ public class MouseWorldPosition : MonoBehaviour {
 			// DEBUG
 			Debug.LogError("CursorObject not defined.");
 		}
+		
+		GUIScript = GameObject.Find("HUD-Objects").GetComponent<GUIControl>();
 	}
 
 	// Use this for initialization
@@ -205,7 +207,7 @@ public class MouseWorldPosition : MonoBehaviour {
 		// Something is selected?
 		if(selectedObject != null) {
 
-			infoPanelMsg = selectedObject.gameObject.name + " ";
+			infoPanelMsg = selectedObject.gameObject.name + " " + GUIScript.CheckClickOnRects(new Vector2(mouseNow.x,mouseNow.y));
 		}
 
 		mouseNow = Input.mousePosition;
@@ -674,7 +676,7 @@ public class MouseWorldPosition : MonoBehaviour {
 	void CheckLeftMouseClick() {
 
 		// Check if we're inside the game defined viewport
-		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom)
+		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom ||  GUIScript.CheckClickOnRects(new Vector2(mouseNow.x,mouseNow.y)) )
 			return;
 
 		// Checks if we clicked in an unit
@@ -795,7 +797,7 @@ public class MouseWorldPosition : MonoBehaviour {
 
     
 		// Check if we're inside the game defined viewport
-		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom) 
+		if(mouseNow.y < gameBarTop || mouseNow.y > gameBarBottom ||  GUIScript.CheckClickOnRects(new Vector2(mouseNow.x,mouseNow.y)) )
 			return;
 
 		// Checks if we clicked in an unit

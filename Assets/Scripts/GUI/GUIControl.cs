@@ -12,6 +12,8 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D BoxPredioTexture;
 	public Texture2D BoxMapaTexture;
 	
+	public GUISkin skin;
+	
 	
 	public Texture2D CentroComandoTexture;
 	public Texture2D LaboratorioTexture;
@@ -46,7 +48,8 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D MoverTextureOFF;
 	
 	private ArrayList allMonkeys;
-
+	
+	private ArrayList allRects;
 	
 	//Macaco 2 - Engenheiro
 	public Texture2D EngenheiroNomeTexture;
@@ -166,18 +169,23 @@ public class GUIControl : MonoBehaviour {
 		return (int) boxYposition[m];
 	}
 	
+	Rect AddRect(Rect r){
+		allRects.Add(r);
+		return r;
+	}
 	void OnGUI () {
+		allRects = new ArrayList();
 		
 		NivelOxigenioFloat = playerScript.oxygenLevel / 500;
 
 		
-		GUI.Label (new Rect (8,4,BoxMapaTexture.width,BoxMapaTexture.height), BoxMapaTexture);
-		GUI.Label (new Rect (150,10,RadarTextureON.width*3,RadarTextureON.height*3), RadarTextureON);
+		GUI.Label (AddRect(new Rect (8,4,BoxMapaTexture.width,BoxMapaTexture.height)), BoxMapaTexture);
+		GUI.Label (AddRect(new Rect (150,10,RadarTextureON.width*3,RadarTextureON.height*3)), RadarTextureON);
 		
-		GUI.Label (new Rect (950,10,MenuTextureON.width *3,MenuTextureON.height*3), MenuTextureON);
+		GUI.Label (AddRect(new Rect (950,10,MenuTextureON.width *3,MenuTextureON.height*3)), MenuTextureON);
 		
-		GUI.Label (new Rect (210,5,BoxMetalTexture.width,BoxMetalTexture.height), BoxMetalTexture);
-		GUI.Label (new Rect (380,5,BoxOxigenioTexture.width,BoxOxigenioTexture.height), BoxOxigenioTexture);
+		GUI.Label (AddRect(new Rect (210,5,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
+		GUI.Label (AddRect(new Rect (380,5,BoxOxigenioTexture.width,BoxOxigenioTexture.height)), BoxOxigenioTexture);
 		
 		
 		
@@ -196,9 +204,20 @@ public class GUIControl : MonoBehaviour {
 		
 		
 }
-	
+	public bool CheckClickOnRects( Vector2 point){
+		
+		Debug.Log("allRects.Count "+ allRects.Count);
+		if (allRects.Count != 0)
+		foreach ( Rect r  in allRects ){
+			if (r.Contains(point)){
+				return true;
+			}
+		}
+		return false;
+	} 
 	
 	void drawBuilding(){
+		
 		int baseYSide = 300;
 		int baseXSide = 760;
 		CBuilding building;
@@ -210,37 +229,41 @@ public class GUIControl : MonoBehaviour {
 				continue;
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRO_COMANDO){
 			
-				GUI.Label (new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height), BoxCentroComandoTexture);
-				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,CentroComandoTexture.width,CentroComandoTexture.height), CentroComandoTexture);
+				GUI.skin = skin;
+				
+				
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,CentroComandoTexture.width,CentroComandoTexture.height), CentroComandoTexture);			
 				GUI.Label (new Rect (baseXSide + 20, baseYSide + 60,EngenheiroMonkeyTexture.width,EngenheiroMonkeyTexture.height), EngenheiroMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 60,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 60 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
+				GUI.skin = null;
 				break;
 			}
 		
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.EXTRATOR){
 			
-				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRAL_SEGURANCA){
 			
-				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FAZENDA){
 			
-				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FazendaTexture.width,FazendaTexture.height), FazendaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FABRICA_DRONES){
 			
-				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FabricaTexture.width,FabricaTexture.height), FabricaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.LABORATORIO){
 			
-				GUI.Label (new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture);
 			}
 		}
@@ -257,7 +280,7 @@ public class GUIControl : MonoBehaviour {
 			int posY = (int) getYposition(m);
 			//Debug.Log("Macaco " + m + " Tipo " + monkey.monkeyClass);
 			GUI.Label (new Rect (posX + 79, posY+7 , 	BarraVaziaTexture.width,BarraVaziaTexture.height), BarraVaziaTexture);
-			GUI.Label (new Rect (posX, 		posY,		BoxMacacoTexture.width,BoxMacacoTexture.height), BoxMacacoTexture);
+			GUI.Label (AddRect(new Rect (posX, 		posY,		BoxMacacoTexture.width,BoxMacacoTexture.height)), BoxMacacoTexture);
 			
 				
 			if(monkey.monkeyClass == CMonkey.eMonkeyType.Astronaut){
@@ -384,7 +407,7 @@ public class GUIControl : MonoBehaviour {
 		boxYmin = 670;
 		
 		xDirection = 0;
-			
+		allRects = new ArrayList();
 	}
 	
 	// Update is called once per frame
@@ -400,6 +423,8 @@ public class GUIControl : MonoBehaviour {
 			}
 			i++;
 		}
+		
+		
 
 	}
 	

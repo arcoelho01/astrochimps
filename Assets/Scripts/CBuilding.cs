@@ -33,6 +33,8 @@ public class CBuilding : CBaseEntity {
 	Transform sabotagedPSObj = null;
 	Transform controlSpot = null;
 	Transform exitSpot = null;
+	
+	MainScript mainScript;
 
 	// ================== MERGE
 
@@ -71,6 +73,7 @@ public class CBuilding : CBaseEntity {
 		if(sfxSelected) {
 		
 			AudioSource.PlayClipAtPoint(sfxSelected, transform.position);
+			
 		}
 		return base.Select();
 	}
@@ -85,7 +88,8 @@ public class CBuilding : CBaseEntity {
 		// Set the default settings for all the buildings
 		Selectable = true; // All building are selectable
 		Type = eObjType.Building;
-
+		mainScript = GameObject.Find("Codigo").GetComponent<MainScript>();
+		
 		// ================== MERGE
 		if((tipo ==TipoEstrutura.CANO_CENTRAL) || (tipo == TipoEstrutura.SLOT))
 		{
@@ -119,6 +123,8 @@ public class CBuilding : CBaseEntity {
 		// A recently created building obviously is not sabotaged
 		if(OnSabotageStatusChange != null)
 			OnSabotageStatusChange(this, false);
+		
+		mainScript.GetCurrentUnitsInScene();
 
 	}
 
@@ -135,6 +141,7 @@ public class CBuilding : CBaseEntity {
 		if(isSelected && monkeyInside != null) {
 
 			mainScript.bottomMenu.BuildingInfoMenuEnable(this);
+			
 		}
 
 		if(buildingType == eBuildingType.ResourceExtractor) {

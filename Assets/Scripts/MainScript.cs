@@ -29,7 +29,8 @@ public class MainScript : MonoBehaviour {
 	public static int enemyLayer = 11;	
 	public static int neutralLayer = 12;	
 	public static int minimapLayer = 13;	
-	public static int minimapGroundLayer = 14;	
+	public static int minimapGroundLayer = 14;
+	public static int HUD = 15;
 
 	// List to hold all games units and resources
 	List<Transform> alliedMonkeys = new List<Transform>();
