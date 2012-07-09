@@ -6,6 +6,7 @@ public class GUIControl : MonoBehaviour {
 	
 	CPlayer playerScript;
 	MainScript mainScript;
+	EventosMenu eventosMenu;
 	
 	public Texture2D BoxMacacoTexture;
 	public Texture2D BoxCentroComandoTexture;
@@ -209,10 +210,13 @@ public class GUIControl : MonoBehaviour {
 		Debug.Log("allRects.Count "+ allRects.Count);
 		if (allRects.Count != 0)
 		foreach ( Rect r  in allRects ){
-			if (r.Contains(point)){
+			Rect temp = new Rect(r.x,r.y,r.width,r.height);
+			if (temp.Contains(point)){
+				Debug.Log("Clicou SOBRE");
 				return true;
 			}
 		}
+		Debug.Log("Clicou FORA");
 		return false;
 	} 
 	
@@ -233,7 +237,7 @@ public class GUIControl : MonoBehaviour {
 				
 				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
-				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,CentroComandoTexture.width,CentroComandoTexture.height), CentroComandoTexture);			
+				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,CentroComandoTexture.width,CentroComandoTexture.height), CentroComandoTexture);
 				GUI.Label (new Rect (baseXSide + 20, baseYSide + 60,EngenheiroMonkeyTexture.width,EngenheiroMonkeyTexture.height), EngenheiroMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 60,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 60 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
@@ -243,28 +247,47 @@ public class GUIControl : MonoBehaviour {
 		
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.EXTRATOR){
 			
-				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRAL_SEGURANCA){
 			
-				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FAZENDA){
 			
-				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FazendaTexture.width,FazendaTexture.height), FazendaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FABRICA_DRONES){
 			
-				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FabricaTexture.width,FabricaTexture.height), FabricaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.LABORATORIO){
 			
-				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxPredioTexture.width,BoxPredioTexture.height)), BoxPredioTexture);
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture);
+			}
+			
+			if (eventosMenu.isSlot()){
+			
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.skin = skin;
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 30,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture,"Laboratorio")){
+					eventosMenu.ConstruirLaboratorio();
+				}
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 80,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture,"Seguranca")){
+					eventosMenu.ConstruirCentralSeguranca();
+				}
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 30,FazendaTexture.width,FazendaTexture.height), FazendaTexture,"Fazenda")){
+					eventosMenu.ConstruirFazenda();
+				}
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 80,FabricaTexture.width,FabricaTexture.height), FabricaTexture,"Fabrica")){
+					eventosMenu.ConstruirFabrica();
+				}
+				GUI.skin = null;
 			}
 		}
 	}
@@ -402,6 +425,7 @@ public class GUIControl : MonoBehaviour {
 		
 		playerScript = GameObject.Find("Player").GetComponent<CPlayer>();
 		mainScript = GameObject.Find("Codigo").GetComponent<MainScript>();
+		eventosMenu = GameObject.Find("Codigo").GetComponent<EventosMenu>();
 		
 		boxYmax = 600;
 		boxYmin = 670;
