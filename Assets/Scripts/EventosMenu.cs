@@ -41,6 +41,9 @@ public class EventosMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (objetoSelecionado!= null)
+			if (!objetoSelecionado.GetComponent<CBuilding>().isSelected)
+				objetoSelecionado = null;
 	
 	}
 	
@@ -49,7 +52,7 @@ public class EventosMenu : MonoBehaviour {
 			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal);
 			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio);
 			objetoSelecionado.GetComponent<CBuilding>().Deselect();
-						
+			
 			GameObject.Find("HUD-Objects").GetComponent<GUIControl>().nextSlot(4);
 							
 			objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FAZENDA;
@@ -92,6 +95,7 @@ public class EventosMenu : MonoBehaviour {
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 		MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
+		
 	}
 	
 	public bool isFazendaConstruida(){
@@ -120,7 +124,9 @@ public class EventosMenu : MonoBehaviour {
 	}
 	
 	public bool isSlot(){
-		return (tipoObj == DefinicaoEstrutura.TipoEstrutura.SLOT);
+		if (objetoSelecionado != null)
+			return (objetoSelecionado.GetComponent<DefinicaoEstrutura>().tipo == DefinicaoEstrutura.TipoEstrutura.SLOT);
+		return false;
 	}
 	
 	

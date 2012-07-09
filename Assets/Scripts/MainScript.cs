@@ -243,7 +243,8 @@ public class MainScript : MonoBehaviour {
 	/// Get all the rocket parts currently in the game
 	/// </summary>
 	void GetCurrentRocketPartsInScene() {
-
+		lcRocketParts.Clear();
+		neutralRocketParts.Clear();
 		GameObject[] goRocketParts;
 		goRocketParts = GameObject.FindGameObjectsWithTag("RocketPart");
 
@@ -501,6 +502,12 @@ public class MainScript : MonoBehaviour {
 
 		return alliedBuildings;
 	}
+	
+	public List<Transform> GetListOfAllNeutralResources() {
+
+		return neutralResources;
+	}
+	
 	/*
 	 * ===========================================================================================================
 	 * GAME END STUFF

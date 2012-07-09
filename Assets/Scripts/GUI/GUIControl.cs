@@ -112,6 +112,8 @@ public class GUIControl : MonoBehaviour {
 	
 	
 	List<Transform> lAllBuilding = new List<Transform>();
+	List<Transform> lAllResources = new List<Transform>();
+	
 	
 	public void nextSlot(int predio){
 		nextSlotPosition++;
@@ -227,63 +229,66 @@ public class GUIControl : MonoBehaviour {
 		int baseXSide = 760;
 		CBuilding building;
 		lAllBuilding = mainScript.GetListOfAllAlliedBuildings();
-
+		
 		foreach ( Transform predio in lAllBuilding){ 
 			building = predio.GetComponent<CBuilding>();
 			if (building == null)
 				continue;
-			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRO_COMANDO){
 			
-				GUI.skin = skin;
-				
+			GUI.skin = skin;
+			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRO_COMANDO){
 				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"CENTRAL DE COMANDO");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,CentroComandoTexture.width,CentroComandoTexture.height), CentroComandoTexture);
-				GUI.Label (new Rect (baseXSide + 20, baseYSide + 60,EngenheiroMonkeyTexture.width,EngenheiroMonkeyTexture.height), EngenheiroMonkeyTexture);
-				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 60,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
-				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 60 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
+				GUI.Label (new Rect (baseXSide + 20, baseYSide + 115,EngenheiroMonkeyTexture.width,EngenheiroMonkeyTexture.height), EngenheiroMonkeyTexture);
+				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 115,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
+				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 115 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
 				if (building.TheresAMonkeyInside() != null)
-					if(GUI.Button(new Rect (baseXSide + 20 , baseYSide + 110 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height),"RemoverMacaco")){
+					if(GUI.Button(new Rect (baseXSide + 20 , baseYSide + 55 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height),"RemoverMacaco")){
 						Transform monkey = building.TheresAMonkeyInside();
 						building.GetTheMonkeyOut();
 						building.Deselect();
 						mouseWorld.SelectObject(monkey);
 						
 					}
-				GUI.skin = null;
-				break;
+				return;
 			}
 		
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.EXTRATOR){
-			
+				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"EXTRATOR");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRAL_SEGURANCA){
 			
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"CENTRAL DE SEGURANCßA");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FAZENDA){
 			
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FAZENDA HIDROPONICA");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FazendaTexture.width,FazendaTexture.height), FazendaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FABRICA_DRONES){
 			
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FABRICA DE DRONES");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FabricaTexture.width,FabricaTexture.height), FabricaTexture);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.LABORATORIO){
 			
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"LABORATORIO");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture);
 			}
 			
-			if (eventosMenu.isSlot()){
+			if (eventosMenu.isSlot() && building.Selectable){
 			
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
-				GUI.skin = skin;
 				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 30,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture,"Laboratorio")){
 					eventosMenu.ConstruirLaboratorio();
 				}
@@ -296,8 +301,21 @@ public class GUIControl : MonoBehaviour {
 				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 80,FabricaTexture.width,FabricaTexture.height), FabricaTexture,"Fabrica")){
 					eventosMenu.ConstruirFabrica();
 				}
-				GUI.skin = null;
+				return;
 			}
+		}
+			
+		lAllResources = mainScript.GetListOfAllNeutralResources();
+		foreach ( Transform recurso in lAllResources){
+			CResource r = recurso.GetComponent<CResource>();
+			if (r.isSelected)
+			{
+				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 30, ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture,"Laboratorio")){
+					recurso.GetComponent<CBaseEntity>().BuildIt();
+				}
+			}
+				
 		}
 	}
 	

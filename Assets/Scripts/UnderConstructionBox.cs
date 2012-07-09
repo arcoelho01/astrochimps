@@ -27,7 +27,9 @@ public class UnderConstructionBox : MonoBehaviour {
 	
 		if(!bnStart)
 			return;
-
+		if (builtOver.GetComponent<CBuilding>() != null)
+			builtOver.GetComponent<CBuilding>().Selectable = false;
+		
 		fTimer += Time.deltaTime;
 
 		// Timer running
@@ -41,7 +43,7 @@ public class UnderConstructionBox : MonoBehaviour {
 
 			return;
 		}
-
+		
 		// Ok, timer is over, build complete
 
 		// 1 - Play the final animation
@@ -106,6 +108,7 @@ public class UnderConstructionBox : MonoBehaviour {
 	/// </summary>
 	void CreateNewBuilding() {
 		// Already instantiated? Get out of here!
+		
 		if(newBuilding)
 			return;
 
@@ -126,6 +129,7 @@ public class UnderConstructionBox : MonoBehaviour {
 					{
 			
 						CResource myResourceObject = builtOver.GetComponent<CResource>();
+						
 						// Setup the extractor
 						// 1 - link it to the resource site
 						myBuildingClass.resourceSite = myResourceObject;
