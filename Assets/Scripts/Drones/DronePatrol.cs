@@ -58,6 +58,8 @@ public class DronePatrol : MonoBehaviour {
 
     mySightTrigger = this.GetComponentInChildren<SightTrigger>();
 
+    //sightScaleFactor = 1.0f;
+
     if(!mySightTrigger)
       Debug.LogError("IM BROKE");
 
@@ -399,5 +401,19 @@ public class DronePatrol : MonoBehaviour {
    Gizmos.DrawWireSphere(transform.position, viewRadius);
 
  }
+
+  public void VisaoAumentada (){
+
+    mySightTrigger.sightScaleFactor = 1.2f;
+    mySightTrigger.scaleChange = true;
+
+  }
+
+  public void VisaoNormal (){
+
+    mySightTrigger.sightScaleFactor = 1.0f;
+    mySightTrigger.scaleChange = true;
+
+  }
 
 }

@@ -7,13 +7,25 @@ public class SightTrigger : MonoBehaviour {
   public Transform oppositeDroneSeen;
   public Transform oppositeDroneLost;
 
+  public float sightScaleFactor;
+  public bool scaleChange;
+
 	// Use this for initialization
 	void Start () {
+
+    sightScaleFactor = 1.0f;
+    scaleChange = false;
 	
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+    if(scaleChange){
+    this.transform.localScale.x = this.transform.localScale.x * sightScaleFactor;
+    this.transform.localScale.z = this.transform.localScale.z * sightScaleFactor;
+    scaleChange = false;
+    }
 	
 	}
 
