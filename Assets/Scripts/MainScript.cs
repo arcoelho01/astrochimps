@@ -73,6 +73,8 @@ public class MainScript : MonoBehaviour {
 
 	//< Signal if we are in a cutscene to ignore player inputs
 	public bool bnOnCutscene;
+	
+	private float fTaxaConsumoOxigenio;
 
 	/*
 	 * ===========================================================================================================
@@ -100,7 +102,9 @@ public class MainScript : MonoBehaviour {
 			// DEBUG
 			Debug.LogError("Player object not found!");
 		}
-
+		
+		fTaxaConsumoOxigenio = 1.0f;
+			
 		GetCurrentUnitsInScene();
 
 		mouseInputScript = gameObject.GetComponent<MouseWorldPosition>();
@@ -506,6 +510,13 @@ public class MainScript : MonoBehaviour {
 	public List<Transform> GetListOfAllNeutralResources() {
 
 		return neutralResources;
+	}
+	
+	public float getTaxaConsumoOxigenio(){
+		return fTaxaConsumoOxigenio;
+	}
+	public void setTaxaConsumoOxigenio(float t){
+		fTaxaConsumoOxigenio = t;
 	}
 	
 	/*

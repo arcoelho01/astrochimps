@@ -1,4 +1,4 @@
-
+using UnityEngine;
 using System.Collections;
 
 /// <summary>
@@ -15,6 +15,7 @@ public class CPlayer : CBaseEntity {
 	public float metalLevel {get{return mMetalLevel;}}
 	// TODO: add other resources, like hydrogen
 	
+	private MainScript mainScript;
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -28,6 +29,7 @@ public class CPlayer : CBaseEntity {
 
 		Selectable = false; // The player is virtual, not a physical object 
 		Type = eObjType.Player;
+		mainScript = GameObject.Find("Codigo").GetComponent<MainScript>();
 	}
 
 	/// <summary>
@@ -61,7 +63,8 @@ public class CPlayer : CBaseEntity {
 	/// </summary>
 	/// <param name ="amount"> Float with the amount of oxygen to be subtracted </param>	
 	public void SubResourceOxygen(float amount){
-		mOxygenLevel -= amount;
+		
+		mOxygenLevel -= amount*(mainScript.getTaxaConsumoOxigenio());
 
 		// Tells the game. Actually, we could check it here, but I think this way is cleaner
 		mainScript.CheckIfWeHaveOxygen();

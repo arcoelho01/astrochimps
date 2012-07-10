@@ -233,6 +233,8 @@ public class CBuilding : CBaseEntity {
 		monkeyInside.transform.rotation = Quaternion.identity;
 		monkeyInside.Translate(new Vector3(0.0f,-2.5f,0.0f));
 		monkeyInside.transform.Rotate(new Vector3(0.0f,180.0f,0.0f));
+		if (monkeyInside.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Astronaut)
+			mainScript.setTaxaConsumoOxigenio (0.7f);
 	}
 
 	/// <summary>
@@ -284,7 +286,9 @@ public class CBuilding : CBaseEntity {
 		CMonkey cmMonkeyInside = monkeyInside.gameObject.GetComponent<CMonkey>();
 		cmMonkeyInside.Selectable = true;
 		cmMonkeyInside.WalkTo(exitSpot.transform.position);
-
+		if (cmMonkeyInside.monkeyClass == CMonkey.eMonkeyType.Astronaut)
+			mainScript.setTaxaConsumoOxigenio (1.0f);
+		
 		monkeyInside = null;
 	}
 

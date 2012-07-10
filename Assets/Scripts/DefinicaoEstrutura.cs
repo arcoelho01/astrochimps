@@ -49,6 +49,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 	private Vector3 posicao1;
 	private Vector3 posicao2;
 	
+	
 	// Use this for initialization
 	void Start () {
 		if((tipo ==TipoEstrutura.CANO_CENTRAL) || (tipo == TipoEstrutura.SLOT))
