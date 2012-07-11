@@ -13,6 +13,9 @@ public class EventosMenu : MonoBehaviour {
 	public GameObject prefabUnidadeDrone;
 	public GameObject prefabUnidadeDroneSabotador;
 	public GameObject prefabUnidadeDroneVigilancia;
+	public int precoMetalDrone;
+	public int precoMetalDroneSabotador;
+	public int precoMetalDroneVigilancia;
 	public Transform objetoSelecionado;
    	public DefinicaoEstrutura.TipoEstrutura tipoObj;
 	
@@ -97,6 +100,28 @@ public class EventosMenu : MonoBehaviour {
 		MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
 		
 	}
+	//Drones
+	public void FabricarDroneCacador(){
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(precoMetalDrone);
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_NORMAL;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;		
+	}
+	
+	public void FabricarDroneVigia(){
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(precoMetalDroneVigilancia);
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_VIGILANCIA;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
+	}
+	
+	public void FabricarDroneSabotador(){
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(precoMetalDroneSabotador);
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_SABOTADOR;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;		
+	}
+	//Fim Drones
 	
 	public bool isFazendaConstruida(){
 		return fazendaConstruida;
@@ -128,7 +153,19 @@ public class EventosMenu : MonoBehaviour {
 			return (objetoSelecionado.GetComponent<DefinicaoEstrutura>().tipo == DefinicaoEstrutura.TipoEstrutura.SLOT);
 		return false;
 	}
+	//Drones
+	public bool canDroneCacador(){
+		return (precoMetalDrone <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+	}
 	
+	public bool canDroneVigia(){
+		return (precoMetalDroneVigilancia <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+	}
+	
+	public bool canDronesabotador(){
+		return (precoMetalDroneSabotador <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+	}
+	//Fim Drone
 	
 	void OnGUI(){
 		GUI.skin = menuSkin;

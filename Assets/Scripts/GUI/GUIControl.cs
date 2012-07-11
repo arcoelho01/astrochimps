@@ -20,10 +20,14 @@ public class GUIControl : MonoBehaviour {
 	
 	public Texture2D CentroComandoTexture;
 	public Texture2D LaboratorioTexture;
+	public Texture2D LaboratorioTextureOFF;
 	public Texture2D FabricaTexture;
+	public Texture2D FabricaTextureOFF;
 	public Texture2D FazendaTexture;
+	public Texture2D FazendaTextureOFF;
 	public Texture2D ExtratorTexture;
 	public Texture2D SegurancaTexture;
+	public Texture2D SegurancaTextureOFF;
 	public Texture2D SlotTexture;
 	
 	public Texture2D AguaTexture;
@@ -89,8 +93,11 @@ public class GUIControl : MonoBehaviour {
 	
 	// FABRICA
 	public Texture2D DroneCacadorTexture;
+	public Texture2D DroneCacadorTextureOff;
 	public Texture2D DroneSabotadorTexture;
+	public Texture2D DroneSabotadorTextureOff;
 	public Texture2D DronePatrulhaTexture;
+	public Texture2D DronePatrulhaTextureOff;
 	
 	public float NivelOxigenioFloat = 0.5f;
 	private int[] SlotPredios = {0,0,0,0,0,0,0,0,0,0};
@@ -275,12 +282,14 @@ public class GUIControl : MonoBehaviour {
 				
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture);
 			}
+			
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRAL_SEGURANCA){
 			
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"CENTRAL DE SEGURANCßA");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture);
 			}
+			
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FAZENDA){
 			
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
@@ -293,18 +302,21 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FABRICA DE DRONES");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FabricaTexture.width,FabricaTexture.height), FabricaTexture);
 			
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),"","DroneSabotador")){
-					eventosMenu.ConstruirLaboratorio();
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),(eventosMenu.canDronesabotador()?DroneSabotadorTexture:DroneSabotadorTextureOff),"DroneSabotador")){
+					if(eventosMenu.canDronesabotador())
+						eventosMenu.FabricarDroneSabotador();
 				}
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), "", "DroneVigia")){
-					eventosMenu.ConstruirCentralSeguranca();
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), (eventosMenu.canDroneVigia()?DronePatrulhaTexture:DronePatrulhaTextureOff), "DroneVigia")){
+					if(eventosMenu.canDroneVigia())
+						eventosMenu.FabricarDroneVigia();
 				}
-				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height),"", "DronePatrulha")){
-					eventosMenu.ConstruirFazenda();
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height),(eventosMenu.canDroneCacador()?DroneCacadorTexture:DroneCacadorTextureOff), "DroneCacador")){
+					if(eventosMenu.canDroneCacador())
+						eventosMenu.FabricarDroneCacador();
 				}
-				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), "", "DroneCacador")){
+				/*if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), "", "DroneCacador")){
 					eventosMenu.ConstruirFabrica();
-				}
+				}*/
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.LABORATORIO){
 			
@@ -319,17 +331,21 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"AREA DE CONSTRUCAO");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SlotTexture.width,SlotTexture.height), SlotTexture);
 				
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture,"Laboratorio")){
-					eventosMenu.ConstruirLaboratorio();
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height), (eventosMenu.canLaboratorio()?LaboratorioTexture:LaboratorioTextureOFF),"Laboratorio")){
+					if(eventosMenu.canLaboratorio())
+						eventosMenu.ConstruirLaboratorio();
 				}
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture,"Seguranca")){
-					eventosMenu.ConstruirCentralSeguranca();
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), (eventosMenu.canSeguranca()?SegurancaTexture:SegurancaTextureOFF),"Seguranca")){
+					if(eventosMenu.canSeguranca())
+						eventosMenu.ConstruirCentralSeguranca();
 				}
-				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height), FazendaTexture,"Fazenda")){
-					eventosMenu.ConstruirFazenda();
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height), (eventosMenu.canFazenda()?FazendaTexture:FazendaTextureOFF),"Fazenda")){
+					if(eventosMenu.canFazenda())
+						eventosMenu.ConstruirFazenda();
 				}
-				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), FabricaTexture,"Fabrica")){
-					eventosMenu.ConstruirFabrica();
+				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), (eventosMenu.canFabrica()?FabricaTexture:FabricaTextureOFF),"Fabrica")){
+					if(eventosMenu.canFabrica())
+						eventosMenu.ConstruirFabrica();
 				}
 				return;
 			}
