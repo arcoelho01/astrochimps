@@ -404,7 +404,7 @@ public class DronePatrol : MonoBehaviour {
 
   public void VisaoAumentada (){
 
-    mySightTrigger.sightScaleFactor = 1.2f;
+    mySightTrigger.sightScaleFactor = 1.5f;
     mySightTrigger.scaleChange = true;
 
   }
