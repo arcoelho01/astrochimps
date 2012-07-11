@@ -22,8 +22,8 @@ public class SightTrigger : MonoBehaviour {
 	void Update () {
 
     if(scaleChange){
-    this.transform.localScale.x = this.transform.localScale.x * sightScaleFactor;
-    this.transform.localScale.z = this.transform.localScale.z * sightScaleFactor;
+ //   this.transform.localScale.x = this.transform.localScale.x * sightScaleFactor;
+ //   this.transform.localScale.z = this.transform.localScale.z * sightScaleFactor;
     scaleChange = false;
     }
 	
