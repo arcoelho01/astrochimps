@@ -100,6 +100,9 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D DronePatrulhaTexture;
 	public Texture2D DronePatrulhaTextureOff;
 	
+	//FAZENDA E CENTRAL DE SEGURANÇA
+	public Texture2D BtAtualizar;
+	
 	public float NivelOxigenioFloat = 0.5f;
 	private int[] SlotPredios = {0,0,0,0,0,0,0,0,0,0};
 
