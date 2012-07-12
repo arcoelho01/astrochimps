@@ -26,6 +26,7 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D FazendaTexture;
 	public Texture2D FazendaTextureOFF;
 	public Texture2D ExtratorTexture;
+	public Texture2D ExtratorTextureOff;
 	public Texture2D SegurancaTexture;
 	public Texture2D SegurancaTextureOFF;
 	public Texture2D SlotTexture;
@@ -366,7 +367,7 @@ public class GUIControl : MonoBehaviour {
 					GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,AguaTexture.width,AguaTexture.height), MetalTexture);
 				}
 				
-				if (GUI.Button(new Rect (baseXSide + 40, baseYSide + 80, ExtratorTexture.width,ExtratorTexture.height), ExtratorTexture,"Laboratorio")){
+				if (GUI.Button(new Rect (baseXSide + 40, baseYSide + 80, ExtratorTexture.width,ExtratorTexture.height), (mainScript.CheckIfAreEnoughResourcesToBuild(MainScript.Script.prefabExtractor)?ExtratorTexture:ExtratorTextureOff),"Laboratorio")){
 					recurso.GetComponent<CBaseEntity>().BuildIt();
 				}
 			}
