@@ -15,7 +15,6 @@ public class CPlayer : CBaseEntity {
 	public float metalLevel {get{return mMetalLevel;}}
 	// TODO: add other resources, like hydrogen
 	
-	private MainScript mainScript;
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
