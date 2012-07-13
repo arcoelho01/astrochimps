@@ -50,7 +50,7 @@ public class EventosMenu : MonoBehaviour {
 	
 	}
 	
-	
+	//Construções
 	public void ConstruirFazenda(){
 			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal);
 			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio);
@@ -123,6 +123,7 @@ public class EventosMenu : MonoBehaviour {
 	}
 	//Fim Drones
 	
+	//Métodos de Atualização
 	public void AtualizarFazenda(){
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
 		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1]);		
@@ -141,6 +142,7 @@ public class EventosMenu : MonoBehaviour {
 	public bool lastLevel(){
 		return (objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura == 3);
 	}
+	//Fim Métodos de Atualização
 	
 	public bool isFazendaConstruida(){
 		return fazendaConstruida;
@@ -152,11 +154,11 @@ public class EventosMenu : MonoBehaviour {
 	
 	
 	public bool canFazenda(){
-		return (prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+		return ((prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel) &&(!fazendaConstruida));
 	}
 	
 	public bool canSeguranca(){
-		return (prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+		return ((prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)&&(!centralSegurancaConstruida));
 	}
 	
 	public bool canLaboratorio(){
