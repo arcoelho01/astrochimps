@@ -205,8 +205,11 @@ public class GUIControl : MonoBehaviour {
 		GUI.Label (AddRect(new Rect (950,10,MenuTextureON.width *3,MenuTextureON.height*3)), MenuTextureON);
 		
 		GUI.Label (AddRect(new Rect (210,5,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
+		GUI.skin = skin;
+		GUI.Label(new Rect (280, 22,120,100),playerScript.metalLevel.ToString());
+		GUI.skin = null;
 		GUI.Label (AddRect(new Rect (380,5,BoxOxigenioTexture.width,BoxOxigenioTexture.height)), BoxOxigenioTexture);
-		
+				
 		
 		
 		for ( int x = 556 ; x < 560 + (NivelOxigenioFloat * 280); x = x +4){
