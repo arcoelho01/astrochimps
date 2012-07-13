@@ -34,8 +34,6 @@ public class CBuilding : CBaseEntity {
 	Transform controlSpot = null;
 	Transform exitSpot = null;
 	
-	MainScript mainScript;
-
 	// ================== MERGE
 
 	public enum TipoEstrutura{
