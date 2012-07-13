@@ -123,6 +123,25 @@ public class EventosMenu : MonoBehaviour {
 	}
 	//Fim Drones
 	
+	public void AtualizarFazenda(){
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1]);		
+	}
+	
+	public void AtualizarCentralSeguranca(){
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO;
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1]);		
+	}
+	
+	public bool canUpgrade(){
+		metal = objetoSelecionado.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura-1];
+		return (metal <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+	}
+	
+	public bool lastLevel(){
+		return (objetoSelecionado.GetComponent<DefinicaoEstrutura>().nivelEstrutura == 3);
+	}
+	
 	public bool isFazendaConstruida(){
 		return fazendaConstruida;
 	}

@@ -292,6 +292,11 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"CENTRAL DE SEGURANCßA");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture);
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),BtAtualizar,"Atualizar")){
+					if(!eventosMenu.lastLevel())
+						if(eventosMenu.canUpgrade())
+							eventosMenu.AtualizarCentralSeguranca();
+				}
 			}
 			
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FAZENDA){
@@ -299,6 +304,11 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FAZENDA HIDROPONICA");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FazendaTexture.width,FazendaTexture.height), FazendaTexture);
+				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),BtAtualizar,"Atualizar")){
+					if(!eventosMenu.lastLevel())
+						if(eventosMenu.canUpgrade())
+							eventosMenu.AtualizarFazenda();
+				}
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FABRICA_DRONES){
 			
