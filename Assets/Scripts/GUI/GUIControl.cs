@@ -103,6 +103,12 @@ public class GUIControl : MonoBehaviour {
 	//FAZENDA E CENTRAL DE SEGURANÇA
 	public Texture2D BtAtualizar;
 	
+	//Barra de Progresso
+	public Texture2D BarraProgressoCheia;
+	public Texture2D BarraProgressoVazia;
+	public Texture2D MolduraBarraProgresso;
+	
+	
 	public float NivelOxigenioFloat = 0.5f;
 	private int[] SlotPredios = {0,0,0,0,0,0,0,0,0,0};
 
@@ -247,10 +253,12 @@ public class GUIControl : MonoBehaviour {
 		int baseYSide = 300;
 		int baseXSide = 760;
 		CBuilding building;
+		DefinicaoEstrutura estrutura;
 		lAllBuilding = mainScript.GetListOfAllAlliedBuildings();
 		
 		foreach ( Transform predio in lAllBuilding){ 
 			building = predio.GetComponent<CBuilding>();
+			estrutura = predio.GetComponent<DefinicaoEstrutura>();
 			if (building == null)
 				continue;
 			
@@ -295,10 +303,17 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"CENTRAL DE SEGURANCßA");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SegurancaTexture.width,SegurancaTexture.height), SegurancaTexture);
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),BtAtualizar,"Atualizar")){
-					if(!eventosMenu.lastLevel())
-						if(eventosMenu.canUpgrade())
-							eventosMenu.AtualizarCentralSeguranca();
+				
+				if(estrutura.statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO){
+					GUI.DrawTexture(new Rect (baseXSide + 30, baseYSide + 70,(LaboratorioTexture.width + 60) * (estrutura.tempoAtualConstrucao/100),20),BarraProgressoCheia);
+					GUI.DrawTexture(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width + 60,20),MolduraBarraProgresso);
+				}
+				else{
+					if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),BtAtualizar,"Atualizar")){
+						if(!eventosMenu.lastLevel())
+							if(eventosMenu.canUpgrade())
+								eventosMenu.AtualizarCentralSeguranca();
+					}
 				}
 			}
 			
@@ -307,10 +322,17 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FAZENDA HIDROPONICA");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FazendaTexture.width,FazendaTexture.height), FazendaTexture);
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),BtAtualizar,"Atualizar")){
-					if(!eventosMenu.lastLevel())
-						if(eventosMenu.canUpgrade())
-							eventosMenu.AtualizarFazenda();
+				
+				if(estrutura.statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_ATUALIZACAO){
+					GUI.DrawTexture(new Rect (baseXSide + 30, baseYSide + 70,(LaboratorioTexture.width + 60) * (estrutura.tempoAtualConstrucao/100),20),BarraProgressoCheia);
+					GUI.DrawTexture(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width + 60,20),MolduraBarraProgresso);
+				}
+				else{
+					if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),BtAtualizar,"Atualizar")){
+						if(!eventosMenu.lastLevel())
+							if(eventosMenu.canUpgrade())
+								eventosMenu.AtualizarFazenda();
+					}
 				}
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FABRICA_DRONES){
@@ -318,18 +340,24 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"FABRICA DE DRONES");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,FabricaTexture.width,FabricaTexture.height), FabricaTexture);
-			
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),(eventosMenu.canDronesabotador()?DroneSabotadorTexture:DroneSabotadorTextureOff),"DroneSabotador")){
-					if(eventosMenu.canDronesabotador())
-						eventosMenu.FabricarDroneSabotador();
+				
+				if(estrutura.statusProgressao == DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO){
+					GUI.DrawTexture(new Rect (baseXSide + 30, baseYSide + 70,(LaboratorioTexture.width + 60) * (estrutura.tempoAtualConstrucao/100),20),BarraProgressoCheia);
+					GUI.DrawTexture(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width + 60,20),MolduraBarraProgresso);
 				}
-				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), (eventosMenu.canDroneVigia()?DronePatrulhaTexture:DronePatrulhaTextureOff), "DroneVigia")){
-					if(eventosMenu.canDroneVigia())
-						eventosMenu.FabricarDroneVigia();
-				}
-				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height),(eventosMenu.canDroneCacador()?DroneCacadorTexture:DroneCacadorTextureOff), "DroneCacador")){
-					if(eventosMenu.canDroneCacador())
-						eventosMenu.FabricarDroneCacador();
+				else{
+					if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height),(eventosMenu.canDronesabotador()?DroneSabotadorTexture:DroneSabotadorTextureOff),"DroneSabotador")){
+						if(eventosMenu.canDronesabotador())
+							eventosMenu.FabricarDroneSabotador();
+					}
+					if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), (eventosMenu.canDroneVigia()?DronePatrulhaTexture:DronePatrulhaTextureOff), "DroneVigia")){
+						if(eventosMenu.canDroneVigia())
+							eventosMenu.FabricarDroneVigia();
+					}
+					if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height),(eventosMenu.canDroneCacador()?DroneCacadorTexture:DroneCacadorTextureOff), "DroneCacador")){
+						if(eventosMenu.canDroneCacador())
+							eventosMenu.FabricarDroneCacador();
+					}
 				}
 				/*if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), "", "DroneCacador")){
 					eventosMenu.ConstruirFabrica();
