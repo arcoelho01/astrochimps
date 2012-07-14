@@ -9,6 +9,7 @@ public class OpponentDroneFactory : MonoBehaviour {
 	public GameObject droneSaboteur;
 	public int timeCreateDrone;
 	public int metalCost;
+	public bool sabotaged;
 	private float currentTime = 0;
 	private enum kindDrone{
 		DRONE_HUNTER,
@@ -20,16 +21,17 @@ public class OpponentDroneFactory : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		typeDrone = kindDrone.DRONE_HUNTER;
+		sabotaged = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log(commanderCenter.name);
-		Debug.Log(commanderCenter.GetComponent<OponentManager>().maxDroneHunter);
-		Debug.Log(commanderCenter.GetComponent<OponentManager>().amountDroneHunter);
-		CreateDroneHunter();
-		CreateDronePatrol();
-		CreateDroneSaboteur();
+		if (!sabotaged)
+		{
+			CreateDroneHunter();
+			CreateDronePatrol();
+			CreateDroneSaboteur();
+		}
 	}
 	
 	void CreateDroneHunter()
