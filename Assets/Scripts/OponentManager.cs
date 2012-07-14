@@ -5,8 +5,12 @@ public class OponentManager : MonoBehaviour {
 	
 	public int baseNumber;
 	public float metalResource;
-	public int maxDrones;
-	public int amountDrones;
+	public int maxDroneHunter;
+	public int maxDronePatrol;
+	public int maxDroneSaboteur;
+	public int amountDroneHunter;
+	public int amountDronePatrol;
+	public int amountDroneSaboteur;
 	// Use this for initialization
 	void Start () {
 	
