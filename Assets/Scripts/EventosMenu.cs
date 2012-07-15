@@ -105,21 +105,21 @@ public class EventosMenu : MonoBehaviour {
 		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(precoMetalDrone);
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_NORMAL;
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;		
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 15 / MainScript.getFabricRate();		
 	}
 	
 	public void FabricarDroneVigia(){
 		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(precoMetalDroneVigilancia);
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_VIGILANCIA;
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 15 / MainScript.getFabricRate();
 	}
 	
 	public void FabricarDroneSabotador(){
 		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(precoMetalDroneSabotador);
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.DRONE_SABOTADOR;
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 5;		
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = 15 / MainScript.getFabricRate();		
 	}
 	//Fim Drones
 	
