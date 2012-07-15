@@ -231,8 +231,13 @@ public class CBuilding : CBaseEntity {
 		monkeyInside.transform.rotation = Quaternion.identity;
 		monkeyInside.Translate(new Vector3(0.0f,-2.5f,0.0f));
 		monkeyInside.transform.Rotate(new Vector3(0.0f,180.0f,0.0f));
+		// ESTRATEGIA DO MACACO DENTRO DO CC
 		if (monkeyInside.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Astronaut)
 			mainScript.setTaxaConsumoOxigenio (0.7f);
+		if (monkeyInside.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Engineer){
+			MainScript.setExtractRate(1.5f);
+			MainScript.setFabricRate(1.5f);
+		}
 	}
 
 	/// <summary>
@@ -284,9 +289,15 @@ public class CBuilding : CBaseEntity {
 		CMonkey cmMonkeyInside = monkeyInside.gameObject.GetComponent<CMonkey>();
 		cmMonkeyInside.Selectable = true;
 		cmMonkeyInside.WalkTo(exitSpot.transform.position);
+		// ESTRATEGIA DO MACACO DENTRO DO CC
 		if (cmMonkeyInside.monkeyClass == CMonkey.eMonkeyType.Astronaut)
 			mainScript.setTaxaConsumoOxigenio (1.0f);
-		
+		//if (cmMonkeyInside.monkeyClass == CMonkey.eMonkeyType.Saboteur)
+			//mainScript.setDroneVision(1.0f);
+		if (cmMonkeyInside.monkeyClass == CMonkey.eMonkeyType.Engineer){
+			MainScript.setExtractRate(1.0f);
+			MainScript.setFabricRate(1.0f);
+		}
 		monkeyInside = null;
 	}
 
@@ -305,7 +316,7 @@ public class CBuilding : CBaseEntity {
 	void ExtractResource() {
 
 		CResource.ExtractedResource extractedResource;
-		float extractionAmount = level * 2.5f;
+		float extractionAmount = MainScript.getExtractRate() * level * 2.5f;
 		string resourceString = "";
 
 		// Try to extract resources

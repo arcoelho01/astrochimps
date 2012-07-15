@@ -74,7 +74,9 @@ public class MainScript : MonoBehaviour {
 	//< Signal if we are in a cutscene to ignore player inputs
 	public bool bnOnCutscene;
 	
-	private float fTaxaConsumoOxigenio;
+	private static float fTaxaConsumoOxigenio;
+	private static float fTaxaExtract;
+	private static float fTaxaFabrica;
 
 	/*
 	 * ===========================================================================================================
@@ -104,6 +106,8 @@ public class MainScript : MonoBehaviour {
 		}
 		
 		fTaxaConsumoOxigenio = 1.0f;
+		fTaxaExtract = 1.0f;
+		fTaxaFabrica = 1.0f;
 			
 		GetCurrentUnitsInScene();
 
@@ -515,9 +519,22 @@ public class MainScript : MonoBehaviour {
 	public float getTaxaConsumoOxigenio(){
 		return fTaxaConsumoOxigenio;
 	}
-	public void setTaxaConsumoOxigenio(float t){
-		fTaxaConsumoOxigenio = t;
+	public void setTaxaConsumoOxigenio(float rate){
+		fTaxaConsumoOxigenio = rate; 
 	}
+	public static void setExtractRate( float rate){	
+	 fTaxaExtract = rate;
+	}
+	public static void setFabricRate( float rate){	
+	 fTaxaFabrica = rate;
+	}
+	public static float getExtractRate(){
+		return fTaxaExtract;
+	}
+	public  static float getFabricRate(){
+		return fTaxaFabrica;
+	}
+
 	
 	/*
 	 * ===========================================================================================================
