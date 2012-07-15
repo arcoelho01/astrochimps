@@ -140,6 +140,11 @@ public class LaunchingSequenceControl : MonoBehaviour {
 		}
 	}
 
+	void ShowCredits() {
+
+		Application.LoadLevelAdditive("credits");
+	}
+
 	void LoadNextCutscene() {
 
 		iTween.CameraFadeAdd();
