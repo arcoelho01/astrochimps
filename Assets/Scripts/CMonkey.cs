@@ -99,15 +99,17 @@ public class CMonkey : CBaseEntity {
 	//< ANIMATIONS
 
 	//< Name of the animation to play in loop when this monkey is working is something that takes time
-	string stAnimationWorking;
-	string stDyingAnimation = "tapa";
-	string stAnimTargetingForBrawl = "tapa";
-	string stAnimEngineerFix = "reprogramando";
-	string stAnimTargetingForRecycle = "reprogramando";
+	string stAnimWalk = "walk";
+	string stAnimIdle = "idle";
+	string stAnimationWorking = "repairing";
+	string stDyingAnimation = "dying";
+	string stAnimTargetingForBrawl = "punching";
+	string stAnimEngineerFix = "repairing";
+	string stAnimTargetingForRecycle = "repairing";
 //	string stAnimCanCapture = "";
-	string stAnimTargetingForReprogram = "reprogramando";
-	string stAnimCanSabotageBuilding = "reprogramando";
-	string stAnimCanSabotageDrone = "reprogramando";
+	string stAnimTargetingForReprogram = "reprogramming";
+	string stAnimCanSabotageBuilding = "repairing";
+	string stAnimCanSabotageDrone = "repairing";
 
 	/*
 	 * ===========================================================================================================
@@ -237,7 +239,7 @@ public class CMonkey : CBaseEntity {
 				// Plays the animation for the walk cycle
 				if(meshObject) {
 
-					meshObject.animation.Play("NormalWalk");
+					meshObject.animation.Play(stAnimWalk);
 				}
 
 				break;
@@ -267,7 +269,7 @@ public class CMonkey : CBaseEntity {
 					// Plays the animation for the walk cycle
 					if(meshObject) {
 
-						meshObject.animation.Play("NormalWalk");
+						meshObject.animation.Play(stAnimWalk);
 					}
 				}
 				break;
@@ -341,10 +343,10 @@ public class CMonkey : CBaseEntity {
 				{
 					// DEBUG
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
-					//if(!meshObject.animation.IsPlaying("idle")) {
+					//if(!meshObject.animation.IsPlaying(stAnimIdle)) {
 					if(!meshObject.animation.isPlaying) {
 
-						meshObject.animation.Play("idle");
+						meshObject.animation.Play(stAnimIdle);
 					}
 				}
 				break;
@@ -511,7 +513,7 @@ public class CMonkey : CBaseEntity {
 				if(meshObject) {
 
 					//meshObject.animation.Stop("Walk");
-					meshObject.animation.CrossFade("idle");
+					meshObject.animation.CrossFade(stAnimIdle);
 				}
 
 				break;
@@ -532,7 +534,7 @@ public class CMonkey : CBaseEntity {
 				if(meshObject) {
 
 					//meshObject.animation.Stop("Walk");
-					meshObject.animation.CrossFade("idle");
+					meshObject.animation.CrossFade(stAnimIdle);
 				}
 
 				break;
