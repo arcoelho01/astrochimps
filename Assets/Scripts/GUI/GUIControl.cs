@@ -263,7 +263,7 @@ public class GUIControl : MonoBehaviour {
 			if (building == null)
 				continue;
 			
-			GUI.skin = null;
+			GUI.skin = skin;
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRO_COMANDO){
 				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
@@ -273,7 +273,7 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 115,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 115 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
 				if (building.TheresAMonkeyInside() != null)
-					if(GUI.Button(new Rect (baseXSide + 20 , baseYSide + 55 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height),removerMacaco)){
+					if(GUI.Button(new Rect (baseXSide + 10 , baseYSide + 60 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height),removerMacaco, "RemoverMacaco")){
 						Transform monkey = building.TheresAMonkeyInside();
 						building.GetTheMonkeyOut();
 						building.Deselect();
