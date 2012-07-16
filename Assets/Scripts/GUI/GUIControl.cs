@@ -108,6 +108,7 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D BarraProgressoVazia;
 	public Texture2D MolduraBarraProgresso;
 	
+	public Texture2D removerMacaco;	
 	
 	public float NivelOxigenioFloat = 0.5f;
 	private int[] SlotPredios = {0,0,0,0,0,0,0,0,0,0};
@@ -262,7 +263,7 @@ public class GUIControl : MonoBehaviour {
 			if (building == null)
 				continue;
 			
-			GUI.skin = skin;
+			GUI.skin = null;
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.CENTRO_COMANDO){
 				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
@@ -272,7 +273,7 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label (new Rect (baseXSide + 70 , baseYSide + 115,CientistaMonkeyTexture.width,CientistaMonkeyTexture.height), CientistaMonkeyTexture);
 				GUI.Label (new Rect (baseXSide + 120 , baseYSide + 115 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height), SabotadorMonkeyTexture);
 				if (building.TheresAMonkeyInside() != null)
-					if(GUI.Button(new Rect (baseXSide + 20 , baseYSide + 55 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height),"RemoverMacaco")){
+					if(GUI.Button(new Rect (baseXSide + 20 , baseYSide + 55 ,SabotadorMonkeyTexture.width,SabotadorMonkeyTexture.height),removerMacaco)){
 						Transform monkey = building.TheresAMonkeyInside();
 						building.GetTheMonkeyOut();
 						building.Deselect();
@@ -281,7 +282,7 @@ public class GUIControl : MonoBehaviour {
 					}
 				return;
 			}
-		
+		    GUI.skin = skin;
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.EXTRATOR){
 				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxCentroComandoTexture.width,BoxCentroComandoTexture.height)), BoxCentroComandoTexture);
