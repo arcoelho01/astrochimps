@@ -315,6 +315,8 @@ public class GUIControl : MonoBehaviour {
 								eventosMenu.AtualizarCentralSeguranca();
 					}
 				}
+				
+				GUI.Label(new Rect (baseXSide+30, baseYSide+150,120,100),"NIVEL: "+estrutura.nivelEstrutura);
 			}
 			
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FAZENDA){
@@ -334,6 +336,8 @@ public class GUIControl : MonoBehaviour {
 								eventosMenu.AtualizarFazenda();
 					}
 				}
+				
+				GUI.Label(new Rect (baseXSide+30, baseYSide+150,120,100),"NIVEL: "+estrutura.nivelEstrutura);
 			}
 			if (building.isSelected && building.tipo == CBuilding.TipoEstrutura.FABRICA_DRONES){
 			
