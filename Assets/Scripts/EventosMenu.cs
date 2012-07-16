@@ -68,7 +68,6 @@ public class EventosMenu : MonoBehaviour {
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 		MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
 		fazendaConstruida = true;
-		quantidadeMaximaMacacos = 2;
 	}
 	
 	public void ConstruirCentralSeguranca(){
@@ -81,7 +80,6 @@ public class EventosMenu : MonoBehaviour {
 		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
 		MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
 		centralSegurancaConstruida = true;
-		quantidadeMaximaDrones = 3;
 	}
 	
 	public void ConstruirLaboratorio(){
