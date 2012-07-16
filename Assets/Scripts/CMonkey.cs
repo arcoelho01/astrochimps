@@ -239,8 +239,7 @@ public class CMonkey : CBaseEntity {
 				// Plays the animation for the walk cycle
 				if(meshObject) {
 
-					//meshObject.animation.Play(stAnimWalk);
-					meshObject.animation.Play("walk");
+					meshObject.animation.Play(stAnimWalk);
 				}
 
 				break;
