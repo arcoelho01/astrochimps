@@ -64,7 +64,7 @@ public class LaunchingSequenceControl : MonoBehaviour {
 	void Update () {
 
 		// Code below just for testing the launching sequence directly.
-		//*
+		/*
 		if(Input.GetKeyDown(KeyCode.Z)) {
 
 			// DEBUG
@@ -138,6 +138,11 @@ public class LaunchingSequenceControl : MonoBehaviour {
 			scriptDetonator.destroyTime = 0.0f;
 			scriptDetonator.Explode();
 		}
+	}
+
+	void ShowCredits() {
+
+		Application.LoadLevelAdditive("credits");
 	}
 
 	void LoadNextCutscene() {
