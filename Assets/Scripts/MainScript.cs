@@ -534,6 +534,21 @@ public class MainScript : MonoBehaviour {
 	public  static float getFabricRate(){
 		return fTaxaFabrica;
 	}
+	
+	public  void setDroneVisaoAumentada(){
+		foreach ( Transform drone in alliedDrones){
+			if (drone.GetComponent<DronePatrol>() != null)
+				drone.GetComponent<DronePatrol>().VisaoAumentada();
+		}
+		
+	}
+	public  void setDroneVisaoNormal(){
+		foreach ( Transform drone in alliedDrones){
+			if (drone.GetComponent<DronePatrol>() != null)
+				drone.GetComponent<DronePatrol>().VisaoNormal();
+		}
+	}
+	
 
 	
 	/*

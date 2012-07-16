@@ -238,6 +238,9 @@ public class CBuilding : CBaseEntity {
 			MainScript.setExtractRate(1.5f);
 			MainScript.setFabricRate(1.5f);
 		}
+		if (monkeyInside.GetComponent<CMonkey>().monkeyClass == CMonkey.eMonkeyType.Saboteur){
+			mainScript.setDroneVisaoAumentada();
+		}
 	}
 
 	/// <summary>
@@ -297,6 +300,9 @@ public class CBuilding : CBaseEntity {
 		if (cmMonkeyInside.monkeyClass == CMonkey.eMonkeyType.Engineer){
 			MainScript.setExtractRate(1.0f);
 			MainScript.setFabricRate(1.0f);
+		}
+		if (cmMonkeyInside.monkeyClass == CMonkey.eMonkeyType.Saboteur){
+			mainScript.setDroneVisaoNormal();
 		}
 		monkeyInside = null;
 	}
