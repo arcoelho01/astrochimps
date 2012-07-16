@@ -64,7 +64,7 @@ public class LaunchingSequenceControl : MonoBehaviour {
 	void Update () {
 
 		// Code below just for testing the launching sequence directly.
-		//*
+		/*
 		if(Input.GetKeyDown(KeyCode.Z)) {
 
 			// DEBUG
