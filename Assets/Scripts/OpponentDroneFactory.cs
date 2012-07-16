@@ -9,7 +9,8 @@ public class OpponentDroneFactory : MonoBehaviour {
 	public GameObject droneSaboteur;
 	public int timeCreateDrone;
 	public int metalCost;
-	public bool sabotaged;
+	
+	private CBuilding build;
 	private float currentTime = 0;
 	private enum kindDrone{
 		DRONE_HUNTER,
@@ -21,12 +22,12 @@ public class OpponentDroneFactory : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		typeDrone = kindDrone.DRONE_HUNTER;
-		sabotaged = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (!sabotaged)
+		build = this.GetComponent<CBuilding>();
+		if (!build.sabotado)
 		{
 			CreateDroneHunter();
 			CreateDronePatrol();

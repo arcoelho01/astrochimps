@@ -67,6 +67,12 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		else
 			rotacaoX = 0;
 		
+		if(tipo == TipoEstrutura.CENTRAL_SEGURANCA)
+			setQuantidadeMaximaDrones();
+		
+		if(tipo == TipoEstrutura.FAZENDA)
+			setQuantidadeMaximaMacacos();
+		
 	}
 	
 	// Update is called once per frame
@@ -170,6 +176,7 @@ public class DefinicaoEstrutura : MonoBehaviour {
 			posicao2 = transform.Find("Mesh/Position2").transform.position;
 			//construcaoNova.GetComponent<CDrone>().WalkTo(posicao1);
 			construcaoNova.GetComponent<CDrone>().WalkTo(posicao2);
+			GameObject.Find("Codigo").GetComponent<EventosMenu>().quantidadeDrones++;
 		}
 			
 	}
@@ -199,6 +206,31 @@ public class DefinicaoEstrutura : MonoBehaviour {
 		nivelEstrutura++;
 		statusProgressao = StatusProgresso.LIBERADO;
 		progressoAtual = 0;
+		
+		if(tipo == TipoEstrutura.CENTRAL_SEGURANCA)
+			setQuantidadeMaximaDrones();
+		if(tipo == TipoEstrutura.FAZENDA)
+			setQuantidadeMaximaMacacos();
 	}
+	
+	void setQuantidadeMaximaDrones(){
+		EventosMenu ev = GameObject.Find("Codigo").GetComponent<EventosMenu>();
+		if(nivelEstrutura == 1)
+			ev.quantidadeMaximaDrones = 3;
+		if(nivelEstrutura == 2)
+			ev.quantidadeMaximaDrones = 9;
+		if(nivelEstrutura == 3)
+			ev.quantidadeMaximaDrones = 15;
+	}
+	
+	void setQuantidadeMaximaMacacos(){
+		EventosMenu ev = GameObject.Find("Codigo").GetComponent<EventosMenu>();
+		if(nivelEstrutura == 1)
+			ev.quantidadeMaximaMacacos = 2;
+		if(nivelEstrutura == 2)
+			ev.quantidadeMaximaMacacos = 3;
+		if(nivelEstrutura == 3)
+			ev.quantidadeMaximaMacacos = 4;		
+	}	
 	
 }

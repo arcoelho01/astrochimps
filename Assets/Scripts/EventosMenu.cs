@@ -18,12 +18,17 @@ public class EventosMenu : MonoBehaviour {
 	public int precoMetalDroneVigilancia;
 	public Transform objetoSelecionado;
    	public DefinicaoEstrutura.TipoEstrutura tipoObj;
+	public int quantidadeMaximaMacacos = 1;
+	public int quantidadeMaximaDrones = 1;
+	public int quantidadeDrones;
+	public int quantidadeMacacos;
 	
 	private bool slotsPosicionados = false;
 	private bool fazendaConstruida = false;
 	private bool centralSegurancaConstruida = false;
 	private float oxigenio;
 	private float metal;
+
 	CPlayer playerScript;
 
  /* private int i_Inicial = 0;
@@ -52,17 +57,17 @@ public class EventosMenu : MonoBehaviour {
 	
 	//Construções
 	public void ConstruirFazenda(){
-			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal);
-			GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio);
-			objetoSelecionado.GetComponent<CBuilding>().Deselect();
-			
-			GameObject.Find("HUD-Objects").GetComponent<GUIControl>().nextSlot(4);
-							
-			objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FAZENDA;
-			objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
-			objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
-			MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
-			fazendaConstruida = true;
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceMetal(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal);
+		GameObject.Find("Player").GetComponent<CPlayer>().SubResourceOxygen(prefabFazenda.GetComponent<DefinicaoEstrutura>().custoOxigenio);
+		objetoSelecionado.GetComponent<CBuilding>().Deselect();
+		
+		GameObject.Find("HUD-Objects").GetComponent<GUIControl>().nextSlot(4);
+						
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().objetoAConstruir = DefinicaoEstrutura.TipoEstrutura.FAZENDA;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().statusProgressao = DefinicaoEstrutura.StatusProgresso.EM_PROGRESSO;
+		objetoSelecionado.GetComponent<DefinicaoEstrutura>().tempoConstrucao = prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao;
+		MainScript.Script.DeployUnderConstructionBox(objetoSelecionado.transform,null,objetoSelecionado.transform.position,prefabFazenda.GetComponent<DefinicaoEstrutura>().tempoConstrucao);
+		fazendaConstruida = true;
 	}
 	
 	public void ConstruirCentralSeguranca(){
@@ -176,18 +181,42 @@ public class EventosMenu : MonoBehaviour {
 	}
 	//Drones
 	public bool canDroneCacador(){
-		return (precoMetalDrone <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+		bool retorno = true;
+		
+		if(precoMetalDrone > GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)
+			retorno = false;
+		
+		if(quantidadeMaximaDrones <= quantidadeDrones)
+			retorno = false;
+		
+		return retorno;
 	}
 	
 	public bool canDroneVigia(){
-		return (precoMetalDroneVigilancia <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+		bool retorno = true;
+		
+		if(precoMetalDroneVigilancia > GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)
+			retorno = false;
+		
+		if(quantidadeMaximaDrones <= quantidadeDrones)
+			retorno = false;
+		
+		return retorno;
 	}
 	
 	public bool canDronesabotador(){
-		return (precoMetalDroneSabotador <= GameObject.Find("Player").GetComponent<CPlayer>().metalLevel);
+		bool retorno = true;
+		
+		if(precoMetalDroneSabotador > GameObject.Find("Player").GetComponent<CPlayer>().metalLevel)
+			retorno = false;
+		
+		if(quantidadeMaximaDrones <= quantidadeDrones)
+			retorno = false;
+		
+		return retorno;
 	}
 	//Fim Drone
-	
+		
 	void OnGUI(){
 		GUI.skin = menuSkin;
 		
