@@ -262,6 +262,11 @@ public class CDrone : CBaseEntity {
 				//Debug.Log("XXXXXX Drone walking");
 				AIScript.ClickedTargetPosition(walkTo);
 
+				if(meshObject) {
+
+					meshObject.animation.Play("walking");
+				}
+
 				break;
 
 			case FSMState.STATE_STUNNED:
@@ -685,6 +690,8 @@ public class CDrone : CBaseEntity {
 
          this.Selectable = true;
 
+				 AIScript.Resume();
+
        break;
 
 			default:
@@ -699,7 +706,7 @@ public class CDrone : CBaseEntity {
 	/// </summary>
 	public bool isStunned(){
 
-		return (GetCurrentState() == FSMState.STATE_STUNNED);
+		return (GetCurrentState() == FSMState.STATE_STUNNED || GetCurrentState() == FSMState.STATE_DISABLED);
 	}
 	
 
