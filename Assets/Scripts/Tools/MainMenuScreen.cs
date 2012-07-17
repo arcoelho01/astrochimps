@@ -36,7 +36,7 @@ public class MainMenuScreen : MonoBehaviour {
 		// Put the menu on the center of the screen
 		fScreenX = Screen.width * 0.5f - fMenuWidth * 0.5f;
 		//fScreenY = Screen.height * 0.5f - fMenuHeight * 0.5f;
-		fScreenY = 200;
+		fScreenY = 240;
 
 		currentMenu = MainMenu;
 	}
