@@ -41,7 +41,7 @@ ModelImporter:
     - name: walk
       firstFrame: 30
       lastFrame: 90
-      wrapMode: 0
+      wrapMode: 2
       loop: 0
     - name: idle
       firstFrame: 91
