@@ -35,7 +35,8 @@ public class MainMenuScreen : MonoBehaviour {
 		
 		// Put the menu on the center of the screen
 		fScreenX = Screen.width * 0.5f - fMenuWidth * 0.5f;
-		fScreenY = Screen.height * 0.5f - fMenuHeight * 0.5f;
+		//fScreenY = Screen.height * 0.5f - fMenuHeight * 0.5f;
+		fScreenY = 200;
 
 		currentMenu = MainMenu;
 	}
@@ -71,6 +72,7 @@ public class MainMenuScreen : MonoBehaviour {
 		GUILayout.BeginArea(new Rect(fScreenX, fScreenY, fMenuWidth, fMenuHeight));
 		{
 			
+			GUILayout.BeginHorizontal();
 			if(GUILayout.Button("Novo Jogo")) {
 
 				if(sceneNewGame != "") {
@@ -82,6 +84,7 @@ public class MainMenuScreen : MonoBehaviour {
 
 				Application.Quit();
 			}
+			GUILayout.EndHorizontal();
 		}
 		GUILayout.EndArea();
 	}
