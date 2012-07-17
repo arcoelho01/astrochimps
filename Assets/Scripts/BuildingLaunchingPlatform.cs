@@ -147,7 +147,20 @@ public class BuildingLaunchingPlatform : MonoBehaviour {
 
 		return rv;
 	}
+	
+	public int getPartsOnTheRocket(){
+		// Let's assume that the player already completed the rocket
 
+		int c = 0;
+		for(int i = 0; i < aPartsAlreadyBrought.Length; i++) {
+
+			if(aPartsAlreadyBrought[i])
+				c++;
+		}
+
+		return c;
+	}
+	
 	/// <summary>
 	/// Find the elevator object and disables it when the game start
 	/// </summary>
