@@ -13,6 +13,7 @@ ModelImporter:
     7400008: low_arms //// Drone_Sabotador
     7400010: dying //// Drone_Sabotador
     7400012: raising //// Drone_Sabotador
+    7400014: walking //// Drone_Sabotador
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -28,10 +29,10 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     clipAnimations:
-    - name: walk
+    - name: walking
       firstFrame: 1
       lastFrame: 40
-      wrapMode: 0
+      wrapMode: 2
       loop: 0
     - name: raise_arms
       firstFrame: 41

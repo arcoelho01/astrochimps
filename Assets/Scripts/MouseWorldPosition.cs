@@ -117,15 +117,15 @@ public class MouseWorldPosition : MonoBehaviour {
 	// Update for physics stuff
 	void Update () {
 
+		// Check what the mouse is pointing
+		MouseOver();
+
 		// Check if the game isn't paused
 		if(mainScript.bnIsTheGamePaused || mainScript.bnOnCutscene) {
 
 			return;
 		}
 		
-		// Check what the mouse is pointing
-		MouseOver();
-
 		// MOUSE LEFT CLICK
 		if(Input.GetMouseButton(0)) {
 

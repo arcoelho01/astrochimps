@@ -33,7 +33,11 @@ public class EndCredits : MonoBehaviour {
 		"Lead Sound Designer", "Leonardo Schenkel", "\n",
 		"Programming", "Alexandre Ramos", "Fernando Leite", "Rodrigo Ribeiro", "Leonardo Schenkel", "\n",
 		"Additional Programming", "Freddy Gund", "\n",
-		"Lead Monkey Boy", "Alexandre Ramos", "\n"
+		"Voices", "Alexandre Ramos", "\n",
+		"Music", "West Noorwod Cassete Library - Flashlight","by Adam Marshall","\n",
+		"Additional Music", "Road To Hell", "by Kevin MacLeod", "incompetech.com","\n",
+		"Using", "iTween", "itween.pixelplacement.com","\n",
+		"Using", "Detonator for Unity", "Ben Throop","\n"
 	};
 
 	//<

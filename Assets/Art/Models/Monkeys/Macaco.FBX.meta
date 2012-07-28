@@ -44,8 +44,8 @@ ModelImporter:
       wrapMode: 2
       loop: 0
     - name: idle
-      firstFrame: 91
-      lastFrame: 180
+      firstFrame: 93
+      lastFrame: 178
       wrapMode: 0
       loop: 0
     - name: idle_too_long

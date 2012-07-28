@@ -142,6 +142,9 @@ public class LaunchingSequenceControl : MonoBehaviour {
 
 	void ShowCredits() {
 
+		// HACK!
+		scriptMainScript.player.AddResourceOxygen(400.0f);
+
 		Application.LoadLevelAdditive("credits");
 	}
 

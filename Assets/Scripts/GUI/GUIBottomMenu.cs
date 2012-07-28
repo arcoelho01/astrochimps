@@ -61,7 +61,7 @@ public class GUIBottomMenu : MonoBehaviour {
 		GUI.skin = menuSkin;
 
 		//
-		GUI.Label(new Rect(posX, posY - 20, Screen.width, 25),stLabelText);
+		//GUI.Label(new Rect(posX, posY - 20, Screen.width, 25),stLabelText);
 
 		// This area defines the bar on the bottom part of the screen
 	//	GUI.Box(new Rect(posX, posY, width, height), "");
