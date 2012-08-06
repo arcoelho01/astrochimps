@@ -82,6 +82,9 @@ public class CMonkey : CBaseEntity {
 	private GUIControl GUIScript;
 	Transform attackSpot;
 
+	float fIdleTime = 0.0f; //< Time that the monkey has been idle
+	float fIdleTargetTime = 10.0f; //< 
+
 	//< Progress bar showed in the Monkey Panel.
 	Transform tProgressBar;
 
@@ -101,6 +104,7 @@ public class CMonkey : CBaseEntity {
 	//< Name of the animation to play in loop when this monkey is working is something that takes time
 	string stAnimWalk = "walk";
 	string stAnimIdle = "idle";
+	string stAnimIdleTooLong = "idle_too_long";
 	string stAnimationWorking = "repairing";
 	string stDyingAnimation = "dying";
 	string stAnimTargetingForBrawl = "punching";
@@ -111,6 +115,7 @@ public class CMonkey : CBaseEntity {
 	string stAnimCanSabotageBuilding = "repairing";
 	string stAnimCanSabotageDrone = "repairing";
 
+	float fTimeToStartMonkey;
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -129,7 +134,7 @@ public class CMonkey : CBaseEntity {
 		AIScript = gameObject.GetComponent<AstarAIFollow>();
 
 		// FSM setup
-		eFSMCurrentState = FSMState.STATE_IDLE;
+		eFSMCurrentState = FSMState.STATE_NULL;
 
 		// Get info about the collider
 		GetColliderInfo();
@@ -153,7 +158,8 @@ public class CMonkey : CBaseEntity {
 		
 		GUIScript = GameObject.Find("HUD-Objects").GetComponent<GUIControl>();
 		GUIScript.addMonkey(this);
-		
+
+		fTimeToStartMonkey = Random.value * 10;	
 	}
 
 	/// <summary>
@@ -205,6 +211,9 @@ public class CMonkey : CBaseEntity {
 			case FSMState.STATE_IDLE:
 				// Clear any previous targets
 				transTarget = null;
+				// Clear the idle timer
+				fIdleTime = 0.0f;
+
 				// DEBUG
 				//Debug.LogWarning(this.transform + " clearing target on entering STATE_IDLE");
 				break;
@@ -341,12 +350,27 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_IDLE:
 				{
+					// Updates the idle timer
+					fIdleTime += Time.deltaTime;
+
 					// DEBUG
 					//Debug.Log("[ExecuteCurrentState: " + GetCurrentState() + "]");
 					//if(!meshObject.animation.IsPlaying(stAnimIdle)) {
 					if(!meshObject.animation.isPlaying) {
 
-						meshObject.animation.Play(stAnimIdle);
+						if(fIdleTime >= fIdleTargetTime) {
+						
+							// Plays the "I'm bored" animation
+							meshObject.animation.Play(stAnimIdleTooLong);
+
+							// And test if we keep using this animation or go back to the regular idle animation
+
+						}
+						else {
+
+							// Plays the usual idle animation
+							meshObject.animation.Play(stAnimIdle);
+						}
 					}
 				}
 				break;
@@ -466,6 +490,14 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_NULL:
+				{
+					fIdleTime += Time.deltaTime;
+					if(fIdleTime > fTimeToStartMonkey) {
+						
+						fIdleTime = 0.0f;
+						EnterNewState(FSMState.STATE_IDLE);
+					}
+				}
 				break;
 
 			default:
