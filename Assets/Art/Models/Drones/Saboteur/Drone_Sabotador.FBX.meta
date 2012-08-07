@@ -14,6 +14,9 @@ ModelImporter:
     7400010: dying //// Drone_Sabotador
     7400012: raising //// Drone_Sabotador
     7400014: walking //// Drone_Sabotador
+    7400016: Walking //// Drone_Sabotador
+    7400018: Deactivate //// Drone_Sabotador
+    7400020: Reactivate //// Drone_Sabotador
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -29,7 +32,7 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     clipAnimations:
-    - name: walking
+    - name: Walking
       firstFrame: 1
       lastFrame: 40
       wrapMode: 2
@@ -49,12 +52,12 @@ ModelImporter:
       lastFrame: 180
       wrapMode: 0
       loop: 0
-    - name: dying
+    - name: Deactivate
       firstFrame: 180
       lastFrame: 215
       wrapMode: 0
       loop: 0
-    - name: raising
+    - name: Reactivate
       firstFrame: 215
       lastFrame: 260
       wrapMode: 0

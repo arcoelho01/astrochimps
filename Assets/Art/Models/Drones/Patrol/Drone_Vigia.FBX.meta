@@ -24,6 +24,9 @@ ModelImporter:
     7400004: backing_to_normal //// Drone_Vigia
     7400006: walking //// Drone_Vigia
     7400008: destroying //// Drone_Vigia
+    7400010: Deactivate //// Drone_Vigia
+    7400012: Reactivate //// Drone_Vigia
+    7400014: Walking //// Drone_Vigia
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -39,20 +42,20 @@ ModelImporter:
     animationScaleError: .5
     animationWrapMode: 0
     clipAnimations:
-    - name: destroying
+    - name: Deactivate
       firstFrame: 0
       lastFrame: 140
       wrapMode: 0
       loop: 0
-    - name: backing_to_normal
+    - name: Reactivate
       firstFrame: 140
       lastFrame: 170
       wrapMode: 0
       loop: 0
-    - name: walking
+    - name: Walking
       firstFrame: 170
       lastFrame: 200
-      wrapMode: 0
+      wrapMode: 2
       loop: 0
   meshes:
     lODScreenPercentages: []
