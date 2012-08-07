@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Pathfinding;
 
 public class DefinicaoEstrutura : MonoBehaviour {
 	
@@ -167,6 +168,22 @@ public class DefinicaoEstrutura : MonoBehaviour {
 			cano = GameObject.Find("CanoCentral"+this.name.Substring(4,1)+"/Mesh/(TO TEX) Tube -- Low (MAP) (ANI F)"); //.renderer.enabled = true;
 			cano.renderer.enabled = true;
 			cano.animation.Play("Tube_Acordeon");
+
+			{
+
+				// Updates the A* graph with the collider of the new built structure
+				Collider col;
+				col = construcaoNova.collider; 
+
+				if(!col) {
+
+					// DEBUG
+					Debug.LogError(this.transform + " No collider found to building " + construcaoNova);
+				}
+				Bounds newBounds = col.bounds;
+				GraphUpdateObject guo = new GraphUpdateObject(newBounds);
+				AstarPath.active.UpdateGraphs(guo);
+			}
 		}
 		else{
 			posicao1 = transform.Find("Mesh/Position1").transform.position;

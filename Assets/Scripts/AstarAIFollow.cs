@@ -69,6 +69,9 @@ public class AstarAIFollow : MonoBehaviour {
 	/** True if the AI is moving, false if not */
 	public bool bnIsMoving = false;
 
+	/** Collider to update the A* grid */
+	protected Collider col;
+
 	/** Use this for initialization */
 	void Awake () {
 
@@ -79,7 +82,6 @@ public class AstarAIFollow : MonoBehaviour {
 			// DEBUG
 			Debug.LogError(this.transform + " seeker component not found!");
 		}
-		Debug.Log(this.transform + "Starting");
 		// The next line was moved to the Awake()
 		//seeker = GetComponent<Seeker>();
 		controller = GetComponent<CharacterController>();
@@ -88,6 +90,14 @@ public class AstarAIFollow : MonoBehaviour {
 
 			// DEBUG
 			Debug.LogError(this.transform + " controller component not found!");
+		}
+
+		col = controller.collider;
+		
+		if(!col) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " collider component not found!");
 		}
 		
 		tr = transform;
@@ -179,9 +189,11 @@ public class AstarAIFollow : MonoBehaviour {
 	  * It will wait if the current path request by this seeker has not been completed yet.
 	  * \see Seeker::IsDone */
 	public virtual void Repath () {
+
 		lastPathSearch = Time.time;
 		
 		if (seeker == null || !newTargetClicked || !canSearch || !seeker.IsDone ()) {
+
 			StartCoroutine (WaitToRepath ());
 			return;
 		}
@@ -196,10 +208,8 @@ public class AstarAIFollow : MonoBehaviour {
 		//seeker.StartPath (fpathTrace,OnPathComplete);
 		
 		if(canSearch) {
-			// DEBUG
-			//Debug.LogWarning(this.transform + " calling startPath");
-		//Start a new path from transform.positon to target.position, return the result to the function OnPathComplete
-		seeker.StartPath (transform.position,targetPosition,OnPathComplete);
+			//Start a new path from transform.positon to target.position, return the result to the function OnPathComplete
+			seeker.StartPath (transform.position,targetPosition,OnPathComplete);
 		}
 	}
 	
@@ -273,6 +283,12 @@ public class AstarAIFollow : MonoBehaviour {
 		forwardDir *= Mathf.Clamp01 (Vector3.Dot (dir.normalized, tr.forward));
 		
 		controller.SimpleMove (forwardDir);
+
+		// Update the grid here?
+		// Problem: the updated graph makes we update our own path. This suck, because produces erratic moves
+		// We have 2 options here:
+		// 1 - Find a way to NOT recalculate the path when the graph is updated by our own movement
+		//UpdateAStarGraph();
 	}
 	
 	/** Draws helper gizmos.
@@ -308,9 +324,58 @@ public class AstarAIFollow : MonoBehaviour {
 	/// </summary>
 	public void ClickedTargetPosition(Vector3 newTargetPosition) {
 
+		// Keeps the current target position
+		targetPosition = newTargetPosition;
+
 		PathToTarget(newTargetPosition);
 		Resume();
 		// DEBUG
 		//Debug.LogWarning(this.transform + " Clicked at " + newTargetPosition);
+	}
+
+	/*
+	 * ===========================================================================================================
+	 * EVENTS STUFF
+	 * ===========================================================================================================
+	 */
+	/// <summary>
+	/// Register this script with the AStar callback when the grid is updated
+	/// <summary>
+	public void OnEnable() {
+
+		AstarPath.OnGraphsUpdated += AStarGraphUpdated;
+	}
+
+	/// <summary>
+	/// Unregister this script with the AStar callback when the grid is updated
+	/// <summary>
+	public void OnDisable() {
+
+		AstarPath.OnGraphsUpdated -= AStarGraphUpdated;
+	}
+
+	/// <summary>
+	/// When the grid is update, check if we already have a path underway. If so, recreate the path towards the
+	/// target
+	/// <summary>
+	public void AStarGraphUpdated(AstarPath active) {
+
+		// 1 - Verify if we have a path underway
+		if(path == null)
+			return;
+		
+		// 2 - if we have, recalculate it
+		PathToTarget(targetPosition);
+	}
+
+	/// <summary>
+	/// Updates the A* graph with the recently built building, using it's collider
+	/// </summary>
+	void UpdateAStarGraph() {
+
+		Bounds newBounds = col.bounds;
+		GraphUpdateObject guo = new GraphUpdateObject(newBounds);
+		// FIXME: an idea: and if the movable objects were ignored by the grid?
+		AstarPath.active.UpdateGraphs(guo, 1);
 	}
 }

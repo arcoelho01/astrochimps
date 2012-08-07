@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Pathfinding;
 
 public class UnderConstructionBox : MonoBehaviour {
 
@@ -145,5 +146,28 @@ public class UnderConstructionBox : MonoBehaviour {
 			}
 		}
 
+		// Updates the A* graph
+		UpdateAStarGraphWithNewBuilding();
+
+	}
+
+	/// <summary>
+	/// Updates the A* graph with the recently built building, using it's collider
+	/// </summary>
+	void UpdateAStarGraphWithNewBuilding() {
+
+		Collider col;
+
+		col = newBuilding.collider; 
+
+		if(!col) {
+
+			// DEBUG
+			Debug.LogError(this.transform + " No collider found to building " + newBuilding);
+		}
+
+		Bounds newBounds = col.bounds;
+		GraphUpdateObject guo = new GraphUpdateObject(newBounds);
+		AstarPath.active.UpdateGraphs(guo);
 	}
 }
