@@ -72,6 +72,10 @@ public class AstarAIFollow : MonoBehaviour {
 	/** Collider to update the A* grid */
 	protected Collider col;
 
+	float fStuckTimer = 0.0f; //< Counts the time that a object stays stuck (doesn't reach the next waypoint)
+	float fMaxStuckTime = 2.0f; //< If the object got stuck for more than this time, recalculate it's path
+	int pathIndexPrev = 0;
+
 	/** Use this for initialization */
 	void Awake () {
 
@@ -247,6 +251,9 @@ public class AstarAIFollow : MonoBehaviour {
 			return;
 		}
 		
+		// Keeps the last waypoint index
+		pathIndexPrev = pathIndex;
+
 		//Change target to the next waypoint if the current one is close enough
 		Vector3 currentWaypoint = path[pathIndex];
 		currentWaypoint.y = tr.position.y;
@@ -282,13 +289,27 @@ public class AstarAIFollow : MonoBehaviour {
 		forwardDir = forwardDir * speed;
 		forwardDir *= Mathf.Clamp01 (Vector3.Dot (dir.normalized, tr.forward));
 		
+
 		controller.SimpleMove (forwardDir);
 
-		// Update the grid here?
-		// Problem: the updated graph makes we update our own path. This suck, because produces erratic moves
-		// We have 2 options here:
-		// 1 - Find a way to NOT recalculate the path when the graph is updated by our own movement
-		//UpdateAStarGraph();
+		// Check if the object got stuck somewhere
+		if(pathIndex == pathIndexPrev) {
+
+			fStuckTimer += Time.deltaTime;
+
+			if(fStuckTimer > fMaxStuckTime) {
+
+				// Clear the stuck timer
+				fStuckTimer = 0.0f;
+				// And ask to recalculate the path
+				ClickedTargetPosition(targetPosition);
+			}
+		}
+		else {
+
+			// Clears the stuck timer
+			fStuckTimer = 0.0f;
+		}
 	}
 	
 	/** Draws helper gizmos.
@@ -331,51 +352,5 @@ public class AstarAIFollow : MonoBehaviour {
 		Resume();
 		// DEBUG
 		//Debug.LogWarning(this.transform + " Clicked at " + newTargetPosition);
-	}
-
-	/*
-	 * ===========================================================================================================
-	 * EVENTS STUFF
-	 * ===========================================================================================================
-	 */
-	/// <summary>
-	/// Register this script with the AStar callback when the grid is updated
-	/// <summary>
-	public void OnEnable() {
-
-		AstarPath.OnGraphsUpdated += AStarGraphUpdated;
-	}
-
-	/// <summary>
-	/// Unregister this script with the AStar callback when the grid is updated
-	/// <summary>
-	public void OnDisable() {
-
-		AstarPath.OnGraphsUpdated -= AStarGraphUpdated;
-	}
-
-	/// <summary>
-	/// When the grid is update, check if we already have a path underway. If so, recreate the path towards the
-	/// target
-	/// <summary>
-	public void AStarGraphUpdated(AstarPath active) {
-
-		// 1 - Verify if we have a path underway
-		if(path == null)
-			return;
-		
-		// 2 - if we have, recalculate it
-		PathToTarget(targetPosition);
-	}
-
-	/// <summary>
-	/// Updates the A* graph with the recently built building, using it's collider
-	/// </summary>
-	void UpdateAStarGraph() {
-
-		Bounds newBounds = col.bounds;
-		GraphUpdateObject guo = new GraphUpdateObject(newBounds);
-		// FIXME: an idea: and if the movable objects were ignored by the grid?
-		AstarPath.active.UpdateGraphs(guo, 1);
 	}
 }
