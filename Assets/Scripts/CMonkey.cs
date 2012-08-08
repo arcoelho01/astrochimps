@@ -116,6 +116,8 @@ public class CMonkey : CBaseEntity {
 	string stAnimCanSabotageDrone = "repairing";
 
 	float fTimeToStartMonkey;
+
+	public Transform stepDustPrefab = null;
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -232,7 +234,8 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_WALKING:
 				// DEBUG
-				Debug.Log(this.transform + " Entering STATE_WALKING");
+				//Debug.Log(this.transform + " Entering STATE_WALKING");
+				
 				if(sfxAckDefault) {
 
 					AudioSource.PlayClipAtPoint(sfxAckDefault, transform.position);
@@ -244,13 +247,6 @@ public class CMonkey : CBaseEntity {
 
 				// Clear the target
 				transTarget = null;
-
-				// Plays the animation for the walk cycle
-				if(meshObject) {
-
-					meshObject.animation.Play(stAnimWalk);
-				}
-
 				break;
 
 			case FSMState.STATE_STUNNED:
@@ -273,12 +269,6 @@ public class CMonkey : CBaseEntity {
 					else {
 						
 						AIScript.ClickedTargetPosition(transTarget.position);
-					}
-
-					// Plays the animation for the walk cycle
-					if(meshObject) {
-
-						meshObject.animation.Play(stAnimWalk);
 					}
 				}
 				break;
@@ -421,6 +411,7 @@ public class CMonkey : CBaseEntity {
 				break;
 
 			case FSMState.STATE_WALKING:
+				LoopWalkCycle();
 				break;
 
 			case FSMState.STATE_STUNNED:
@@ -440,6 +431,8 @@ public class CMonkey : CBaseEntity {
 
 			case FSMState.STATE_PURSUIT:
 				{
+					LoopWalkCycle();
+
 					// ADDED by Alexandre: pursuit is the combination of walk and attack modes. First, walk to the target. 
 					// Here, test if the target is in range, then switch to the ATTACK state
 					// IF BELLOW IS TO CHECK IF THE TARGET STILL EXISTS
@@ -1252,6 +1245,38 @@ public class CMonkey : CBaseEntity {
 					}
 				}
 			}
+		}
+	}
+
+	/// <summary>
+	/// Manages the walk cycle loop
+	/// </summary>
+	void LoopWalkCycle() {
+
+		// Check if the walking animation is finished
+		if(meshObject && !meshObject.animation.IsPlaying(stAnimWalk)) {
+
+			// Play it again
+			meshObject.animation.Play(stAnimWalk);
+			InstantiateADustCloud();
+		}
+	}
+
+
+	/// <summary>
+	/// Instantiate a simple particle emitter to simulate dust on the monkey step. Auto-destroy it after a couple
+	/// of seconds
+	/// </summary>
+	void InstantiateADustCloud() {
+
+		// Create a dust
+		if(stepDustPrefab) {
+
+			// Instantiate the dust particles
+			Transform trDustParticleSystem = Instantiate(stepDustPrefab, this.transform.position, 
+					Quaternion.identity) as Transform;
+			// And destroy it after n seconds
+			Destroy(trDustParticleSystem.gameObject, 4);
 		}
 	}
 
