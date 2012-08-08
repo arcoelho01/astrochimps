@@ -118,6 +118,8 @@ public class CMonkey : CBaseEntity {
 	float fTimeToStartMonkey;
 
 	public Transform stepDustPrefab = null;
+	float fDustTimer = 0.0f;
+	float fDustTimeOfAStep;
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -162,6 +164,15 @@ public class CMonkey : CBaseEntity {
 		GUIScript.addMonkey(this);
 
 		fTimeToStartMonkey = Random.value * 10;	
+
+		if(meshObject) {
+
+			// Calculates the walk cycle half length
+			fDustTimeOfAStep = meshObject.animation[stAnimWalk].clip.length / 2;
+
+			// DEBUG
+			Debug.Log(this.transform + " Length: " + fDustTimeOfAStep);
+		}
 	}
 
 	/// <summary>
@@ -1253,12 +1264,26 @@ public class CMonkey : CBaseEntity {
 	/// </summary>
 	void LoopWalkCycle() {
 
+		if(!meshObject)
+			return;
+
+		fDustTimer += Time.deltaTime;
+
 		// Check if the walking animation is finished
-		if(meshObject && !meshObject.animation.IsPlaying(stAnimWalk)) {
+		if(!meshObject.animation.IsPlaying(stAnimWalk)) {
 
 			// Play it again
 			meshObject.animation.Play(stAnimWalk);
 			InstantiateADustCloud();
+			fDustTimer = 0.0f;
+		}
+		else {
+
+			if(fDustTimer >= fDustTimeOfAStep) {
+
+				InstantiateADustCloud();
+				fDustTimer = 0.0f;
+			}
 		}
 	}
 
@@ -1276,7 +1301,7 @@ public class CMonkey : CBaseEntity {
 			Transform trDustParticleSystem = Instantiate(stepDustPrefab, this.transform.position, 
 					Quaternion.identity) as Transform;
 			// And destroy it after n seconds
-			Destroy(trDustParticleSystem.gameObject, 4);
+			Destroy(trDustParticleSystem.gameObject, 3);
 		}
 	}
 
