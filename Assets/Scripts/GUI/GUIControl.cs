@@ -374,29 +374,55 @@ public class GUIControl : MonoBehaviour {
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"LABORATORIO");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,LaboratorioTexture.width,LaboratorioTexture.height), LaboratorioTexture);
 			}
-			
+						
 			if (eventosMenu.isSlot() && building.Selectable){
-			
+				
+				Rect area;
+				
 				GUI.Label (AddRect(new Rect (baseXSide, baseYSide,BoxSlotTexture.width,BoxSlotTexture.height)), BoxSlotTexture);
 				GUI.Label(new Rect (baseXSide+70, baseYSide+32,120,100),"AREA DE CONSTRUCAO");
 				GUI.Label (new Rect (baseXSide + 10, baseYSide + 10,SlotTexture.width,SlotTexture.height), SlotTexture);
 				
+				//Botão do laboratorio
 				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height), (eventosMenu.canLaboratorio()?LaboratorioTexture:LaboratorioTextureOFF),"Laboratorio")){
 					if(eventosMenu.canLaboratorio())
 						eventosMenu.ConstruirLaboratorio();
 				}
+				
+				area = new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height);
+				//Botão da central de segurança
 				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), (eventosMenu.canSeguranca()?SegurancaTexture:SegurancaTextureOFF),"Seguranca")){
 					if(eventosMenu.canSeguranca())
 						eventosMenu.ConstruirCentralSeguranca();
 				}
+				
+				area = new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height);
+				if(area.Contains(Event.current.mousePosition)){
+					//TODO: acrescentar quadro com informações
+				}
+				
+				//Botão da fazenda
 				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height), (eventosMenu.canFazenda()?FazendaTexture:FazendaTextureOFF),"Fazenda")){
 					if(eventosMenu.canFazenda())
 						eventosMenu.ConstruirFazenda();
 				}
+				
+				area = new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height);
+				if(area.Contains(Event.current.mousePosition)){
+					//TODO: acrescentar quadro com informações
+				}
+				
+				//Botão da fabrica de drones
 				if(GUI.Button(new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height), (eventosMenu.canFabrica()?FabricaTexture:FabricaTextureOFF),"Fabrica")){
 					if(eventosMenu.canFabrica())
 						eventosMenu.ConstruirFabrica();
 				}
+				
+				area = new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height);
+				if(area.Contains(Event.current.mousePosition)){
+					//TODO: acrescentar quadro com informações
+				}
+				
 				return;
 			}
 		}
