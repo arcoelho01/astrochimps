@@ -390,6 +390,13 @@ public class GUIControl : MonoBehaviour {
 				}
 				
 				area = new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height);
+				if(area.Contains(Event.current.mousePosition)){
+					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
+					GUI.skin = skin;					
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.skin = null;					
+				}
+				
 				//Botão da central de segurança
 				if (GUI.Button(new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height), (eventosMenu.canSeguranca()?SegurancaTexture:SegurancaTextureOFF),"Seguranca")){
 					if(eventosMenu.canSeguranca())
@@ -398,7 +405,10 @@ public class GUIControl : MonoBehaviour {
 				
 				area = new Rect (baseXSide + 30, baseYSide + 120,SegurancaTexture.width,SegurancaTexture.height);
 				if(area.Contains(Event.current.mousePosition)){
-					//TODO: acrescentar quadro com informações
+					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
+					GUI.skin = skin;					
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.skin = null;
 				}
 				
 				//Botão da fazenda
@@ -409,7 +419,10 @@ public class GUIControl : MonoBehaviour {
 				
 				area = new Rect (baseXSide + 90, baseYSide + 70,FazendaTexture.width,FazendaTexture.height);
 				if(area.Contains(Event.current.mousePosition)){
-					//TODO: acrescentar quadro com informações
+					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
+					GUI.skin = skin;					
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.skin = null;
 				}
 				
 				//Botão da fabrica de drones
@@ -420,7 +433,10 @@ public class GUIControl : MonoBehaviour {
 				
 				area = new Rect (baseXSide + 90, baseYSide + 120,FabricaTexture.width,FabricaTexture.height);
 				if(area.Contains(Event.current.mousePosition)){
-					//TODO: acrescentar quadro com informações
+					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
+					GUI.skin = skin;					
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.skin = null;
 				}
 				
 				return;
