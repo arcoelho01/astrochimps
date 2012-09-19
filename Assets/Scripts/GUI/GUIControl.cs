@@ -14,6 +14,7 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D BoxPredioTexture;
 	public Texture2D BoxSlotTexture;
 	public Texture2D BoxMapaTexture;
+	public Texture2D BoxDescricao;
 	
 	public GUISkin skin;
 	
@@ -393,7 +394,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
 					GUI.skin = skin;					
-					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.getDadosLaboratorio("CUSTO"));
 					GUI.skin = null;					
 				}
 				
@@ -407,7 +408,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
 					GUI.skin = skin;					
-					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.getDadosCentralSeguranca("CUSTO"));
 					GUI.skin = null;
 				}
 				
@@ -421,7 +422,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
 					GUI.skin = skin;					
-					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.getDadosFazenda("CUSTO"));
 					GUI.skin = null;
 				}
 				
@@ -435,7 +436,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Label (AddRect(new Rect (baseXSide, baseYSide+173,BoxMetalTexture.width,BoxMetalTexture.height)), BoxMetalTexture);
 					GUI.skin = skin;					
-					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal.ToString());
+					GUI.Label(new Rect (baseXSide + 70, baseYSide+190,120,100),eventosMenu.getDadosFabricaDrones("CUSTO"));
 					GUI.skin = null;
 				}
 				
