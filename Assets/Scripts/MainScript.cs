@@ -78,6 +78,9 @@ public class MainScript : MonoBehaviour {
 	private static float fTaxaExtract;
 	private static float fTaxaFabrica;
 
+	//< Cache the QuestManager script
+	public QuestManager questManager = null;
+	
 	/*
 	 * ===========================================================================================================
 	 * UNITY'S STUFF
@@ -116,6 +119,13 @@ public class MainScript : MonoBehaviour {
 
 			// DEBUG
 			Debug.LogError("Cannot find the MouseWorldPosition component. Please check.");
+		}
+
+		questManager = gameObject.GetComponent<QuestManager>();
+		if(!questManager) {
+
+			// DEBUG
+			Debug.LogError("Cannot find the QuestManager component. Please check.");
 		}
 		
 		//Instantiate(GameObject.("Monkey"), new Vector3(79.07609f,33.39249f,13.41692f), Quaternion.identity);
