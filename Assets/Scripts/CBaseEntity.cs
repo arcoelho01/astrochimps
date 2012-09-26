@@ -401,5 +401,15 @@ public class CBaseEntity : MonoBehaviour {
 
 		return captureRaySpotObj;
 	}
+
+	/// <summary>
+	/// The VisibilityControl script set me to visible. If this object is a resource, we should inform the
+	/// Quest Manager
+	/// </summary>
+	public void IWasSetToVisible() {
+
+		// DEBUG
+		//
+	}
 }
 

@@ -699,4 +699,20 @@ public class MainScript : MonoBehaviour {
 		}
 
 	}
+
+	/*
+	 * ===========================================================================================================
+	 * TASKS AND EVENTS STUFF
+	 * ===========================================================================================================
+	 */
+	/// <summary>
+	/// Receive an event
+	/// </summary>
+	/// <param name="trSender"> Transform of the sender of this event </param>
+	/// <param name="eEvent"> EQuestEvents enum with the event </param>
+	public void ReceiveNewEvent(Transform trSender, QuestManager.EQuestEvents eEvent) {
+
+		questManager.AddEventToTheQM(eEvent);
+	}
+
 }

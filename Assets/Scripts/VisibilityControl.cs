@@ -9,8 +9,21 @@ public class VisibilityControl : MonoBehaviour {
 	public float sight_range;
 	public AudioClip sfxRecursoLocalizado;
 	public AudioClip  sfxPecaLocalizada;
+
+	MainScript mainScript = null;
+	CBaseEntity cBaseEntity = null;
+
 	// Use this for initialization
 	void Start () {
+
+		// Cache the main script
+		mainScript = GameObject.Find("/Codigo").GetComponent<MainScript>();
+
+		if(!mainScript) {
+
+			// DEBUG
+			Debug.LogError("MainScript object not found. Check the code.");
+		}
 
 		if (gameObject.tag.CompareTo("Building") == 0 || gameObject.tag.CompareTo("Resource") == 0 
 				|| gameObject.tag == "RocketPart") {
@@ -105,9 +118,34 @@ public class VisibilityControl : MonoBehaviour {
 
 		if(AppearsToEnemy() && !visible){
 			visible = true;
-			if ( this.CompareTag("Resource"))
+			if ( this.CompareTag("Resource")) {
+			
 				if (sfxRecursoLocalizado)
 					AudioSource.PlayClipAtPoint(sfxRecursoLocalizado, transform.position);
+
+				// Send an event: we found a resource
+				if(!cBaseEntity)
+					cBaseEntity = gameObject.GetComponent<CResource>();
+
+				if(cBaseEntity != null) {
+
+					CResource cResource = cBaseEntity as CResource;
+					if(cResource.resourceType == CResource.eResourceType.Oxygen) {
+
+						mainScript.ReceiveNewEvent(this.transform, QuestManager.EQuestEvents.FOUND_WATER_RESOURCE);
+					}
+					if(cResource.resourceType == CResource.eResourceType.Metal) {
+
+						mainScript.ReceiveNewEvent(this.transform, QuestManager.EQuestEvents.FOUND_METAL_RESOURCE);
+					}
+				}
+				else {
+
+					// DEBUG
+					Debug.LogError(this.transform + "Couldn't find CBaseEntity in this object");
+				}
+			}
+
 			if ( this.CompareTag("RocketPart"))
 				if (sfxPecaLocalizada)
 					AudioSource.PlayClipAtPoint(sfxPecaLocalizada, transform.position);

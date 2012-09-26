@@ -127,11 +127,11 @@ public class CResource : CBaseEntity {
 			// Tell the Quest Manager about this event
 			if(resourceType == eResourceType.Oxygen) {
 
-				mainScript.questManager.AddEventToTheQM(QuestManager.EQuestEvents.BUILT_OXYGEN_EXTRACTOR);
+				mainScript.ReceiveNewEvent(this.transform, QuestManager.EQuestEvents.BUILT_OXYGEN_EXTRACTOR);
 			}
 			else {
 
-				mainScript.questManager.AddEventToTheQM(QuestManager.EQuestEvents.BUILT_METAL_EXTRACTOR);
+				mainScript.ReceiveNewEvent(this.transform, QuestManager.EQuestEvents.BUILT_METAL_EXTRACTOR);
 			}
 		}
 	}

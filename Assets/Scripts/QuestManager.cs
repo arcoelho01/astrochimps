@@ -25,9 +25,10 @@ public class QuestManager : MonoBehaviour {
 	/// </summary>
 	class TaskEntry {
 
-		public string stTaskDescription = "";
-		public EQuestEvents eEvent = EQuestEvents.EVENT_NULL;
-		public bool bnDone = false;
+		public string stTaskDescription = ""; //< Description of this task
+		public EQuestEvents eEvent = EQuestEvents.EVENT_NULL; //< Type of event
+		public bool bnDone = false; //< Is this task done?
+		public int nEventCount = 1; //< Number of events to consider this task done
 	};
 
 	/// <summary>
@@ -35,9 +36,10 @@ public class QuestManager : MonoBehaviour {
 	/// </summary>
 	class QuestEntry {
 
-		public string stName = "";
-		public bool bnDone = false;
-		public List<TaskEntry> lstTasks;
+		public string stName = ""; //< Name of the quest. Will be used to search this particular quest in the quest list
+		public bool bnDone = false; //< Is this task done?
+		public List<TaskEntry> lstTasks; //< List of tasks in this quest
+		public int nTasksDone = 0;
 	};
 
 	//< List of all quests
@@ -56,19 +58,19 @@ public class QuestManager : MonoBehaviour {
 		
 		// TEST PURPOSE ONLY
 		// Create a Quest
-		CreateNewQuest("Teste");
+		CreateNewQuest("Heavy Metal");
 		// Add a task to that quest
-		CreateTaskInQuest("Teste", "This is the task description", EQuestEvents.BUILT_METAL_EXTRACTOR);
+		CreateTaskInQuest("Heavy Metal", "Find a metal resource.", EQuestEvents.FOUND_METAL_RESOURCE, 1);
+		// Create a Quest
+		CreateNewQuest("Breathe");
+		// Add a task to that quest
+		CreateTaskInQuest("Breathe", "Find a water resource.", EQuestEvents.FOUND_WATER_RESOURCE, 2);
+		CreateTaskInQuest("Breathe", "Build an oxygen extractor", EQuestEvents.BUILT_OXYGEN_EXTRACTOR, 1);
 		
 		// Print all Quests
 		PrintQuestsInfo();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	/*
 	 * ===========================================================================================================
 	 * QUEST'S STUFF
@@ -107,7 +109,7 @@ public class QuestManager : MonoBehaviour {
 
 				foreach(TaskEntry taskEntry in entry.lstTasks) {
 
-					Debug.Log("+ Task " + taskEntry.stTaskDescription);
+					Debug.Log("+ Task " + taskEntry.stTaskDescription + " : " + taskEntry.nEventCount);
 				}
 			}
 			
@@ -127,23 +129,73 @@ public class QuestManager : MonoBehaviour {
 	/// <param name="eEvent"> One of the EQuestEvents </param>
 	public void AddEventToTheQM(EQuestEvents eEvent) {
 
+		// FIXME: I guess this code won't be needed
 		switch(eEvent) {
 
 			case EQuestEvents.BUILT_METAL_EXTRACTOR:
 				// DEBUG
-				Debug.Log(this.transform + " Received a BUILT_METAL_EXTRACTOR event");
+				Debug.LogWarning(this.transform + " Received a BUILT_METAL_EXTRACTOR event");
 				break;
 
 			case EQuestEvents.BUILT_OXYGEN_EXTRACTOR:
 				// DEBUG
-				Debug.Log(this.transform + " Received a BUILT_OXYGEN_EXTRACTOR event");
+				Debug.LogWarning(this.transform + " Received a BUILT_OXYGEN_EXTRACTOR event");
+				break;
+
+			case EQuestEvents.FOUND_WATER_RESOURCE:
+				// DEBUG
+				Debug.LogWarning(this.transform + " Received a FOUND_WATER_EXTRACTOR event");
+				break;
+
+			case EQuestEvents.FOUND_METAL_RESOURCE:
+				// DEBUG
+				Debug.LogWarning(this.transform + " Received a FOUND_METAL_EXTRACTOR event");
 				break;
 
 			// TODO: add other events here...
-
 			default:
 				break;
-																						
+		}
+
+		// In all quests ...
+		foreach(QuestEntry questEntry in lstQuests) {
+
+			if(questEntry.bnDone)
+				continue;
+
+			// ... in all tasks
+			foreach(TaskEntry taskEntry in questEntry.lstTasks) {
+
+				// Task already done? Next task then
+				if(taskEntry.bnDone)
+					continue;
+
+				// Event Match!
+				if(taskEntry.eEvent == eEvent) {
+
+					// Decrease the event counter
+					taskEntry.nEventCount--;
+
+					// Enough of theses events? Mark this task as done!
+					if(taskEntry.nEventCount	<= 0) {
+
+						taskEntry.bnDone = true;
+
+						// Increase the "tasks done" counter
+						questEntry.nTasksDone++;
+
+						// Check if we haven't completed the task
+						if(questEntry.lstTasks.Count == questEntry.nTasksDone) {
+
+							// Quest done!
+							questEntry.bnDone = true;
+
+							// DEBUG
+							Debug.Log(this.transform + "Quest " + questEntry.stName + " done.");
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -153,7 +205,7 @@ public class QuestManager : MonoBehaviour {
 	/// <param name="stQuestName"> The name of the quest to add this task. The quest is identified by it's name </param>
 	/// <param name="stTaskDescription"> A string with the description of this task </param>
 	/// <param name="eEvent"> A EQuestEvents enum with the type of event to perform this task </param>
-	public void CreateTaskInQuest(string stQuestName, string stTaskDescription, EQuestEvents eEvent) {
+	public void CreateTaskInQuest(string stQuestName, string stTaskDescription, EQuestEvents eEvent, int nCount) {
 
 		// First of all, let's find the quest in the list
 		QuestEntry questEntry = null;
@@ -173,6 +225,8 @@ public class QuestManager : MonoBehaviour {
 			TaskEntry taskEntry = new TaskEntry();
 			taskEntry.stTaskDescription = stTaskDescription;
 			taskEntry.eEvent = eEvent;
+			taskEntry.nEventCount = nCount;
+
 			// ... and add it to the quest
 			questEntry.lstTasks.Add(taskEntry);
 		}
