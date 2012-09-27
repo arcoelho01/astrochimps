@@ -216,7 +216,67 @@ public class EventosMenu : MonoBehaviour {
 		return retorno;
 	}
 	//Fim Drone
+	//Retorno de Dados
+	public string getDadosFazenda(string dado){
+		int nivel = prefabFazenda.GetComponent<DefinicaoEstrutura>().nivelEstrutura -1;
 		
+		if(dado=="CUSTO")
+			return prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
+		if(dado=="DESCRICAO")
+			return prefabFazenda.GetComponent<DefinicaoEstrutura>().descricao;
+		
+		return prefabFazenda.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[nivel].ToString();
+	}	
+	public string getDadosLaboratorio(string dado){
+		int nivel = prefabLaboratorio.GetComponent<DefinicaoEstrutura>().nivelEstrutura -1;
+		
+		if(dado=="CUSTO")
+			return prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
+		if(dado=="DESCRICAO")
+			return prefabLaboratorio.GetComponent<DefinicaoEstrutura>().descricao;	
+		
+		return prefabLaboratorio.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[nivel].ToString();
+	}
+	public string getDadosFabricaDrones(string dado){
+		int nivel = prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().nivelEstrutura -1;
+		
+		if(dado=="CUSTO")
+			return prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
+		if(dado=="DESCRICAO")
+			return prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().descricao;
+		
+		return prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[nivel].ToString();
+	}
+	public string getDadosCentralSeguranca(string dado){
+		int nivel = prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().nivelEstrutura -1;
+		
+		if(dado=="CUSTO")
+			return prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
+		if(dado=="DESCRICAO")
+			return prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().descricao;
+		
+		return prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[nivel].ToString();
+	}
+	public string getDadosDroneCacador(string dado){
+		if(dado=="CUSTO")
+			return prefabUnidadeDrone.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
+		else
+			return prefabUnidadeDrone.GetComponent<DefinicaoEstrutura>().descricao;	
+		
+	}
+	public string getDadosDroneVigilancia(string dado){
+		if(dado=="CUSTO")
+			return prefabUnidadeDroneVigilancia.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
+		else
+			return prefabUnidadeDroneVigilancia.GetComponent<DefinicaoEstrutura>().descricao;		
+	}
+	public string getDadosDroneSabotador(string dado){
+		if(dado=="CUSTO")
+			return prefabUnidadeDroneSabotador.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
+		else
+			return prefabUnidadeDroneSabotador.GetComponent<DefinicaoEstrutura>().descricao;		
+	}
+	//Fim Retorno de Dados
 	void OnGUI(){
 		GUI.skin = menuSkin;
 		

@@ -171,7 +171,7 @@ public class CMonkey : CBaseEntity {
 			fDustTimeOfAStep = meshObject.animation[stAnimWalk].clip.length / 2;
 
 			// DEBUG
-			Debug.Log(this.transform + " Length: " + fDustTimeOfAStep);
+			//Debug.Log(this.transform + " Length: " + fDustTimeOfAStep);
 		}
 	}
 

@@ -123,6 +123,16 @@ public class CResource : CBaseEntity {
 
 			mainScript.DeployUnderConstructionBox(this.transform, 
 					prefabToBuild, transform.position, myBuildingClass.costTime);
+
+			// Tell the Quest Manager about this event
+			if(resourceType == eResourceType.Oxygen) {
+
+				mainScript.ReceiveNewEvent(this.transform, QuestManager.EQuestEvents.BUILT_OXYGEN_EXTRACTOR);
+			}
+			else {
+
+				mainScript.ReceiveNewEvent(this.transform, QuestManager.EQuestEvents.BUILT_METAL_EXTRACTOR);
+			}
 		}
 	}
 

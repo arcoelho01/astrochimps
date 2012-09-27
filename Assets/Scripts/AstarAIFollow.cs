@@ -137,8 +137,9 @@ public class AstarAIFollow : MonoBehaviour {
 		float minDist = Mathf.Infinity;
 		int notCloserHits = 0;
 		
-		// debug
-		Debug.Log(this.transform + " OnPathComplete " + path.Length + " and tr" + tr);
+		// DEBUG
+		//Debug.Log(this.transform + " OnPathComplete " + path.Length + " and tr" + tr);
+
 		for (int i=0;i<path.Length-1;i++) {
 			float dist = Mathfx.DistancePointSegmentStrict (path[i],path[i+1],tr.position);
 			if (dist < minDist) {
