@@ -244,6 +244,8 @@ public class EventosMenu : MonoBehaviour {
 			return prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
 		if(dado=="DESCRICAO")
 			return prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().descricao;
+		if(dado=="NIVEL")
+			return nivel.ToString();
 		
 		return prefabFabricaDrones.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[nivel].ToString();
 	}
@@ -254,6 +256,8 @@ public class EventosMenu : MonoBehaviour {
 			return prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetal.ToString();
 		if(dado=="DESCRICAO")
 			return prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().descricao;
+		if(dado=="NIVEL")
+			return nivel.ToString();
 		
 		return prefabCentralSeguranca.GetComponent<DefinicaoEstrutura>().custoMetalEvoluirNivel[nivel].ToString();
 	}
