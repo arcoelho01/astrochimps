@@ -16,8 +16,9 @@ public class MusicScript : MonoBehaviour {
 	bool avisou;
 	
 	// Use this for initialization
-	 void Start() {
-       	launch = GameObject.Find("LaunchingPlatform").GetComponent<BuildingLaunchingPlatform>();
+	void Start() {
+
+		GetLaunchPlatformScript();
 		player = GameObject.Find("Player").GetComponent<CPlayer>();
 		trilha130 = GameObject.Find("trilha_simples-130BPM");
 		trilha140 = GameObject.Find("trilha_simples-140BPM");
@@ -25,8 +26,8 @@ public class MusicScript : MonoBehaviour {
 		oxy130 = GameObject.Find("OXI-130BPM");
 		oxy140 = GameObject.Find("OXI-140BPM");
 		oxy150 = GameObject.Find("OXI-150BPM");
-		
-		
+
+
 		trilha130.audio.Play();
 		trilha140.audio.Play();
 		trilha150.audio.Play();
@@ -35,8 +36,8 @@ public class MusicScript : MonoBehaviour {
 		oxy150.audio.Play();
 		avisou = false;
 		muteAll();
-		
-    }
+
+	}
 	
 	void Awake(){
 
@@ -52,27 +53,27 @@ public class MusicScript : MonoBehaviour {
 				avisou = true;
 			}
 			muteAll();
-			if (launch.getPartsOnTheRocket() <= 1 && player.oxygenLevel < 99){
+			if (launch!=null && launch.getPartsOnTheRocket() <= 1 && player.oxygenLevel < 99){
 				oxy130.audio.mute = false;
 			}else
-			if (launch.getPartsOnTheRocket() <= 3  && player.oxygenLevel < 99){
+			if (launch!= null && launch.getPartsOnTheRocket() <= 3  && player.oxygenLevel < 99){
 				oxy140.audio.mute = false;
 			}else
-			if (launch.getPartsOnTheRocket() <= 5  && player.oxygenLevel < 99){
+			if (launch != null && launch.getPartsOnTheRocket() <= 5  && player.oxygenLevel < 99){
 				oxy140.audio.mute = false;
 			}
 		}
 		else{
 			avisou = false;
-			if (launch.getPartsOnTheRocket() <= 1){
+			if (launch!= null && launch.getPartsOnTheRocket() <= 1){
 				muteAll();
 				trilha130.audio.mute = false;
 			}else
-			if (launch.getPartsOnTheRocket() <= 3){
+			if (launch != null && launch.getPartsOnTheRocket() <= 3){
 				muteAll();
 				trilha140.audio.mute = false;
 			}else
-			if (launch.getPartsOnTheRocket() <= 5){
+			if (launch != null && launch.getPartsOnTheRocket() <= 5){
 				muteAll();
 				trilha150.audio.mute = false;
 			}
@@ -88,5 +89,21 @@ public class MusicScript : MonoBehaviour {
 		oxy140.audio.mute = true;
 		oxy150.audio.mute = true;
 		
+	}
+
+	/// <summary>
+	/// Get the LaunchingPlatform object from the hierarchy. Initiallyt, there's none
+	/// </summary>
+	void GetLaunchPlatformScript() {
+
+		if(launch != null)
+			return;
+
+		GameObject goLaunchingPlatform = GameObject.Find("LaunchingPlatform");
+
+		if(goLaunchingPlatform) {
+
+			launch = goLaunchingPlatform.GetComponent<BuildingLaunchingPlatform>();
+		}
 	}
 }

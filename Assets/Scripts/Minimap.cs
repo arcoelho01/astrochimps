@@ -5,6 +5,7 @@ public class Minimap : MonoBehaviour {
 
 	MainScript mainScript;
 	Camera minimapCam;
+	Camera mainCamera;
 	
 	Vector3 bottomLeft;
 	Vector3 centerScreen;
@@ -43,6 +44,9 @@ public class Minimap : MonoBehaviour {
 		}
 
 		focusCubeOriginalSize = mmCubeFocus.localScale;
+
+		// Gets the main camera
+		mainCamera = Camera.main;
 
 		//
 		EnableMinimap();
