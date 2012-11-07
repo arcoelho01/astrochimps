@@ -16,7 +16,7 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D BoxMapaTexture;
 	
 	public GUISkin skin;
-	
+	//public GUISkin skin_orange;
 	
 	public Texture2D CentroComandoTexture;
 	public Texture2D LaboratorioTexture;
@@ -394,7 +394,7 @@ public class GUIControl : MonoBehaviour {
 				area = new Rect (baseXSide + 30, baseYSide + 70,LaboratorioTexture.width,LaboratorioTexture.height);
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Box (new Rect (baseXSide+2, baseYSide+181,BoxMetalTexture.width+12,BoxMetalTexture.height+90),"");
-					GUI.skin = skin;					
+					GUI.skin = skin;
 					GUI.Label(new Rect (baseXSide + 5, baseYSide+180,120,100),"LABORATORIO");
 					GUI.Label(new Rect (baseXSide + 5, baseYSide+208,120,100),"CUSTO");
 					GUI.Label(new Rect (baseXSide + 70, baseYSide+210,40,20),NivelMetal);
