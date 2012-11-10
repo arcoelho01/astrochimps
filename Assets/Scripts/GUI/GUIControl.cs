@@ -16,7 +16,8 @@ public class GUIControl : MonoBehaviour {
 	public Texture2D BoxMapaTexture;
 	
 	public GUISkin skin;
-	//public GUISkin skin_orange;
+	public GUISkin skinOrange;
+	public GUIStyle style;
 	
 	public Texture2D CentroComandoTexture;
 	public Texture2D LaboratorioTexture;
@@ -395,7 +396,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Box (new Rect (baseXSide+2, baseYSide+181,BoxMetalTexture.width+12,BoxMetalTexture.height+90),"");
 					GUI.skin = skin;
-					GUI.Label(new Rect (baseXSide + 5, baseYSide+180,120,100),"LABORATORIO");
+					GUI.Label(new Rect (baseXSide + 5, baseYSide+182,180,100),"LABORATORIO",style);
 					GUI.Label(new Rect (baseXSide + 5, baseYSide+208,120,100),"CUSTO");
 					GUI.Label(new Rect (baseXSide + 70, baseYSide+210,40,20),NivelMetal);
 					GUI.Label(new Rect (baseXSide + 93, baseYSide+207,120,100),eventosMenu.getDadosLaboratorio("CUSTO"));
@@ -413,7 +414,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Box (new Rect (baseXSide+2, baseYSide+181,BoxMetalTexture.width+12,BoxMetalTexture.height+90),"");
 					GUI.skin = skin;
-					GUI.Label(new Rect (baseXSide + 5, baseYSide+180,180,100),"CENTRAL DE SEGURANCA");
+					GUI.Label(new Rect (baseXSide + 5, baseYSide+182,180,100),"CENTRAL DE SEGURANCA",style);
 					GUI.Label(new Rect (baseXSide + 5, baseYSide+208,120,100),"CUSTO");
 					GUI.Label(new Rect (baseXSide + 70, baseYSide+210,40,20),NivelMetal);
 					GUI.Label(new Rect (baseXSide + 93, baseYSide+207,120,100),eventosMenu.getDadosCentralSeguranca("CUSTO"));
@@ -431,7 +432,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Box (new Rect (baseXSide+2, baseYSide+181,BoxMetalTexture.width+12,BoxMetalTexture.height+90),"");
 					GUI.skin = skin;
-					GUI.Label(new Rect (baseXSide + 5, baseYSide+180,180,100),"FAZENDA HIDROPONICA");
+					GUI.Label(new Rect (baseXSide + 5, baseYSide+182,180,100),"FAZENDA HIDROPONICA",style);
 					GUI.Label(new Rect (baseXSide + 5, baseYSide+208,120,100),"CUSTO");
 					GUI.Label(new Rect (baseXSide + 70, baseYSide+210,40,20),NivelMetal);
 					GUI.Label(new Rect (baseXSide + 93, baseYSide+207,120,100),eventosMenu.getDadosFazenda("CUSTO"));
@@ -449,7 +450,7 @@ public class GUIControl : MonoBehaviour {
 				if(area.Contains(Event.current.mousePosition)){
 					GUI.Box (new Rect (baseXSide+2, baseYSide+181,BoxMetalTexture.width+12,BoxMetalTexture.height+90),"");
 					GUI.skin = skin;
-					GUI.Label(new Rect (baseXSide + 5, baseYSide+180,180,100),"FABRICA DE DRONES");
+					GUI.Label(new Rect (baseXSide + 5, baseYSide+182,180,100),"FABRICA DE DRONES",style);
 					GUI.Label(new Rect (baseXSide + 5, baseYSide+208,120,100),"CUSTO");
 					GUI.Label(new Rect (baseXSide + 70, baseYSide+210,40,20),NivelMetal);
 					GUI.Label(new Rect (baseXSide + 93, baseYSide+207,120,100),eventosMenu.getDadosFabricaDrones("CUSTO"));
